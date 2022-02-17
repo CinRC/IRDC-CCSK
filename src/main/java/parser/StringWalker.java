@@ -1,5 +1,6 @@
 package parser;
 
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
@@ -15,9 +16,8 @@ public class StringWalker implements Iterable<Character>, CharSequence{
     private String stringBase;
     private int curPos = 0;
     private Direction direction = Direction.FORWARDS;
-    private Deque<Character> memory;
+    private ArrayDeque<Character> memory;
     public int length;
-
 
     //Overloading ftw
     public StringWalker(String s) {
@@ -45,7 +45,7 @@ public class StringWalker implements Iterable<Character>, CharSequence{
     }
 
     /**
-     * Walks 1 character along the string
+     * Walks 1 character along the string, saving the *destination* char to memory
      */
     public void walk(){
         if (!canWalk())
@@ -54,6 +54,14 @@ public class StringWalker implements Iterable<Character>, CharSequence{
                             curPos, length()));
         curPos += getDirection().inc;
         memory.push(read());
+    }
+
+    /**
+     * Reads walker memory. Does not clear
+     * @return Memory as an ArrayDequeue
+     */
+    public ArrayDeque<Character> readMemory() {
+        return memory;
     }
 
     /**
@@ -106,10 +114,10 @@ public class StringWalker implements Iterable<Character>, CharSequence{
      */
     @Deprecated
     public void reverseBase(){
-        String s = "";
-        for (int i = this.stringBase.length()-1; i >= 0; i++)
-            s += this.stringBase.charAt(i);
-        this.stringBase = s;
+        StringBuilder s = new StringBuilder();
+        for (int i = this.stringBase.length()-1; i >= 0; i--)
+            s.append(this.stringBase.charAt(i));
+        this.stringBase = s.toString();
     }
 
     /**
@@ -120,10 +128,10 @@ public class StringWalker implements Iterable<Character>, CharSequence{
      */
     @Deprecated
     private String reverseString(String st){
-        String s = "";
-        for (int i = st.length()-1; i >= 0; i++)
-            s += st.charAt(i);
-        return s;
+        StringBuilder s = new StringBuilder();
+        for (int i = st.length()-1; i >= 0; i--)
+            s.append(st.charAt(i));
+        return s.toString();
     }
 
     /**
@@ -155,7 +163,7 @@ public class StringWalker implements Iterable<Character>, CharSequence{
     //Impl methods
     @Override
     public Iterator<Character> iterator() {
-        return new Iterator<Character>() {
+        return new Iterator<>() {
             public boolean hasNext() {
                 return curPos < length;
             }

@@ -1,11 +1,8 @@
 package parser;
 
-import process.CCSGrammar;
 import process.ProcessFormula;
-import process.ProcessNode;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CCSParser {
 

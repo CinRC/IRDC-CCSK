@@ -1,4 +1,4 @@
-package process;
+package parser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,8 +8,8 @@ public enum CCSGrammar {
     OP_CONCURRENT("\\|"),
     OP_DETERMINISTIC("\\+"),
     OP_SEQUENTIAL("\\."),
-    PROCESS("[PQV]"),
-    LABEL("[abc]");
+    PROCESS("[PQV]"), //[A-Z]
+    LABEL("[abc]");   //[a-z]
 
     private String pString;
     private Pattern pattern;
@@ -29,9 +29,6 @@ public enum CCSGrammar {
         return getPattern().matcher(c);
     }
 
-    String refactor(CharSequence c){
-        return null;
-    }
 
 
 }

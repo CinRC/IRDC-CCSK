@@ -1,6 +1,7 @@
 package me.gmx.process;
 
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
@@ -60,13 +61,11 @@ public class ProcessTemplate {
         System.out.println();
     }
 
-    public void prettyWrite(){
+    public String prettyString(){
+        StringBuilder sb = new StringBuilder();
         for (Process o : tList)
-            System.out.print(o.origin());
-    }
-
-    public void printActionableLabels(){
-        getActionableLabels().forEach(System.out::println);
+            sb.append(o.origin());
+        return sb.toString();
     }
 
     public Set<LabelNode> getActionableLabels(){
@@ -82,7 +81,7 @@ public class ProcessTemplate {
         return getActionableLabels().contains(node);
     }
 
-    public boolean actOn(LabelNode node){
+    public ProcessTemplate actOn(LabelNode node){
         /*for (Process p : tList){
             if (p.canAct(node)){
 
@@ -94,9 +93,11 @@ public class ProcessTemplate {
             Process p = tList.get(i);
             if (p.canAct(node)){
                 tList.set(i,p.act(node));
+                return this;
             }
         }
-        return false;
+        throw new CCSTransitionException(node);
+        //return false;
     }
 
 

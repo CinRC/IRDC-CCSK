@@ -17,11 +17,8 @@ Reversible computation is important because //TODO
 
 ### Build
 
-To build this project, execute `mvn assembly:single`. This will create an executable jar file
+To build this project, execute `mvn package` in the project root dir. This will create an executable jar file
 in `target/`.
 
 ### Running
-Running this is fairly simple. One approach is to load the program into an IDE and run through its compiler.
-The main class is `me.gmx.RCCS`. 
-
-Alternatively, you can run the executable jar specified above with the command `java -jar RCCS.jar "`.
+To run the project, use the command `java -jar <filename>`.

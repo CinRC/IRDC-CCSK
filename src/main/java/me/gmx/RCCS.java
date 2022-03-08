@@ -24,23 +24,22 @@ public class RCCS {
         CCSParser c = new CCSParser();
         ProcessTemplate a = c.parseLine(s);
 
-        a.prettyWrite();
-        System.out.println("\nMinimizing and recursing function...");
+        System.out.println(String.format("Formula before complex init and minimization: %s", a.prettyString()));
+        System.out.println("\nMinimizing and initializing function...");
         a.initComplex();
-        a.prettyWrite();
+        System.out.println(String.format("Formula after complex init and minimization: %s", a.prettyString()));
         while(!a.getActionableLabels().isEmpty()){
-            System.out.println("\nActionable labels:");
-            //a.printActionableLabels();
+            System.out.println(String.format("%s", a.prettyString()));
             System.out.println("Please type the label you'd like to act on:");
             String st = scan.next();
             if (st == "") continue;
             LabelNode n = LabelNodeFactory.parseNode(st);
             try{
-                System.out.println(a.actOn(n));
+                System.out.println(String.format("%s -%s-> %s",
+                        a.prettyString(),n.origin(),a.actOn(n)));
             }catch (Exception e){
                 System.out.println("Could not act on label!");
             }
-            a.prettyWrite();
 
         }
 

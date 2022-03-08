@@ -28,11 +28,9 @@ public class SummationProcess extends ComplexProcess{
     @Override
     public Process act(LabelNode label) {
         if (left.canAct(label)) {
-            left.act(label);
-            return left;
+            return left.act(label);
         }else if (right.canAct(label)){
-            right.act(label);
-            return right;
+            return right.act(label);
         }else throw new CCSTransitionException(this,label);
 
     }

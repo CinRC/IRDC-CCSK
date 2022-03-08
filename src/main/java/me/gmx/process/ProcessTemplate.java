@@ -1,13 +1,12 @@
 package me.gmx.process;
 
 import me.gmx.parser.CCSGrammar;
+import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
 import me.gmx.process.process.ProgramNode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ProcessTemplate {
     private LinkedList<Process> tList;
@@ -59,6 +58,45 @@ public class ProcessTemplate {
             else System.out.println(o.toString());*/
             System.out.println(o.represent());
         System.out.println();
+    }
+
+    public void prettyWrite(){
+        for (Process o : tList)
+            System.out.print(o.origin());
+    }
+
+    public void printActionableLabels(){
+        getActionableLabels().forEach(System.out::println);
+    }
+
+    public Set<LabelNode> getActionableLabels(){
+        Set<LabelNode> nodes = new HashSet<>();
+        for(Process p : tList)
+            for (LabelNode n : p.getActionableLabels())
+                nodes.add(n);
+
+        return nodes;
+    }
+
+    public boolean canAct(LabelNode node){
+        return getActionableLabels().contains(node);
+    }
+
+    public boolean actOn(LabelNode node){
+        /*for (Process p : tList){
+            if (p.canAct(node)){
+
+                p = p.act(node);
+                return true;
+            }
+        }*/
+        for(int i = 0; i < tList.size();i++){
+            Process p = tList.get(i);
+            if (p.canAct(node)){
+                tList.set(i,p.act(node));
+            }
+        }
+        return false;
     }
 
 

@@ -4,15 +4,12 @@ import me.gmx.parser.CCSGrammar;
 import me.gmx.process.ProcessTemplate;
 import me.gmx.process.nodes.LabelNode;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public abstract class ComplexProcess implements Process{
 
     Process left, right;
-    static CCSGrammar operator;
+    CCSGrammar operator;
 
     public Collection<Process> getChildren(){
         return Set.of(left, right);
@@ -20,7 +17,7 @@ public abstract class ComplexProcess implements Process{
 
     @Override
     public Collection<LabelNode> getActionableLabels(){
-        Set<LabelNode> s = Collections.emptySet();
+        Set<LabelNode> s = new HashSet<>();
         s.addAll(left.getActionableLabels());
         s.addAll(right.getActionableLabels());
         return s;
@@ -35,12 +32,12 @@ public abstract class ComplexProcess implements Process{
 
             if (template.get(i) == this) {
                 if (left == null) {
-                    System.out.println(String.format("Using %s to init left ", template.get(i - 1).origin()));
+                    //System.out.println(String.format("Using %s to init left ", template.get(i - 1).origin()));
                     left = template.remove(i - 1);
                     i--;
                 }
                 if (right == null) {
-                    System.out.println(String.format("Using %s to init right ", template.get(i + 1).origin()));
+                    //System.out.println(String.format("Using %s to init right ", template.get(i + 1).origin()));
                     right = template.remove(i + 1);
 
                 }
@@ -53,7 +50,13 @@ public abstract class ComplexProcess implements Process{
 
     @Override
     public String origin(){
-        return left.origin() + this.operator + right.origin();
+        StringBuilder b = new StringBuilder();
+        b.append("(");
+        if (left == null) b.append(""); else b.append(left.origin());
+        b.append(operator);
+        if (right == null) b.append(""); else b.append(right.origin());
+        b.append(")");
+        return b.toString();
     }
 
 }

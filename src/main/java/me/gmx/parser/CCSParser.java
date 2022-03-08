@@ -14,13 +14,11 @@ import java.util.regex.Matcher;
 public class CCSParser {
 
     private List<Process> processes;
-    public CCSParser(String text){
-        //for (String line : text.lines().toList())
-        parseLine(text);
+    public CCSParser(){
     }
 
 
-    public ProcessFormula parseLine(String line){
+    public ProcessTemplate parseLine(String line){
 //        StringWalker walker = new StringWalker(line, line.length()-1, StringWalker.Direction.BACKWARDS);
         StringWalker walker = new StringWalker(line);
         /*for (CCSGrammar g : CCSGrammar.values()){
@@ -48,7 +46,7 @@ public class CCSParser {
                 //System.out.println(String.format("Found match: [%s] %s", g.name(), m.group()));
                 if (m.find()){
                     if (g == CCSGrammar.ACTIONPREFIX_COMPLETE) {
-                        System.out.println("PArsing " + m.group());
+                        //System.out.println("PArsing " + m.group());
                         template.add(ActionPrefixProcessFactory.parse(m.group()));
                     }else if (g == CCSGrammar.OP_CONCURRENT){
                         template.add(new ConcurrentProcess(null,null));
@@ -61,10 +59,7 @@ public class CCSParser {
             }
 
         }
-        template.initComplex();
-        template.write();
-        //TODO
-        return null;
+        return template;
     }
 
 

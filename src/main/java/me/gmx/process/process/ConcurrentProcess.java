@@ -8,6 +8,8 @@ import java.util.Set;
 
 public class ConcurrentProcess extends ComplexProcess{
 
+
+    public static String representString = "|";
     /**
      * @param left - left side me.gmx.process
      * @param right - right side me.gmx.process

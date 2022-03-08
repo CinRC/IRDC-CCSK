@@ -10,12 +10,12 @@ public class LabelNodeFactory {
     public static LabelNode parseNode(String s){
         Matcher m = CCSGrammar.OUT_LABEL.match(s);
         if (m.find()) {
-            System.out.println("Parsing out node " + s);
+            //System.out.println("Parsing out node " + s);
             return new ComplementLabelNode(m.group());
         }
         m = CCSGrammar.LABEL.match(s);
         if (m.find()) {
-            System.out.println("Parsing node " + s);
+            //System.out.println("Parsing node " + s);
             return new LabelNode(m.group());
         }
 

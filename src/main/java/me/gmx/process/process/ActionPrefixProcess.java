@@ -37,13 +37,20 @@ public class ActionPrefixProcess implements Process{
         this.prefix = label;
     }
 
+
+    /**
+     * still deciding how to determine equivalency
+     * @param label
+     * @return
+     */
     @Override
     public boolean canAct(LabelNode label) {
-        return prefix == label;
+        return prefix.equals(label);
     }
 
     @Override
     public Process act(LabelNode label) {
+        //System.out.println("Acting on " + label.origin() + " (actionprefix)");
         return process;
     }
 
@@ -59,6 +66,6 @@ public class ActionPrefixProcess implements Process{
 
     @Override
     public String origin(){
-        return prefix.origin() + process.origin();
+        return prefix.origin() +"."+ process.origin();
     }
 }

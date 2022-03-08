@@ -6,6 +6,9 @@ import me.gmx.process.nodes.LabelNode;
 
 public class SummationProcess extends ComplexProcess{
 
+
+    public static String representString = "+";
+
     public SummationProcess(Process left, Process right) {
         this.left = left;
         this.right = right;

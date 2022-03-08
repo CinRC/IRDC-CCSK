@@ -5,9 +5,11 @@ import me.gmx.process.process.ProgramNode;
 
 public class LabelNode extends ProgramNode {
 
-    public static CCSGrammar grammar;
+    public CCSGrammar grammar;
     public LabelNode(String s) {
         super(s);
-        this.grammar = CCSGrammar.LABEL;
+        grammar = CCSGrammar.LABEL;
     }
+
+
 }

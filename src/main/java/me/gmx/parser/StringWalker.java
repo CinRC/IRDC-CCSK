@@ -1,7 +1,6 @@
 package me.gmx.parser;
 
-import java.util.ArrayDeque;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * An implementation of an iterable char stream. Self contained
@@ -11,26 +10,35 @@ import java.util.Iterator;
  */
 public class StringWalker implements Iterable<Character>, CharSequence{
     private String stringBase;
-    private int curPos = 0;
+    private int curPos;
     private Direction direction = Direction.FORWARDS;
-    private ArrayDeque<Character> memory;
+    private LinkedList<Character> memory;
     public int length;
 
     //Overloading ftw
     public StringWalker(String s) {
-        new StringWalker(s, 0);
+        this.stringBase = s;
+        length = s.length();
+        this.curPos = -1;
+        setDirection(Direction.FORWARDS);
+        memory = new LinkedList<>();
     }
 
     public StringWalker(String s, int pos){
-        new StringWalker(s,pos,Direction.FORWARDS);
+        this.stringBase = s;
+        length = s.length();
+        this.curPos = pos;
+        setDirection(Direction.FORWARDS);
+        memory = new LinkedList<>(Collections.singleton(s.charAt(curPos)));
     }
 
+
     public StringWalker(String s, int pos, Direction dir){
-        stringBase = s;
+        this.stringBase = s;
         length = s.length();
         this.curPos = pos;
         setDirection(dir);
-        memory = new ArrayDeque<>(s.charAt(0));
+        memory = new LinkedList<>(Collections.singleton(s.charAt(curPos)));
     }
 
     /**
@@ -50,15 +58,32 @@ public class StringWalker implements Iterable<Character>, CharSequence{
                     String.format("String walker cannot walk to index %d with string length %d",
                             curPos, length()));
         curPos += getDirection().inc;
-        memory.push(read());
+        memory.addLast(read());
+    }
+
+    /**
+     * Looks ahead to the rest of the string it has to walk, in addition to its own memory
+     * @return The memory it would return if it were to walk until the end of the string
+     */
+    public String look(){
+        return readMemory() + stringBase.substring(this.curPos+1,this.length);
+    }
+
+    /**
+     * Destroys the character it is currently standing on
+     */
+    public void stomp(){
+        stringBase = stringBase.substring(0,curPos)+stringBase.substring(curPos+1);
     }
 
     /**
      * Reads walker memory. Does not clear
      * @return Memory as an ArrayDequeue
      */
-    public ArrayDeque<Character> readMemory() {
-        return memory;
+    public String readMemory() {
+        StringBuilder sb = new StringBuilder();
+        memory.forEach(sb::append);
+        return sb.toString();
     }
 
     /**
@@ -66,14 +91,14 @@ public class StringWalker implements Iterable<Character>, CharSequence{
      * @return True if the walker has more string to walk
      */
     public boolean canWalk(){
-        return (curPos + getDirection().inc >= length()
+        return !(curPos + getDirection().inc >= length()
         || curPos + getDirection().inc < 0);
     }
 
     /**
      * Clears memory
      */
-    public void clearBuffer(){
+    public void clearMemory(){
         memory.clear();
     }
 
@@ -145,15 +170,16 @@ public class StringWalker implements Iterable<Character>, CharSequence{
      * @return Walker with reverse direction
      */
     public StringWalker reverseClone(){
-        clearBuffer();
+        clearMemory();
         return new StringWalker(stringBase,curPos,getDirection().reverse());
     }
+
 
     /**
      * Reverses walker direction
      */
     public void reverse(){
-        clearBuffer();
+        clearMemory();
         setDirection(getDirection().reverse());
     }
 
@@ -177,7 +203,7 @@ public class StringWalker implements Iterable<Character>, CharSequence{
 
     @Override
     public char charAt(int index) {
-        return stringBase.charAt(index);
+        return this.stringBase.charAt(index);
     }
 
     @Override
@@ -188,7 +214,7 @@ public class StringWalker implements Iterable<Character>, CharSequence{
     /**
      * Purely for convenience. Whether or not this is practical is highly debatable
      */
-    private enum Direction{
+    public enum Direction{
         FORWARDS(1),
         BACKWARDS(-1);
         public int inc;

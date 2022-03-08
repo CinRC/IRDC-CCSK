@@ -2,7 +2,9 @@ package me.gmx.process.process;
 
 import me.gmx.process.nodes.LabelNode;
 
-public interface Process {
+import java.util.Collection;
+
+public interface Process{
 
 
     boolean canAct(LabelNode label);
@@ -10,5 +12,9 @@ public interface Process {
     Process act(LabelNode label);
 
     String represent();
+
+    Collection<LabelNode> getActionableLabels();
+
+    String origin();
 
 }

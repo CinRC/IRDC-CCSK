@@ -1,6 +1,12 @@
 ## What is RCCS?
 RCCS, or Reversible Calculus of Communicating Systems, is a formal language that describes the interaction of concurrent systems in a reversible paradigm.
 
+### Syntax and Precedence of Operators
+
+We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.
+    
+So, a.a + b | c \a is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c  (postfix notation).
+
 
 Reversible computation is important because //TODO
 

@@ -11,7 +11,7 @@ import me.gmx.process.nodes.LabelNodeFactory;
 import java.util.*;
 import java.util.regex.Matcher;
 
-public class ActionPrefixProcess implements Process{
+public class ActionPrefixProcess implements Process {
 
     private LabelNode prefix;
     private Process process;

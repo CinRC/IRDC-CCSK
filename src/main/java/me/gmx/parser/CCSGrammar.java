@@ -12,6 +12,8 @@ public enum CCSGrammar {
 
     LABEL("[a-z]", LabelNode.class, null),
     WHITESPACE(" ", null, " "),
+    OPEN_PARENTHESIS("(", null, "("),
+    CLOSE_PARENTHESIS(")",null, ")"),
     PROCESS("[A-Z]", UnrestrictedProcess.class, null),
     OP_SEQUENTIAL("\\.", null, "."),
     OUT_LABEL(String.format("'%s",LABEL.pString), ComplementLabelNode.class, null),

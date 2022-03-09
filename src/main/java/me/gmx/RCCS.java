@@ -42,6 +42,7 @@ public class RCCS {
             System.out.println(String.format("%s", a.prettyString()));
             System.out.println("Please type the label you'd like to act on:");
             String st = scan.next();
+            //a.getActionableLabels()
             if (st == "") continue;
             LabelNode n = LabelNodeFactory.parseNode(st);
             try{

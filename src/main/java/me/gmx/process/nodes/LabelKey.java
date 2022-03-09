@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class LabelKey {
 
-    private ;
+    ///private UUID uuid;
 
     public LabelKey(String s){
 
@@ -12,8 +12,8 @@ public class LabelKey {
 
 
 
-    public LabelKey clone(){
-        return new LabelKey(this.uuid)
-    }
+    ///public LabelKey clone(){
+  ///      return new LabelKey(uuid);
+   /// }
 
 }

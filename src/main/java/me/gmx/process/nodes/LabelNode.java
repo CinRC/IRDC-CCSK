@@ -5,9 +5,20 @@ import me.gmx.process.process.ProgramNode;
 
 public class LabelNode extends ProgramNode {
 
-    public static CCSGrammar grammar;
+    public CCSGrammar grammar;
     public LabelNode(String s) {
         super(s);
-        this.grammar = CCSGrammar.LABEL;
+        grammar = CCSGrammar.LABEL;
     }
+
+    public String toString(){
+        return this.origin();
+    }
+
+    //TODO fix
+    public boolean equals(Object o){
+        return (o instanceof LabelNode) && (((LabelNode)o).origin().equals(this.origin()));
+    }
+
+
 }

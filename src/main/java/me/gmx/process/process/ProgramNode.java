@@ -8,7 +8,7 @@ public class ProgramNode {
         origin = s;
     }
 
-    public String toString(){
+    public String origin(){
         return origin;
     }
 }

@@ -21,7 +21,7 @@ Rversible computation is important because
 
 ### Build
 
-To build this project, execute `mvn package`. This will create an executable jar file
+To build this project, execute `mvn assembly:single`. This will create an executable jar file
 in `target/`.
 
 ### Running

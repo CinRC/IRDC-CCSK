@@ -2,8 +2,7 @@ package me.gmx.process.process;
 
 import me.gmx.process.nodes.LabelNode;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * A restricted me.gmx.process. Cannot act over a set of labels.
@@ -15,9 +14,9 @@ public class RestrictedProcess implements Process{
     private Process process;
 
 
-    public RestrictedProcess(Process p, LabelNode... labels){
+    public RestrictedProcess(Process p, Collection<LabelNode> labels){
         this.process = p;
-        restriction = Arrays.asList(labels);
+        restriction = new ArrayList<>(labels);
     }
 
 
@@ -39,5 +38,24 @@ public class RestrictedProcess implements Process{
         //Delete last comma
         sb.deleteCharAt(sb.length()-1);
         return String.format("[Restriction(%s,{%s})",process.represent(),sb.toString());
+    }
+
+    @Override
+    public Collection<LabelNode> getActionableLabels() {
+        Collection z = process.getActionableLabels();
+        z.removeAll(restriction);
+        return z;
+    }
+
+    @Override
+    public String origin(){
+        StringBuilder b = new StringBuilder();
+        b.append(process.origin());
+        b.append("\\{");
+        for (LabelNode z : restriction)
+            b.append(z +",");
+        b.deleteCharAt(b.length()-1);
+        b.append("}");
+        return b.toString();
     }
 }

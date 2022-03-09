@@ -1,23 +1,39 @@
 package me.gmx.parser;
 
+import me.gmx.process.nodes.ComplementLabelNode;
+import me.gmx.process.nodes.LabelNode;
+import me.gmx.process.process.*;
+
+import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum CCSGrammar {
 
-    OP_CONCURRENT("\\|"),               // |
-    OP_SUMMATION("\\+"),                // +
-    OP_SEQUENTIAL("\\."),               // .
-    WHITESPACE(" "),                    //
-    PROCESS("[A-Z]"),                   // P
-    LABEL("[a-z]"),                     // a
-    OUT_LABEL("'"+LABEL.pString),       // 'a
-    RESTRICTION("\\"+LABEL.pString);    // \a
+    LABEL("[a-z]", LabelNode.class, null),
+    WHITESPACE(" ", null, " "),
+    PROCESS("[A-Z]", UnrestrictedProcess.class, null),
+    OP_SEQUENTIAL("\\.", null, "."),
+    OUT_LABEL(String.format("'%s",LABEL.pString), ComplementLabelNode.class, null),
+    OP_ACTIONPREFIX(String.format("(((%s)|(%s))%s)",
+            LABEL.pString,OUT_LABEL.pString,OP_SEQUENTIAL.pString),null, null),
+    OP_ACTIONPREFIX_REVERSE(String.format("%s(%s|%s)", OP_SEQUENTIAL.pString,LABEL.pString,OUT_LABEL.pString),null, null),
+    ACTIONPREFIX_COMPLETE(String.format("(%s)*%s",OP_ACTIONPREFIX.pString,PROCESS.pString), ActionPrefixProcess.class, null),
+    OP_CONCURRENT("\\|", ConcurrentProcess.class, "|"),
+    OP_SUMMATION("\\+", SummationProcess.class, "+"),
+    RESTRICTION(String.format("\\{(%s,?)*}",LABEL.pString), null, null),
+    RESTRICTED_PROCESS(String.format("(%s)%s",PROCESS.pString,RESTRICTION.pString),RestrictedProcess.class, null);
 
-    private String pString;
+    private String pString, rep;
     private Pattern pattern;
-    CCSGrammar(String s){
+    private Class classObject;
+    CCSGrammar(String s, Class c, String rep){
         this.pString = s;
+        this.classObject = c;
+        this.rep = rep;
+    }
+    public Class getClassObject(){
+        return classObject;
     }
 
     /***
@@ -43,7 +59,7 @@ public enum CCSGrammar {
 
 
     public String toString(){
-        return pattern.toString();
+        return rep == null ? "" : rep;
     }
 
 

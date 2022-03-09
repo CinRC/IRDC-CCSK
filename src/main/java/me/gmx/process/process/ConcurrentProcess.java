@@ -1,11 +1,15 @@
 package me.gmx.process.process;
 
+import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.LabelNode;
 
-public class ConcurrentProcess implements Process{
+import java.util.Collection;
+import java.util.Set;
 
-    private Process left, right;
+public class ConcurrentProcess extends ComplexProcess{
 
+
+    public static String representString = "|";
     /**
      * @param left - left side me.gmx.process
      * @param right - right side me.gmx.process
@@ -13,6 +17,7 @@ public class ConcurrentProcess implements Process{
     public ConcurrentProcess(Process left, Process right) {
         this.left = left;
         this.right = right;
+        operator = CCSGrammar.OP_CONCURRENT;
     }
 
 
@@ -33,6 +38,13 @@ public class ConcurrentProcess implements Process{
 
     @Override
     public String represent() {
-        return String.format("[Concurrent(%s, %s)]",left.toString(),right.toString());
+        return String.format("[Concurrent(%s, %s)]",left.represent(),right.represent());
     }
+
+    @Override
+    public Collection<Process> getChildren() {
+        return Set.of(left, right);
+    }
+
+
 }

@@ -8,5 +8,8 @@ public class CCSTransitionException extends RuntimeException{
     public CCSTransitionException(Process p, LabelNode l){
         super(String.format("Could act %s on %s",p.represent(),l.toString()));
     }
+    public CCSTransitionException(LabelNode l){
+        super(String.format("Could act on %s",l.toString()));
+    }
 
 }

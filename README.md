@@ -7,6 +7,8 @@ We assume that the operators have decreasing binding power, in the following ord
     
 So, a.a + b | c \a is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c  (postfix notation).
 
+Of course, parenthesises take precedence over all operators.
+
 
 Reversible computation is important because //TODO
 

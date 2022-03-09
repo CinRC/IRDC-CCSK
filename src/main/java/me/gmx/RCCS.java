@@ -6,6 +6,7 @@ import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.nodes.LabelNodeFactory;
 import me.gmx.process.process.ProcessFormula;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 public class RCCS {
@@ -19,10 +20,19 @@ public class RCCS {
         String s = "a.b.V + c.a.P|b.Q";
         new CCSParser(s);*/
         Scanner scan = new Scanner(System.in);
-        String s = "a.b.P + c.r.Q|b.g.P\\{zg}";
+        String s;
+        if (args.length > 0)
+            s = args[0];
+        else
+            s = "a.b.P + c.r.Q|b.g.P\\{zg}";
 
+        ProcessTemplate a = null;
         CCSParser c = new CCSParser();
-        ProcessTemplate a = c.parseLine(s);
+        try {
+            a = c.parseLine(s);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         System.out.println(String.format("Formula before complex init and minimization: %s", a.prettyString()));
         System.out.println("\nMinimizing and initializing function...");
@@ -37,6 +47,7 @@ public class RCCS {
             try{
                 System.out.println(String.format("%s -%s-> %s",
                         a.prettyString(),n.origin(),a.actOn(n).prettyString()));
+                break;
             }catch (Exception e){
                 System.out.println("Could not act on label!");
             }

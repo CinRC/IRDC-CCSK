@@ -29,10 +29,7 @@ public class ActionPrefixProcessFactory {
                     System.out.println("Adding " + m.group() + " to prefixes");
                     prefixes.add(LabelNodeFactory.parseNode(w.readMemory()));
                     w.clearMemory();
-                }/*else if (CCSGrammar.PROCESS.match(w.readMemory()).find()){
-                    System.out.println("Adding " + w.readMemory() + " to processes");
-                    process = ProcessFactory.determineRestriction(w.readMemory());
-                }*/
+                }
                 //No more labels, must be a process now or breaks syntax
                 process = ProcessFactory.determineRestriction(w.look());
             }while(w.canWalk());

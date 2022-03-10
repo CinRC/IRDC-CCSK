@@ -4,7 +4,6 @@ import me.gmx.process.nodes.ComplementLabelNode;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.*;
 
-import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,8 @@ public enum CCSGrammar {
     WHITESPACE(" ", null, " "),
     OPEN_PARENTHESIS("(", null, "("),
     CLOSE_PARENTHESIS(")",null, ")"),
-    PROCESS("[A-Z]", UnrestrictedProcess.class, null),
+    PROCESS("[A-Z]", ProcessImpl.class, null),
+    NULL_PROCESS("[A-Z0]",NullProcess.class,"0"),
     OP_SEQUENTIAL("\\.", null, "."),
     OUT_LABEL(String.format("'%s",LABEL.pString), ComplementLabelNode.class, null),
     OP_ACTIONPREFIX(String.format("(((%s)|(%s))%s)",
@@ -23,8 +23,8 @@ public enum CCSGrammar {
     ACTIONPREFIX_COMPLETE(String.format("(%s)*%s",OP_ACTIONPREFIX.pString,PROCESS.pString), ActionPrefixProcess.class, null),
     OP_CONCURRENT("\\|", ConcurrentProcess.class, "|"),
     OP_SUMMATION("\\+", SummationProcess.class, "+"),
-    RESTRICTION(String.format("\\{(%s,?)*}",LABEL.pString), null, null),
-    RESTRICTED_PROCESS(String.format("(%s)%s",PROCESS.pString,RESTRICTION.pString),RestrictedProcess.class, null);
+    RESTRICTION(String.format("\\{(%s,?)*}",LABEL.pString), null, null);
+    //RESTRICTED_PROCESS(String.format("(%s)%s",PROCESS.pString,RESTRICTION.pString), RestrictedProcessImpl.class, null);
 
     private String pString, rep;
     private Pattern pattern;
@@ -34,6 +34,7 @@ public enum CCSGrammar {
         this.classObject = c;
         this.rep = rep;
     }
+
     public Class getClassObject(){
         return classObject;
     }

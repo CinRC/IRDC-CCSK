@@ -1,17 +1,10 @@
 package me.gmx.process.process;
 
-import me.gmx.parser.CCSGrammar;
-import me.gmx.parser.CCSParser;
-import me.gmx.parser.CCSParserException;
-import me.gmx.parser.StringWalker;
-import me.gmx.process.ProcessTemplate;
 import me.gmx.process.nodes.LabelNode;
-import me.gmx.process.nodes.LabelNodeFactory;
 
 import java.util.*;
-import java.util.regex.Matcher;
 
-public class ActionPrefixProcess implements Process {
+public class ActionPrefixProcess extends Process {
 
     private LabelNode prefix;
     private Process process;
@@ -33,6 +26,7 @@ public class ActionPrefixProcess implements Process {
 
 
     public ActionPrefixProcess(Process process, LabelNode label){
+        super(label.origin() + "." + process.origin());
         this.process = process;
         this.prefix = label;
     }
@@ -60,12 +54,20 @@ public class ActionPrefixProcess implements Process {
     }
 
     @Override
+    public Collection<Process> getChildren() {
+        return Collections.singleton(process);
+    }
+
+    @Override
     public Collection<LabelNode> getActionableLabels(){
         return Collections.singleton(this.prefix);
     }
 
-    @Override
-    public String origin(){
-        return prefix.origin() +"."+ process.origin();
-    }
+    /**
+     * No longer needed
+     */
+    /*@Override
+    public String origin() {
+        return prefix.origin() + process.origin();
+    }*/
 }

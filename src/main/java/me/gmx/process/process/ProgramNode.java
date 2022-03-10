@@ -1,14 +1,11 @@
 package me.gmx.process.process;
 
-public class ProgramNode {
+public abstract class ProgramNode {
 
-    private String origin;
+    protected String origin;
 
     public ProgramNode(String s){
-        origin = s;
+        this.origin = s;
     }
-
-    public String origin(){
-        return origin;
-    }
+    public abstract String origin();
 }

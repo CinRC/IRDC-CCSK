@@ -15,8 +15,7 @@ public class ConcurrentProcess extends ComplexProcess{
      * @param right - right side me.gmx.process
      */
     public ConcurrentProcess(Process left, Process right) {
-        this.left = left;
-        this.right = right;
+        super(left,right);
         operator = CCSGrammar.OP_CONCURRENT;
     }
 

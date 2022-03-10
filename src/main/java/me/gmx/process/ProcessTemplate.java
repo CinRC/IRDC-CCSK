@@ -5,16 +5,15 @@ import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
-import me.gmx.process.process.ProgramNode;
 
 import java.util.*;
+
+
 
 public class ProcessTemplate {
     private LinkedList<Process> tList;
     public ProcessTemplate(){
-
         tList = new LinkedList<>();
-
     }
 
 
@@ -24,28 +23,42 @@ public class ProcessTemplate {
     }
 
     public void initComplex(){
-        List<ComplexProcess> complex = new ArrayList<>();
-        //Add all complex processes to a list
-        for (Process value : tList) {
-            if (value instanceof ComplexProcess)
-                complex.add((ComplexProcess) value);
-        }
-        //Iterate through ccs syntax, determining highest structure
+        //Collect complex processes
+        Set<ComplexProcess> complex = new HashSet<>();
+        for (Process process : tList)
+            if (process instanceof ComplexProcess)
+                complex.add((ComplexProcess) process);
+
+
         for (CCSGrammar g : CCSGrammar.values()){
-            for (ComplexProcess process : complex){
-                if (process.getClass() == g.getClassObject()){
-                    tList = process.init(tList);
+            for (ComplexProcess p : complex){
+                if (p.getClass() == g.getClassObject()){
+                    if (p.left == null)
+                        //Subsume object to the left
+                        p.left = tList.remove(tList.indexOf(p)-1);
+
+                    if (p.right == null)
+                        //Subsume object to the right
+                        p.right = tList.remove(tList.indexOf(p)+1);
+
                 }
             }
         }
-        /*for (int i = 0; i < tList.size();i++) {
-            if (tList.get(i) instanceof ComplexProcess){
-                System.out.println("instance of complex");
-                ComplexProcess p = (ComplexProcess) tList.get(i);
-                if (!p.isInit()){
-                    System.out.println("test");
+        /*for (CCSGrammar g : CCSGrammar.values()){
+            for (int i = 0; i < tList.size(); i++) {
+                Process p = tList.get(i);
+                if (p.getClass() == g.getClassObject()) {
+                    if (p.left == null) {
+                        //System.out.println(String.format("Using %s to init left ", tList.get(i - 1).origin()));
+                        left = tList.remove(i - 1);
+                        i--;
+                    }
+                    if (right == null) {
+                        //System.out.println(String.format("Using %s to init right ", tList.get(i + 1).origin()));
+                        if (tList.size() > i+1)
+                            right = tList.remove(i + 1);
 
-                    tList = p.init(tList);
+                    }
                 }
             }
         }*/
@@ -53,11 +66,7 @@ public class ProcessTemplate {
 
     public void write(){
         for (Process o : tList)
-            /*if (o instanceof Process){
-                System.out.println(String.format("Node: %s", ((Process) o).origin()));
-            }
-            else System.out.println(o.toString());*/
-            System.out.println(o.represent());
+            System.out.println(o.origin());
         System.out.println();
     }
 
@@ -82,13 +91,6 @@ public class ProcessTemplate {
     }
 
     public ProcessTemplate actOn(LabelNode node){
-        /*for (Process p : tList){
-            if (p.canAct(node)){
-
-                p = p.act(node);
-                return true;
-            }
-        }*/
         for(int i = 0; i < tList.size();i++){
             Process p = tList.get(i);
             if (p.canAct(node)){
@@ -97,7 +99,18 @@ public class ProcessTemplate {
             }
         }
         throw new CCSTransitionException(node);
-        //return false;
+    }
+
+    public LinkedList<Process> getProcesses(){
+        return this.tList;
+    }
+
+    public void prependTemplate(ProcessTemplate t){
+        t.getProcesses().addAll(tList);
+    }
+
+    public void appendTemplate(ProcessTemplate t){
+        tList.addAll(t.getProcesses());
     }
 
 

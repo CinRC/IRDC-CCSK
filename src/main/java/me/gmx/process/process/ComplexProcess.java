@@ -1,18 +1,34 @@
 package me.gmx.process.process;
 
 import me.gmx.parser.CCSGrammar;
-import me.gmx.process.ProcessTemplate;
 import me.gmx.process.nodes.LabelNode;
 
 import java.util.*;
 
-public abstract class ComplexProcess implements Process{
+public abstract class ComplexProcess extends Process{
 
-    Process left, right;
+    public Process left, right;
     CCSGrammar operator;
 
+
+    public ComplexProcess(Process left, Process right){
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
     public Collection<Process> getChildren(){
         return Set.of(left, right);
+    }
+
+    public Collection<Process> recurseChildren(){
+        Set<Process> s = new HashSet<>();
+        s.addAll(getChildren());
+        if (left instanceof ComplexProcess)
+            s.addAll(((ComplexProcess)left).recurseChildren());
+        if (right instanceof ComplexProcess)
+            s.addAll(((ComplexProcess)right).recurseChildren());
+            return s;
     }
 
     @Override
@@ -38,7 +54,8 @@ public abstract class ComplexProcess implements Process{
                 }
                 if (right == null) {
                     //System.out.println(String.format("Using %s to init right ", template.get(i + 1).origin()));
-                    right = template.remove(i + 1);
+                    if (template.size() > i+1)
+                        right = template.remove(i + 1);
 
                 }
             }

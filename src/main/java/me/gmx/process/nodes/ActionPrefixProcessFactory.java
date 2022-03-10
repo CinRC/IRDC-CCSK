@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 
 public class ActionPrefixProcessFactory {
 
+
     public static ActionPrefixProcess parse(String s){
         ActionPrefixProcess F_c = null;
             //Separate process from labels, assure it is last
@@ -33,7 +34,6 @@ public class ActionPrefixProcessFactory {
                 //No more labels, must be a process now or breaks syntax
                 process = ProcessFactory.determineRestriction(w.look());
             }while(w.canWalk());
-
             Collections.reverse(prefixes);
             for(LabelNode node : prefixes){
                 F_c = new ActionPrefixProcess(process, node);

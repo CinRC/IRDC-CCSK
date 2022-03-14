@@ -40,32 +40,6 @@ public class ActionPrefixProcessFactory {
                 process = F_c;
             }
 
-        /*ActionPrefixProcess sub = null;
-        StringWalker w = new StringWalker(s, s.length() - 1, StringWalker.Direction.BACKWARDS);
-        Process p;
-        Matcher m = CCSGrammar.PROCESS.match(w.readMemory());
-        if (m.find())
-            p = new UnrestrictedProcess(m.group());
-        else throw new CCSParserException(s, CCSGrammar.PROCESS);
-        w.clearMemory();
-
-        while (w.canWalk()){
-            w.walk();
-            m = CCSGrammar.OP_ACTIONPREFIX.match(w.readMemory());
-            if (m.matches()){
-                if (sub == null) {
-                    sub = new ActionPrefixProcess(p,
-                            LabelNodeFactory.parseNode(m.group()));
-                    System.out.println(String.format(
-                            "Creating new action prefix. Parsed process %s and node %s",p.toString(),m.group()));
-                } else {
-                    sub = new ActionPrefixProcess(sub,
-                            LabelNodeFactory.parseNode(m.group()));
-                }
-                w.clearMemory();
-            }
-        }*/
-
         return F_c;
     }
 }

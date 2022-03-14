@@ -7,9 +7,10 @@ import me.gmx.util.SetUtil;
 import java.util.*;
 
 /**
- * A restricted me.gmx.process. Cannot act over a set of labels.
- * Form: P\a, a.b.P\{a,b}
+ * Deprecated in favor of using base class Process with restrictions collection. No need to
+ * have tokenized object for restriction, instead check for restrictions is empty
  */
+@Deprecated
 public class RestrictedProcessImpl extends ProcessImpl {
 
     private List<LabelNode> restriction;

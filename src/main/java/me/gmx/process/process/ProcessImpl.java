@@ -5,13 +5,19 @@ import me.gmx.process.nodes.LabelNode;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 public class ProcessImpl extends Process{
     //Unimplemented
     private Process next;
 
+
     public ProcessImpl(String s) {
         super(s);
+    }
+
+    public ProcessImpl(String s, Collection<LabelNode> restrictions){
+        super(s, restrictions);
     }
 
     @Override

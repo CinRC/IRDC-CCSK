@@ -19,7 +19,7 @@ public class RCCS {
         if (args.length > 0)
             s = args[0];
         else
-            s = "a.b.P + b.b.Q | c.b.P + d.b.Q + e.b.C | f.C|g.P+h.C";
+            s = "a.P + (b.Q|v.V)";
 
         ProcessTemplate a = null;
         CCSParser c = new CCSParser();
@@ -34,11 +34,11 @@ public class RCCS {
         a.initComplex();
         System.out.println(String.format("Formula after complex init and minimization: %s", a.prettyString()));
         while(!a.getActionableLabels().isEmpty()){
-            System.out.println("-----------");
+            System.out.println("------| Actionable Labels |------");
             for (LabelNode na : a.getActionableLabels()){
                 System.out.println(na.origin());
             }
-            System.out.println("-----------");
+            System.out.println("------------");
 
             System.out.println(String.format("%s", a.prettyString()));
             System.out.println("Please type the label you'd like to act on:");

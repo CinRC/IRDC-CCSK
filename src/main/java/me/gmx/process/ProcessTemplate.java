@@ -1,6 +1,7 @@
 package me.gmx.process;
 
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.CCSParserException;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.ComplexProcess;
@@ -11,11 +12,11 @@ import java.util.*;
 
 
 public class ProcessTemplate {
-    private LinkedList<Process> tList;
+    private final LinkedList<Process> tList;
     public ProcessTemplate(){
         tList = new LinkedList<>();
     }
-
+    public boolean isInit = false;
 
 
     public void add(Process node){
@@ -44,26 +45,11 @@ public class ProcessTemplate {
                 }
             }
         }
-        /*for (CCSGrammar g : CCSGrammar.values()){
-            for (int i = 0; i < tList.size(); i++) {
-                Process p = tList.get(i);
-                if (p.getClass() == g.getClassObject()) {
-                    if (p.left == null) {
-                        //System.out.println(String.format("Using %s to init left ", tList.get(i - 1).origin()));
-                        left = tList.remove(i - 1);
-                        i--;
-                    }
-                    if (right == null) {
-                        //System.out.println(String.format("Using %s to init right ", tList.get(i + 1).origin()));
-                        if (tList.size() > i+1)
-                            right = tList.remove(i + 1);
-
-                    }
-                }
-            }
-        }*/
+        isInit = true;
     }
 
+
+    @Deprecated
     public void write(){
         for (Process o : tList)
             System.out.println(o.origin());
@@ -80,15 +66,28 @@ public class ProcessTemplate {
     public Set<LabelNode> getActionableLabels(){
         Set<LabelNode> nodes = new HashSet<>();
         for(Process p : tList)
-            for (LabelNode n : p.getActionableLabels())
-                nodes.add(n);
-
+            nodes.addAll(p.getActionableLabels());
         return nodes;
+    }
+
+    /**
+     * Exports ProcessTemplate as a process. ProcessTemplate should always init down to
+     * a single 'parent' process.
+     * @return Parent process
+     * @throws CCSParserException If for some reason there are more than 1 parent processes
+     */
+    public Process export(){
+        if (!isInit)
+            initComplex();
+        if (tList.size() != 1)
+            throw new CCSParserException("Could not export process template into process!");
+        else return tList.get(0);
     }
 
     public boolean canAct(LabelNode node){
         return getActionableLabels().contains(node);
     }
+
 
     public ProcessTemplate actOn(LabelNode node){
         for(int i = 0; i < tList.size();i++){

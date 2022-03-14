@@ -14,6 +14,7 @@ public class StringWalker implements Iterable<Character>, CharSequence{
     private Direction direction = Direction.FORWARDS;
     private LinkedList<Character> memory;
     public int length;
+    private Collection<Character> ignore = new HashSet<>();
 
     //Overloading ftw
     public StringWalker(String s) {
@@ -32,6 +33,10 @@ public class StringWalker implements Iterable<Character>, CharSequence{
         memory = new LinkedList<>(Collections.singleton(s.charAt(curPos)));
     }
 
+
+    public void setIgnore(Character... ch){
+        this.ignore.addAll(List.of(ch));
+    }
 
     public StringWalker(String s, int pos, Direction dir){
         this.stringBase = s;
@@ -58,7 +63,8 @@ public class StringWalker implements Iterable<Character>, CharSequence{
                     String.format("String walker cannot walk to index %d with string length %d",
                             curPos, length()));
         curPos += getDirection().inc;
-        memory.addLast(read());
+        if (!ignore.contains(read()))
+            memory.addLast(read());
     }
 
     /**

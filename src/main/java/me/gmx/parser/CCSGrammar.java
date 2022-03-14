@@ -11,10 +11,10 @@ public enum CCSGrammar {
 
     LABEL("[a-z]", LabelNode.class, null),
     WHITESPACE(" ", null, " "),
-    OPEN_PARENTHESIS("(", null, "("),
-    CLOSE_PARENTHESIS(")",null, ")"),
+    OPEN_PARENTHESIS("\\(", null, "("),
+    CLOSE_PARENTHESIS("\\)",null, ")"),
     PROCESS("[A-Z]", ProcessImpl.class, null),
-    NULL_PROCESS("[A-Z0]",NullProcess.class,"0"),
+    NULL_PROCESS("[0]",NullProcess.class,"0"),
     OP_SEQUENTIAL("\\.", null, "."),
     OUT_LABEL(String.format("'%s",LABEL.pString), ComplementLabelNode.class, null),
     OP_ACTIONPREFIX(String.format("(((%s)|(%s))%s)",

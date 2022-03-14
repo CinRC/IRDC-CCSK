@@ -16,18 +16,16 @@ public class ActionPrefixProcessFactory {
     public static ActionPrefixProcess parse(String s){
         ActionPrefixProcess F_c = null;
             //Separate process from labels, assure it is last
-            System.out.println("Create " + s);
+            System.out.println("Creating prefix " + s);
             ProcessTemplate template = new ProcessTemplate();
             StringWalker w = new StringWalker(s);
             LinkedList<LabelNode> prefixes = new LinkedList<>();
             Process process = null;
             do{
                 w.walk();
-                System.out.println("Walking... Memory: " + w.readMemory());
                 Matcher m = CCSGrammar.OP_ACTIONPREFIX.match(w.readMemory());
                 //Forward through the labels until no more...
                 if (m.find()){
-                    System.out.println("Adding " + m.group() + " to prefixes");
                     prefixes.add(LabelNodeFactory.parseNode(w.readMemory()));
                     w.clearMemory();
                 }

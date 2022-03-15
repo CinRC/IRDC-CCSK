@@ -61,5 +61,5 @@ in `target/`.
 Running this is fairly simple. One approach is to load the program into an IDE and run through its compiler.
 The main class is `me.gmx.RCCS`. 
 
-Alternatively, you can run the executable jar specified above with the command `java -jar RCCS.jar "`.
+Alternatively, you can run the executable jar specified above with the command `java -jar target/RCCS-1.0-SNAPSHOT.jar`.
 

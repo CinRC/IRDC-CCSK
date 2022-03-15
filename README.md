@@ -17,6 +17,35 @@ Of course, parenthesises take precedence over all operators.
 `Maven  >=  3.0`
 `JDK    >=  17`
 
+To upgrade JDK to the latest version on Linux:
+
+```
+curl -O https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
+tar -xvf jdk-17_linux-x64_bin.tar.gz
+sudo mv jdk-17.0.2/ /opt/jdk17.0.2
+sudo update-alternatives --install "/usr/bin/java" "java" "/opt/jdk17.0.2/bin/java" 100
+sudo update-alternatives --config java
+sudo update-alternatives --install "/usr/bin/javac" "javac" "/opt/jdk17.0.2/bin/javac" 100
+sudo update-alternatives --config javac
+export JAVA_HOME=/opt/jdk17.0.2/
+```
+
+To upgrade Maven to the latest version on Linux (courtesy of https://stackoverflow.com/a/71199477/)
+
+```
+wget https://apache.org/dist/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz -P /tmp
+sudo tar xf /tmp/apache-maven-*.tar.gz -C /opt
+rm /tmp/apache-maven-*-bin.tar.gz
+```
+
+then use
+
+```
+/opt/apache-maven-3.8.5/bin/mvn
+```
+
+or link it.
+
 ### Running
 `JRE >= 8`
 

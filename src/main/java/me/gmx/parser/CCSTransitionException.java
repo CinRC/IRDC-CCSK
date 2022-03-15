@@ -6,7 +6,7 @@ import me.gmx.process.process.Process;
 public class CCSTransitionException extends RuntimeException{
 
     public CCSTransitionException(Process p, LabelNode l){
-        super(String.format("Could act %s on %s",p.represent(),l.toString()));
+        super(String.format("Could act %s on %s",p.origin(),l.toString()));
     }
     public CCSTransitionException(LabelNode l){
         super(String.format("Could act on %s",l.toString()));

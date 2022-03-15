@@ -1,22 +1,22 @@
 package me.gmx.process;
 
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.CCSParserException;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
-import me.gmx.process.process.ProgramNode;
 
 import java.util.*;
 
+
+
 public class ProcessTemplate {
-    private LinkedList<Process> tList;
+    private final LinkedList<Process> tList;
     public ProcessTemplate(){
-
         tList = new LinkedList<>();
-
     }
-
+    public boolean isInit = false;
 
 
     public void add(Process node){
@@ -24,40 +24,35 @@ public class ProcessTemplate {
     }
 
     public void initComplex(){
-        List<ComplexProcess> complex = new ArrayList<>();
-        //Add all complex processes to a list
-        for (Process value : tList) {
-            if (value instanceof ComplexProcess)
-                complex.add((ComplexProcess) value);
-        }
-        //Iterate through ccs syntax, determining highest structure
-        for (CCSGrammar g : CCSGrammar.values()){
-            for (ComplexProcess process : complex){
-                if (process.getClass() == g.getClassObject()){
-                    tList = process.init(tList);
-                }
-            }
-        }
-        /*for (int i = 0; i < tList.size();i++) {
-            if (tList.get(i) instanceof ComplexProcess){
-                System.out.println("instance of complex");
-                ComplexProcess p = (ComplexProcess) tList.get(i);
-                if (!p.isInit()){
-                    System.out.println("test");
+        //Collect complex processes
+        Set<ComplexProcess> complex = new HashSet<>();
+        for (Process process : tList)
+            if (process instanceof ComplexProcess)
+                complex.add((ComplexProcess) process);
 
-                    tList = p.init(tList);
+
+        for (CCSGrammar g : CCSGrammar.values()){
+            for (ComplexProcess p : complex){
+                if (p.getClass() == g.getClassObject()){
+                    if (p.left == null)
+                        //Subsume object to the left
+                        p.left = tList.remove(tList.indexOf(p)-1);
+
+                    if (p.right == null)
+                        //Subsume object to the right
+                        p.right = tList.remove(tList.indexOf(p)+1);
+
                 }
             }
-        }*/
+        }
+        isInit = true;
     }
 
+
+    @Deprecated
     public void write(){
         for (Process o : tList)
-            /*if (o instanceof Process){
-                System.out.println(String.format("Node: %s", ((Process) o).origin()));
-            }
-            else System.out.println(o.toString());*/
-            System.out.println(o.represent());
+            System.out.println(o.origin());
         System.out.println();
     }
 
@@ -71,24 +66,30 @@ public class ProcessTemplate {
     public Set<LabelNode> getActionableLabels(){
         Set<LabelNode> nodes = new HashSet<>();
         for(Process p : tList)
-            for (LabelNode n : p.getActionableLabels())
-                nodes.add(n);
-
+            nodes.addAll(p.getActionableLabels());
         return nodes;
+    }
+
+    /**
+     * Exports ProcessTemplate as a process. ProcessTemplate should always init down to
+     * a single 'parent' process.
+     * @return Parent process
+     * @throws CCSParserException If for some reason there are more than 1 parent processes
+     */
+    public Process export(){
+        if (!isInit)
+            initComplex();
+        if (tList.size() != 1)
+            throw new CCSParserException("Could not export process template into process!");
+        else return tList.get(0);
     }
 
     public boolean canAct(LabelNode node){
         return getActionableLabels().contains(node);
     }
 
-    public ProcessTemplate actOn(LabelNode node){
-        /*for (Process p : tList){
-            if (p.canAct(node)){
 
-                p = p.act(node);
-                return true;
-            }
-        }*/
+    public ProcessTemplate actOn(LabelNode node){
         for(int i = 0; i < tList.size();i++){
             Process p = tList.get(i);
             if (p.canAct(node)){
@@ -97,7 +98,18 @@ public class ProcessTemplate {
             }
         }
         throw new CCSTransitionException(node);
-        //return false;
+    }
+
+    public LinkedList<Process> getProcesses(){
+        return this.tList;
+    }
+
+    public void prependTemplate(ProcessTemplate t){
+        t.getProcesses().addAll(tList);
+    }
+
+    public void appendTemplate(ProcessTemplate t){
+        tList.addAll(t.getProcesses());
     }
 
 

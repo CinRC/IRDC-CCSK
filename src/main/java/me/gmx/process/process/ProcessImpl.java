@@ -1,13 +1,23 @@
 package me.gmx.process.process;
 
+import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.LabelNode;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
-public class NullProcess extends Process{
-    public NullProcess() {
-        super();
+public class ProcessImpl extends Process{
+    //Unimplemented
+    private Process next;
+
+
+    public ProcessImpl(String s) {
+        super(s);
+    }
+
+    public ProcessImpl(String s, Collection<LabelNode> restrictions){
+        super(s, restrictions);
     }
 
     @Override
@@ -17,12 +27,12 @@ public class NullProcess extends Process{
 
     @Override
     public Process act(LabelNode label) {
-        return this;
+        return new NullProcess();
     }
 
     @Override
     public String represent() {
-        return "0";
+        return String.format("[Process(%s)]", origin);
     }
 
     @Override
@@ -37,6 +47,9 @@ public class NullProcess extends Process{
 
     @Override
     public String origin(){
-        return "0";
+        return origin +".0";
     }
+
+
+
 }

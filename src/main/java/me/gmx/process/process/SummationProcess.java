@@ -10,8 +10,7 @@ public class SummationProcess extends ComplexProcess{
     public static String representString = "+";
 
     public SummationProcess(Process left, Process right) {
-        this.left = left;
-        this.right = right;
+        super(left,right);
         operator = CCSGrammar.OP_SUMMATION;
     }
 

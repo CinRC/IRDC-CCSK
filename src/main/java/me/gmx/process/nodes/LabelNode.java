@@ -11,6 +11,11 @@ public class LabelNode extends ProgramNode {
         grammar = CCSGrammar.LABEL;
     }
 
+    @Override
+    public String origin() {
+        return origin;
+    }
+
     public String toString(){
         return this.origin();
     }

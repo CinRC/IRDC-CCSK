@@ -3,8 +3,8 @@ package me.gmx.process.nodes;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;
 import me.gmx.process.process.Process;
-import me.gmx.process.process.RestrictedProcess;
-import me.gmx.process.process.UnrestrictedProcess;
+import me.gmx.process.process.RestrictedProcessImpl;
+import me.gmx.process.process.ProcessImpl;
 
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -24,9 +24,9 @@ public class ProcessFactory {
         m = CCSGrammar.PROCESS.match(s);
         if (m.find()) {
             if (re == null)
-                return new UnrestrictedProcess(m.group());
+                return new ProcessImpl(m.group());
             else
-                return new RestrictedProcess(new UnrestrictedProcess(m.group()),re);
+                return new RestrictedProcessImpl(new ProcessImpl(m.group()),re);
         }
 
         throw new CCSParserException("Could not parse any processes from " + s);

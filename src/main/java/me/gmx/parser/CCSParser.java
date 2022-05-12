@@ -1,5 +1,6 @@
 package me.gmx.parser;
 
+import me.gmx.RCCS;
 import me.gmx.process.ProcessTemplate;
 import me.gmx.process.nodes.ActionPrefixProcessFactory;
 import me.gmx.process.process.*;
@@ -11,60 +12,66 @@ import java.util.regex.Matcher;
 public class CCSParser {
 
     private List<Process> processes;
-    private boolean implicitNull = false;
-    private int paren;
     public CCSParser(){
-        this.paren = 0;
     }
 
     public CCSParser(boolean implicitNull){
-        this.implicitNull = implicitNull;
+
     }
 
 
     public ProcessTemplate parseLine(String line){
         StringWalker walker = new StringWalker(line);
         walker.setIgnore(' ');
+
         ProcessTemplate template = new ProcessTemplate();
         int counter = 0;
         boolean started = false;
+
+
         while(walker.canWalk()){
-            System.out.println(walker.readMemory());
             walker.walk();
-            System.out.println(String.format("Begin matching with memory %s",walker.readMemory()));
+            RCCS.log(String.format("Begin matching with memory %s",walker.readMemory()));
             for (CCSGrammar g : CCSGrammar.values()) {
-                if ((g.getClassObject() == null && g != CCSGrammar.OPEN_PARENTHESIS && g != CCSGrammar.CLOSE_PARENTHESIS) || g == CCSGrammar.OP_ACTIONPREFIX || g == CCSGrammar.LABEL || g == CCSGrammar.PROCESS)
+                /**"Skip if:
+                 * 1. The grammar does not have an initializable class AND the grammar is not a parenthesis
+                 * OR
+                 * 2. The grammar is a LABEL or PROCESS
+                 *
+                 * It will skip labels and processes because I am CCSGrammar.ACTION
+                 *
+                 **/
+                if ((g.getClassObject() == null && g != CCSGrammar.OPEN_PARENTHESIS && g != CCSGrammar.CLOSE_PARENTHESIS) || g == CCSGrammar.LABEL || g == CCSGrammar.PROCESS)
                     continue;
                 Matcher m = g.match(walker.readMemory());
                 if (m.find()){
-
                     if (started) {
                         if (g == CCSGrammar.CLOSE_PARENTHESIS) {
                             counter--;
                             if (counter == 0) {
-                                System.out.println("Parenthesis close: " + walker.readMemory());
+                                RCCS.log("Parenthesis close: " + walker.readMemory());
                                 template.add(parseLine(walker.readMemory()//sub to remove paren
                                         .substring(1,walker.readMemory().length()-1)).export());
                                 started = false;
                             }
                         }else {
-                            System.out.println("Started, so no matching");
+                            RCCS.log("Started, so no matching");
                             continue;
                         }
                     }
-                    System.out.println("\nFound match!: " + m.group() + " INDEX: " + g.name());
+                    RCCS.log("\nFound match!: " + m.group() + " INDEX: " + g.name());
 
                     if (g == CCSGrammar.OPEN_PARENTHESIS){
                         counter++;
                         started = true;
                     }else if (g == CCSGrammar.ACTIONPREFIX_COMPLETE) {
-                        System.out.println("Parsing into action prefix...");
+                        RCCS.log("Parsing into action prefix...");
                         template.add(ActionPrefixProcessFactory.parse(m.group()));
                     }else if (g == CCSGrammar.OP_CONCURRENT){
-                        System.out.println("Parsing into concurrent...");
+                        RCCS.log("Parsing into concurrent...");
                         template.add(new ConcurrentProcess(null,null));
                     }else if (g == CCSGrammar.OP_SUMMATION){
-                        System.out.println("Parsing into summation...");
+                        RCCS.log("Parsing into summation...");
                         template.add(new SummationProcess(null,null));
                     }/**
                          * I was thinking about completely removing the distinction between processes and null

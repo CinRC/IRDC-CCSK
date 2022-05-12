@@ -17,18 +17,25 @@ public enum CCSGrammar {
     NULL_PROCESS("[0]",NullProcess.class,"0"),
     OP_SEQUENTIAL("\\.", null, "."),
     OUT_LABEL(String.format("'%s",LABEL.pString), ComplementLabelNode.class, null),
-    OP_ACTIONPREFIX(String.format("(((%s)|(%s))%s)",
+    OP_ACTIONPREFIX(String.format("(%s)|(%s)%s",
             LABEL.pString,OUT_LABEL.pString,OP_SEQUENTIAL.pString),null, null),
     OP_ACTIONPREFIX_REVERSE(String.format("%s(%s|%s)", OP_SEQUENTIAL.pString,LABEL.pString,OUT_LABEL.pString),null, null),
     ACTIONPREFIX_COMPLETE(String.format("(%s)*%s",OP_ACTIONPREFIX.pString,PROCESS.pString), ActionPrefixProcess.class, null),
     OP_CONCURRENT("\\|", ConcurrentProcess.class, "|"),
     OP_SUMMATION("\\+", SummationProcess.class, "+"),
-    RESTRICTION(String.format("\\{(%s,?)*}",LABEL.pString), null, null);
-    //RESTRICTED_PROCESS(String.format("(%s)%s",PROCESS.pString,RESTRICTION.pString), RestrictedProcessImpl.class, null);
+    RESTRICTION(String.format("\\{(%s,?)*}",LABEL.pString), null, null),
+    RESTRICTED_PROCESS(String.format("(%s)%s",PROCESS.pString,RESTRICTION.pString), RestrictedProcessImpl.class, null);
 
     private String pString, rep;
     private Pattern pattern;
     private Class classObject;
+
+    /**
+     *
+     * @param s Regex to match against
+     * @param c Instantiatable class representation
+     * @param rep Human readable constant
+     */
     CCSGrammar(String s, Class c, String rep){
         this.pString = s;
         this.classObject = c;

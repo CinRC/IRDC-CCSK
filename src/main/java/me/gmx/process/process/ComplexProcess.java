@@ -1,10 +1,15 @@
 package me.gmx.process.process;
 
+import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.LabelNode;
 
 import java.util.*;
 
+/**
+ * Complex process class is a process that is represented by two processes
+ * linked together by an operator
+ */
 public abstract class ComplexProcess extends Process{
 
     public Process left, right;
@@ -16,11 +21,20 @@ public abstract class ComplexProcess extends Process{
         this.right = right;
     }
 
+    /**
+     * Returns a non-recursive sub-process
+     * @return
+     */
     @Override
     public Collection<Process> getChildren(){
         return Set.of(left, right);
     }
 
+    /**
+     * Returns a recursive set of sub-processes by calling the same function
+     * on all children
+     * @return
+     */
     public Collection<Process> recurseChildren(){
         Set<Process> s = new HashSet<>();
         s.addAll(getChildren());
@@ -31,6 +45,10 @@ public abstract class ComplexProcess extends Process{
             return s;
     }
 
+    /**
+     *
+     * @return Collection of all labels that can be acted upon
+     */
     @Override
     public Collection<LabelNode> getActionableLabels(){
         Set<LabelNode> s = new HashSet<>();
@@ -39,21 +57,30 @@ public abstract class ComplexProcess extends Process{
         return s;
     }
 
-    public boolean isInit(){
+    /**
+     * Checks if the process has been packed
+     * @return
+     */
+    public boolean isPacked(){
         return !(left == null || right == null);
     }
 
-    public LinkedList<Process> init(LinkedList<Process> template){
+    /**
+     * "Packs" processes to the left and right of this process to form a packed complex process.
+     * @param template ordered list of processes representing a formula that the process will pack from.
+     * @return leftover processes that were not packed
+     */
+    public LinkedList<Process> pack(LinkedList<Process> template){
         for (int i = 0; i < template.size(); i++) {
 
             if (template.get(i) == this) {
                 if (left == null) {
-                    //System.out.println(String.format("Using %s to init left ", template.get(i - 1).origin()));
+                    RCCS.log(String.format("Using %s to init left ", template.get(i - 1).origin()));
                     left = template.remove(i - 1);
                     i--;
                 }
                 if (right == null) {
-                    //System.out.println(String.format("Using %s to init right ", template.get(i + 1).origin()));
+                    RCCS.log(String.format("Using %s to init right ", template.get(i + 1).origin()));
                     if (template.size() > i+1)
                         right = template.remove(i + 1);
 
@@ -65,6 +92,10 @@ public abstract class ComplexProcess extends Process{
         return template;
     }
 
+    /**
+     * Returns the 'debug' form of human readable representation
+     * @return
+     */
     @Override
     public String origin(){
         StringBuilder b = new StringBuilder();

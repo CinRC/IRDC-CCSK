@@ -15,9 +15,6 @@ public class CCSParser {
     public CCSParser(){
     }
 
-    public CCSParser(boolean implicitNull){
-
-    }
 
 
     public ProcessTemplate parseLine(String line){
@@ -26,7 +23,7 @@ public class CCSParser {
 
         ProcessTemplate template = new ProcessTemplate();
         int counter = 0;
-        boolean started = false;
+        boolean inParenthesis = false;
 
 
         while(walker.canWalk()){
@@ -43,27 +40,31 @@ public class CCSParser {
                  **/
                 if ((g.getClassObject() == null && g != CCSGrammar.OPEN_PARENTHESIS && g != CCSGrammar.CLOSE_PARENTHESIS) || g == CCSGrammar.LABEL || g == CCSGrammar.PROCESS)
                     continue;
+
+                //Start matching memory with grammar
                 Matcher m = g.match(walker.readMemory());
                 if (m.find()){
-                    if (started) {
+                    //While in parenthesis, do not match anything. Simply move to the closing parenthesis and send memory to this function for reparsing
+                    if (inParenthesis) {
                         if (g == CCSGrammar.CLOSE_PARENTHESIS) {
                             counter--;
                             if (counter == 0) {
                                 RCCS.log("Parenthesis close: " + walker.readMemory());
                                 template.add(parseLine(walker.readMemory()//sub to remove paren
                                         .substring(1,walker.readMemory().length()-1)).export());
-                                started = false;
+                                inParenthesis = false;
                             }
                         }else {
                             RCCS.log("Started, so no matching");
                             continue;
                         }
                     }
+
                     RCCS.log("\nFound match!: " + m.group() + " INDEX: " + g.name());
 
                     if (g == CCSGrammar.OPEN_PARENTHESIS){
                         counter++;
-                        started = true;
+                        inParenthesis = true;
                     }else if (g == CCSGrammar.ACTIONPREFIX_COMPLETE) {
                         RCCS.log("Parsing into action prefix...");
                         template.add(ActionPrefixProcessFactory.parse(m.group()));
@@ -83,7 +84,7 @@ public class CCSParser {
                         //Do nothing for processes for now. I could change by rearranging CCSGRAMMAR precedence, but this is easier
                         //and if I need to process them separately in the future this will be the way.
                     }
-                    if (!started)
+                    if (!inParenthesis)
                     walker.clearMemory();
                 }
             }
@@ -91,31 +92,6 @@ public class CCSParser {
         }
         return template;
     }
-
-    private ProcessTemplate handleParenthesis(String s){
-        System.out.println(s);
-        return parseLine(s);
-    }
-
-/*    private int checkEndParenthesis(String s){
-        StringWalker w = new StringWalker(s);
-        int open = 0;
-        boolean start = false;
-        while(w.canWalk()){
-            w.walk();
-
-            if (CCSGrammar.OPEN_PARENTHESIS.match(Character.toString(w.read())).find()){
-                open++;
-                start = true;
-            }else if (CCSGrammar.CLOSE_PARENTHESIS.match(Character.toString(w.read())).find()){
-                open--;
-            }
-            if (open == 0 && start){
-                return w.readMemory();
-            }
-        }
-        return "";
-    }*/
 
 
 

@@ -99,6 +99,7 @@ public abstract class ComplexProcess extends Process{
     @Override
     public String origin(){
         StringBuilder b = new StringBuilder();
+        b.append(String.format("[%s]%s",getKey(), CCSGrammar.OP_SEQUENTIAL.toString()));
         b.append("(");
         if (left == null) b.append(""); else b.append(left.origin());
         b.append(operator);

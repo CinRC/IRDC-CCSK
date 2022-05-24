@@ -2,6 +2,9 @@ package me.gmx.process.nodes;
 
 import me.gmx.parser.CCSGrammar;
 
+/**
+ * The "output" portion of a communication channel
+ */
 public class ComplementLabelNode extends LabelNode{
 
     public ComplementLabelNode(String s) {

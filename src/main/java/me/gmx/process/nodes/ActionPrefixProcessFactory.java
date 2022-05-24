@@ -14,7 +14,12 @@ import java.util.regex.Matcher;
 public class ActionPrefixProcessFactory {
 
 
-    public static ActionPrefixProcess parse(String s){
+    /**
+     * Creates new action prefix process from complete string
+     * @param s
+     * @return
+     */
+    public static ActionPrefixProcess parseString(String s){
         ActionPrefixProcess F_c = null;
         //Separate process from labels, assure it is last
         RCCS.log("Creating prefix " + s);
@@ -42,4 +47,6 @@ public class ActionPrefixProcessFactory {
 
         return F_c;
     }
+
+    //TODO: parse
 }

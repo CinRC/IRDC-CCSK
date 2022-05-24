@@ -25,10 +25,9 @@ public class RCCS {
                         flags.add(flag);
 
 
-        ProcessTemplate template = null;
         CCSParser c = new CCSParser();
         try {
-            template = c.parseLine(args[0]);
+            ProcessTemplate template = c.parseLine(args[0]);
             log(String.format("Formula before complex init and minimization: %s", template.prettyString()));
             log("\nMinimizing and initializing function...");
             template.initComplex();

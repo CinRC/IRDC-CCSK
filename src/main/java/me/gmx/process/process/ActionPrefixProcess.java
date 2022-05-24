@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.LabelNode;
 
 import java.util.*;
@@ -32,11 +33,6 @@ public class ActionPrefixProcess extends Process {
     }
 
 
-    /**
-     * still deciding how to determine equivalency
-     * @param label
-     * @return
-     */
     @Override
     public boolean canAct(LabelNode label) {
         return prefix.equals(label);
@@ -64,11 +60,4 @@ public class ActionPrefixProcess extends Process {
     }
 
 
-    /**
-     * No longer needed
-     */
-    /*@Override
-    public String origin() {
-        return prefix.origin() + process.origin();
-    }*/
 }

@@ -92,20 +92,37 @@ public abstract class ComplexProcess extends Process{
         return template;
     }
 
+    @Override
+    public String represent(){
+        return super.represent(String.format(
+                "(%s)%s(%s)"
+                , left.origin()
+                , operator.toString()
+                , right.origin()
+        ));
+    }
+
     /**
      * Returns the 'debug' form of human readable representation
      * @return
      */
     @Override
     public String origin(){
-        StringBuilder b = new StringBuilder();
+        /*StringBuilder b = new StringBuilder();
         b.append(String.format("[%s]%s",getKey(), CCSGrammar.OP_SEQUENTIAL.toString()));
         b.append("(");
         if (left == null) b.append(""); else b.append(left.origin());
         b.append(operator);
         if (right == null) b.append(""); else b.append(right.origin());
         b.append(")");
+        return b.toString();*/
+        StringBuilder b = new StringBuilder();
+        if (left == null) b.append(""); else b.append(left.origin());
+        b.append(operator);
+        if (right == null) b.append(""); else b.append(right.origin());
         return b.toString();
+
+
     }
 
 }

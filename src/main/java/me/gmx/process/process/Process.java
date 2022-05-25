@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import me.gmx.RCCS;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.util.SetUtil;
@@ -65,7 +66,20 @@ public abstract class Process extends ProgramNode{
         return this.key;
     }
 
-    abstract String represent();
+    public abstract String represent();
+
+    protected String represent(String base){
+        String s = "";
+        s += hasKey() ? String.format("[Key: %s](%s)"
+                , getKey().origin()
+                , base)
+                : "(%s)";
+        s += !restrictions.isEmpty() ? String.format("\\{Restriction: %s}"
+                , SetUtil.csvSet(restrictions)) : "";
+        RCCS.log(s);
+        return s;
+
+    }
 
     public abstract Collection<Process> getChildren();
 

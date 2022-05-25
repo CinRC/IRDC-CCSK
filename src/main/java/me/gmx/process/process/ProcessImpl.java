@@ -30,9 +30,8 @@ public class ProcessImpl extends Process{
         return new NullProcess();
     }
 
-    @Override
     public String represent() {
-        return String.format("[Process(%s)]", origin);
+        return super.represent(origin());
     }
 
     @Override
@@ -47,7 +46,7 @@ public class ProcessImpl extends Process{
 
     @Override
     public String origin(){
-        return origin +".0";
+        return origin + ".0";
     }
 
 

@@ -38,7 +38,8 @@ public class CCSParser {
                  * It will skip labels and processes because I am CCSGrammar.ACTION
                  *
                  **/
-                if ((g.getClassObject() == null && g != CCSGrammar.OPEN_PARENTHESIS && g != CCSGrammar.CLOSE_PARENTHESIS) || g == CCSGrammar.LABEL || g == CCSGrammar.PROCESS)
+                if ((g.getClassObject() == null && g != CCSGrammar.OPEN_PARENTHESIS && g != CCSGrammar.CLOSE_PARENTHESIS)
+                        || g == CCSGrammar.LABEL || g == CCSGrammar.PROCESS || g == CCSGrammar.OUT_LABEL)
                     continue;
 
                 //Start matching memory with grammar
@@ -59,7 +60,6 @@ public class CCSParser {
                             continue;
                         }
                     }
-
                     RCCS.log("\nFound match!: " + m.group() + " INDEX: " + g.name());
 
                     if (g == CCSGrammar.OPEN_PARENTHESIS){
@@ -67,25 +67,26 @@ public class CCSParser {
                         inParenthesis = true;
                     }else if (g == CCSGrammar.ACTIONPREFIX_COMPLETE) {
                         RCCS.log("Parsing into action prefix...");
-                        template.add(ActionPrefixProcessFactory.parse(m.group()));
+                        template.add(ActionPrefixProcessFactory.parseString(m.group()));
                     }else if (g == CCSGrammar.OP_CONCURRENT){
                         RCCS.log("Parsing into concurrent...");
                         template.add(new ConcurrentProcess(null,null));
                     }else if (g == CCSGrammar.OP_SUMMATION){
                         RCCS.log("Parsing into summation...");
                         template.add(new SummationProcess(null,null));
-                    }/**
-                         * I was thinking about completely removing the distinction between processes and null
-                         * processes, but am unsure if that's the right way to go. If it turns out there is
-                         * no need for distinction, PROCESS can be changed to [A-Z0], and nothing else changes
-                         */
+                    }
+                    /**
+                     * I was thinking about completely removing the distinction between processes and null
+                     * processes, but am unsure if that's the right way to go. If it turns out there is
+                     * no need for distinction, PROCESS can be changed to [A-Z0], and nothing else changes
+                     */
                     else if (g == CCSGrammar.PROCESS || g == CCSGrammar.NULL_PROCESS){
                         continue;
                         //Do nothing for processes for now. I could change by rearranging CCSGRAMMAR precedence, but this is easier
                         //and if I need to process them separately in the future this will be the way.
                     }
                     if (!inParenthesis)
-                    walker.clearMemory();
+                        walker.clearMemory();
                 }
             }
 

@@ -6,9 +6,6 @@ import me.gmx.process.nodes.LabelNode;
 
 public class SummationProcess extends ComplexProcess{
 
-
-    public static String representString = "+";
-
     public SummationProcess(Process left, Process right) {
         super(left,right);
         operator = CCSGrammar.OP_SUMMATION;
@@ -34,10 +31,5 @@ public class SummationProcess extends ComplexProcess{
 
     }
 
-    @Override
-    public String represent() {
-        return String.format("[Summation(%s,%s)]",left.represent(),right.represent());
-    }
-    //a.b.V + c.a.P | b.Q
-    // prefix
+
 }

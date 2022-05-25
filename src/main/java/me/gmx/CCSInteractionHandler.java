@@ -1,11 +1,12 @@
 package me.gmx;
 
 import me.gmx.process.ProcessTemplate;
+import me.gmx.process.nodes.ComplementLabelNode;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.nodes.LabelNodeFactory;
+import me.gmx.util.SetUtil;
 
-import java.util.Collection;
-import java.util.Scanner;
+import java.util.*;
 
 public class CCSInteractionHandler {
 
@@ -21,8 +22,19 @@ public class CCSInteractionHandler {
         Scanner scan = new Scanner(System.in);
         while(!template.getActionableLabels().isEmpty()){
             System.out.println("------| Actionable Labels |------");
+            Set<LabelNode> actionable = template.getActionableLabels();
+            //Find complements for tau
+            HashMap<LabelNode, ComplementLabelNode> tauMatches
+                    = SetUtil.getTauMatches(actionable);
             for (LabelNode na : template.getActionableLabels()){
                 System.out.println(na.origin());
+            }
+            for (Map.Entry<LabelNode,ComplementLabelNode> e : tauMatches.entrySet()){
+                System.out.println(String.format(
+                        "Tau{%s, %s}"
+                        , e.getKey().origin()
+                        , e.getValue().origin()
+                ));
             }
             System.out.println("------------");
 
@@ -43,4 +55,6 @@ public class CCSInteractionHandler {
         }
         return true;
     }
+
+
 }

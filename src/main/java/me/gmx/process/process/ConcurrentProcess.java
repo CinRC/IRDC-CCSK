@@ -35,15 +35,4 @@ public class ConcurrentProcess extends ComplexProcess{
         return this;
     }
 
-    @Override
-    public String represent() {
-        return String.format("[Concurrent(%s, %s)]",left.represent(),right.represent());
-    }
-
-    @Override
-    public Collection<Process> getChildren() {
-        return Set.of(left, right);
-    }
-
-
 }

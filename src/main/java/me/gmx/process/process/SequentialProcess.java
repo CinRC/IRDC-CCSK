@@ -18,16 +18,12 @@ public class SequentialProcess extends ComplexProcess{
 
     @Override
     public boolean canAct(LabelNode label) {
-        return false;
+        return left.canAct(label);
     }
 
     @Override
     public Process act(LabelNode label) {
-        return null;
+        return left.act(label);
     }
 
-    @Override
-    public String represent() {
-        return null;
-    }
 }

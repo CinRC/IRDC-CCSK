@@ -1,5 +1,6 @@
 package me.gmx.process;
 
+import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;
 import me.gmx.parser.CCSTransitionException;
@@ -58,8 +59,9 @@ public class ProcessTemplate {
 
     public String prettyString(){
         StringBuilder sb = new StringBuilder();
-        for (Process o : tList)
+        for (Process o : tList) {
             sb.append(o.origin());
+        }
         return sb.toString();
     }
 

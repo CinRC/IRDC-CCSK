@@ -14,40 +14,33 @@ public class RCCS {
         String formula = "";
         Set<CCSFlag> flags = new HashSet<>();
         if (args.length == 0){
-            log("Incorrect arguments! Please use the form `java -jar RCCS.jar \"a.b|c.a\" <opt/flags>");
-
+            log("Incorrect arguments! Please use the form `java -jar RCCS.jar <opt/flags> \"a.b|c.a\"");
             System.exit(1);
         }
+
         if (args.length > 1)
             for (CCSFlag flag : CCSFlag.values())
-                for (int i = 1; i < args.length;i++)
+                for (int i = 0; i < args.length;i++)
                     if (flag.match(args[i]))
                         flags.add(flag);
 
-
         CCSParser c = new CCSParser();
         try {
-            ProcessTemplate template = c.parseLine(args[0]);
+            ProcessTemplate template = c.parseLine(args[flags.size()]);
             log(String.format("Formula before complex init and minimization: %s", template.prettyString()));
             log("\nMinimizing and initializing function...");
             template.initComplex();
             log(String.format("Formula after complex init and minimization: %s", template.prettyString()));
             if (CCSFlag.INTERACTIVE.check(flags))
                 new CCSInteractionHandler(template,flags).startInteraction();
-
         }catch(Exception e){
             e.printStackTrace();
         }
-
-
-
     }
-
 
     public static void log(String s){
         if (RCCS.DEBUG)
             System.out.println("[debug] " + s);
-
     }
 
     /**

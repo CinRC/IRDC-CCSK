@@ -1,8 +1,5 @@
 package me.gmx.process.nodes;
 
-import me.gmx.KeyGenerator;
-import me.gmx.process.process.ProgramNode;
-
 import java.util.UUID;
 
 public class LabelKey extends LabelNode {

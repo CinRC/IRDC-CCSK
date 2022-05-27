@@ -3,13 +3,14 @@ package me.gmx.process.process;
 import me.gmx.RCCS;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.LabelNode;
+import me.gmx.process.nodes.ProgramNode;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Process extends ProgramNode{
+public abstract class Process extends ProgramNode {
 
     //Storing a key to previous life
     LabelKey key = null;
@@ -21,15 +22,15 @@ public abstract class Process extends ProgramNode{
     Set<LabelNode> restrictions = new HashSet<>();
 
     public Process(String s) {
-        super(s);
+        origin = s;
     }
 
     public Process(){
-        super("0");
+        origin = "0";
     }
 
     public Process(String s, Collection<LabelNode> restrictions){
-        super(s);
+        origin = s;
         this.restrictions.addAll(restrictions);
     }
 

@@ -1,6 +1,7 @@
 package me.gmx.process.process;
 
 import me.gmx.RCCS;
+import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.nodes.ProgramNode;
@@ -19,7 +20,7 @@ public abstract class Process extends ProgramNode {
     //Note: This is NOT how it's going to work in the end. This is just a test
     Process previousLife = null;
 
-    Set<LabelNode> restrictions = new HashSet<>();
+    Set<Label> restrictions = new HashSet<>();
 
     public Process(String s) {
         origin = s;
@@ -29,7 +30,7 @@ public abstract class Process extends ProgramNode {
         origin = "0";
     }
 
-    public Process(String s, Collection<LabelNode> restrictions){
+    public Process(String s, Collection<Label> restrictions){
         origin = s;
         this.restrictions.addAll(restrictions);
     }
@@ -39,13 +40,11 @@ public abstract class Process extends ProgramNode {
      * @param label label to act on
      * @return True if given label is able to be acted on, false otherwise
      */
-    public boolean canAct(LabelNode label){
-        Collection<LabelNode> n = restrictions;
-        n.removeAll(restrictions);
-        return n.contains(label);
+    public boolean canAct(Label label){
+        return restrictions.contains(label);
     }
 
-    public abstract Process act(LabelNode label);
+    public abstract Process act(Label label);
 
     public boolean canReverse(LabelKey key){
         return hasKey() && getKey().equals(key);
@@ -77,14 +76,13 @@ public abstract class Process extends ProgramNode {
                 : "(%s)";
         s += !restrictions.isEmpty() ? String.format("\\{Restriction: %s}"
                 , SetUtil.csvSet(restrictions)) : "";
-        RCCS.log(s);
         return s;
 
     }
 
     public abstract Collection<Process> getChildren();
 
-    public abstract Collection<LabelNode> getActionableLabels();
+    public abstract Collection<Label> getActionableLabels();
 
     public String origin(){
         if (!restrictions.isEmpty())

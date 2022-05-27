@@ -13,11 +13,11 @@ public class ProcessFactory {
 
     public static Process determineRestriction(String s){
         Matcher m = CCSGrammar.RESTRICTION.match(s);
-        Set<LabelNode> re = null;
+        Set<Label> re = null;
         if (m.find()){
-            re = Set.of(LabelNodeFactory.parseNode(m.group()));
+            re = Set.of(LabelFactory.parseNode(m.group()));
             while(m.find()){
-                re.add(LabelNodeFactory.parseNode(m.group()));
+                re.add(LabelFactory.parseNode(m.group()));
             }
         }
 

@@ -5,9 +5,9 @@ import me.gmx.parser.CCSParserException;
 
 import java.util.regex.Matcher;
 
-public class LabelNodeFactory {
+public class LabelFactory {
 
-    public static LabelNode parseNode(String s){
+    public static Label parseNode(String s){
         Matcher m = CCSGrammar.OUT_LABEL.match(s);
         if (m.find()) {
             //System.out.println("Parsing out node " + s);

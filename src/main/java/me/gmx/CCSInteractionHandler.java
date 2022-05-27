@@ -1,9 +1,7 @@
 package me.gmx;
 
 import me.gmx.process.ProcessTemplate;
-import me.gmx.process.nodes.ComplementLabelNode;
-import me.gmx.process.nodes.LabelNode;
-import me.gmx.process.nodes.LabelNodeFactory;
+import me.gmx.process.nodes.*;
 import me.gmx.util.SetUtil;
 
 import java.util.*;
@@ -22,18 +20,18 @@ public class CCSInteractionHandler {
         Scanner scan = new Scanner(System.in);
         while(!template.getActionableLabels().isEmpty()){
             System.out.println("------| Actionable Labels |------");
-            Set<LabelNode> actionable = template.getActionableLabels();
+            Set<Label> actionable = template.getActionableLabels();
             //Find complements for tau
-            HashMap<LabelNode, ComplementLabelNode> tauMatches
-                    = SetUtil.getTauMatches(actionable);
-            for (LabelNode na : template.getActionableLabels()){
+            Collection<TauLabelNode> tauMatches = SetUtil.getTauMatches(actionable);
+
+            for (Label na : template.getActionableLabels()){
                 System.out.println(na.origin());
             }
-            for (Map.Entry<LabelNode,ComplementLabelNode> e : tauMatches.entrySet()){
+            for (TauLabelNode e : tauMatches){
                 System.out.println(String.format(
                         "Tau{%s, %s}"
-                        , e.getKey().origin()
-                        , e.getValue().origin()
+                        , e.getA().origin()
+                        , e.getB().origin()
                 ));
             }
             System.out.println("------------");
@@ -43,13 +41,14 @@ public class CCSInteractionHandler {
             String st = scan.next();
             //a.getActionableLabels()
             if (st == "") continue;
-            LabelNode n = LabelNodeFactory.parseNode(st);
+            Label n = LabelFactory.parseNode(st);
 
             try{
                 System.out.println(String.format("%s -%s-> %s",
                         template.prettyString(),n.origin(),template.actOn(n).prettyString()));
             }catch (Exception e){
                 System.out.println("Could not act on label!");
+                if (RCCS.DEBUG) e.printStackTrace();
             }
 
         }

@@ -2,14 +2,17 @@ package me.gmx;
 
 import me.gmx.parser.CCSParser;
 import me.gmx.process.ProcessTemplate;
-import me.gmx.process.nodes.LabelNode;
-import me.gmx.process.nodes.LabelNodeFactory;
 
 import java.util.*;
 
 public class RCCS {
     static Scanner scan;
+
+    //Print debug info?
     public static final boolean DEBUG = true;
+
+    //Should every channel parsed be given a unique ID? (This breaks things right now. I only leave it in for future use.
+    public static final boolean UNIQUE_CHANNELS = false;
     public static void main(String[] args){
         String formula = "";
         Set<CCSFlag> flags = new HashSet<>();

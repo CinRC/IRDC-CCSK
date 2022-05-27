@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelNode;
 
 import java.util.Collection;
@@ -11,12 +12,12 @@ public class NullProcess extends Process{
     }
 
     @Override
-    public boolean canAct(LabelNode label) {
+    public boolean canAct(Label label) {
         return false;
     }
 
     @Override
-    public Process act(LabelNode label) {
+    public Process act(Label label) {
         return this;
     }
 
@@ -31,7 +32,7 @@ public class NullProcess extends Process{
     }
 
     @Override
-    public Collection<LabelNode> getActionableLabels() {
+    public Collection<Label> getActionableLabels() {
         return Collections.emptySet();
     }
 

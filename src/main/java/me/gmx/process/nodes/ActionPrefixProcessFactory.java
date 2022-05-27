@@ -25,14 +25,14 @@ public class ActionPrefixProcessFactory {
         RCCS.log("Creating prefix " + s);
         ProcessTemplate template = new ProcessTemplate();
         StringWalker w = new StringWalker(s);
-        LinkedList<LabelNode> prefixes = new LinkedList<>();
+        LinkedList<Label> prefixes = new LinkedList<>();
         Process process = null;
         do{
             w.walk();
             Matcher m = CCSGrammar.OP_ACTIONPREFIX.match(w.readMemory());
             //Forward through the labels until no more...
             if (m.find()){
-                prefixes.add(LabelNodeFactory.parseNode(w.readMemory()));
+                prefixes.add(LabelFactory.parseNode(w.readMemory()));
                 w.clearMemory();
             }
             //No more labels, must be a process now or breaks syntax
@@ -40,7 +40,7 @@ public class ActionPrefixProcessFactory {
             }while(w.canWalk());
 
             Collections.reverse(prefixes);
-            for(LabelNode node : prefixes){
+            for(Label node : prefixes){
                 F_c = new ActionPrefixProcess(process, node);
                 process = F_c;
             }

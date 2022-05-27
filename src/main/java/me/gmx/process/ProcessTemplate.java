@@ -4,6 +4,7 @@ import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;
 import me.gmx.parser.CCSTransitionException;
+import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
@@ -65,8 +66,8 @@ public class ProcessTemplate {
         return sb.toString();
     }
 
-    public Set<LabelNode> getActionableLabels(){
-        Set<LabelNode> nodes = new HashSet<>();
+    public Set<Label> getActionableLabels(){
+        Set<Label> nodes = new HashSet<>();
         for(Process p : tList)
             nodes.addAll(p.getActionableLabels());
         return nodes;
@@ -86,12 +87,12 @@ public class ProcessTemplate {
         else return tList.get(0);
     }
 
-    public boolean canAct(LabelNode node){
+    public boolean canAct(Label node){
         return getActionableLabels().contains(node);
     }
 
 
-    public ProcessTemplate actOn(LabelNode node){
+    public ProcessTemplate actOn(Label node){
         for(int i = 0; i < tList.size();i++){
             Process p = tList.get(i);
             if (p.canAct(node)){

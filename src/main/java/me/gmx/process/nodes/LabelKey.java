@@ -2,13 +2,14 @@ package me.gmx.process.nodes;
 
 import java.util.UUID;
 
-public class LabelKey extends LabelNode {
+public class LabelKey extends Label {
 
     private UUID uuid;
 
-    public LabelKey(LabelNode node){
-        super(node.origin());
+    private Label from;
+    public LabelKey(Label node){
         this.uuid = UUID.randomUUID();
+        this.from = node;
     }
 
     /**
@@ -16,8 +17,7 @@ public class LabelKey extends LabelNode {
      * @param node
      * @param id
      */
-    public LabelKey(LabelNode node, UUID id){
-        super(node.origin());
+    public LabelKey(Label node, UUID id){
         this.uuid = id;
     }
 
@@ -29,6 +29,6 @@ public class LabelKey extends LabelNode {
 
     @Override
     public String origin() {
-        return null;
+        return String.format("[%s]",from.origin());
     }
 }

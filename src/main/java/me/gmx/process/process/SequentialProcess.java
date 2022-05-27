@@ -1,6 +1,7 @@
 package me.gmx.process.process;
 
 import me.gmx.parser.CCSGrammar;
+import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelNode;
 
 /**
@@ -17,12 +18,12 @@ public class SequentialProcess extends ComplexProcess{
     }
 
     @Override
-    public boolean canAct(LabelNode label) {
+    public boolean canAct(Label label) {
         return left.canAct(label);
     }
 
     @Override
-    public Process act(LabelNode label) {
+    public Process act(Label label) {
         return left.act(label);
     }
 

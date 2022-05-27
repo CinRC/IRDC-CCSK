@@ -5,10 +5,10 @@ import me.gmx.parser.CCSGrammar;
 /**
  * The "output" portion of a communication channel
  */
-public class ComplementLabelNode extends LabelNode{
+public class ComplementLabelNode extends Label{
 
     public ComplementLabelNode(String s) {
-        super(s);
+        origin = s;
         grammar = CCSGrammar.OUT_LABEL;
     }
 
@@ -16,9 +16,5 @@ public class ComplementLabelNode extends LabelNode{
         return this.origin();
     }
 
-    //TODO fix
-    public boolean equals(Object o){
-        return (o instanceof LabelNode) && (((LabelNode)o).origin().equals(this.origin()));
-    }
 
 }

@@ -1,13 +1,16 @@
 package me.gmx.process.process;
 
+import me.gmx.RCCS;
+import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.LabelNode;
+import me.gmx.util.SetUtil;
 
 import java.util.*;
 
 public class ActionPrefixProcess extends Process {
 
-    private LabelNode prefix;
+    private Label prefix;
     private Process process;
 
 
@@ -26,7 +29,7 @@ public class ActionPrefixProcess extends Process {
      */
 
 
-    public ActionPrefixProcess(Process process, LabelNode label){
+    public ActionPrefixProcess(Process process, Label label){
         super(label.origin() + "." + process.origin());
         this.process = process;
         this.prefix = label;
@@ -34,12 +37,12 @@ public class ActionPrefixProcess extends Process {
 
 
     @Override
-    public boolean canAct(LabelNode label) {
-        return prefix.equals(label);
+    public boolean canAct(Label label) {
+        return !restrictions.contains(label) && prefix.equals(label);
     }
 
     @Override
-    public Process act(LabelNode label) {
+    public Process act(Label label) {
         //System.out.println("Acting on " + label.origin() + " (actionprefix)");
         return process;
     }
@@ -55,7 +58,7 @@ public class ActionPrefixProcess extends Process {
     }
 
     @Override
-    public Collection<LabelNode> getActionableLabels(){
+    public Collection<Label> getActionableLabels(){
         return Collections.singleton(this.prefix);
     }
 

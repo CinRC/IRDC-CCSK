@@ -28,7 +28,6 @@ public abstract class Label extends ProgramNode{
             return (o instanceof Label)
                     && ((Label)o).getId().equals(getId());
         else {
-            RCCS.log("Str+ " + ((Label)o).origin() + " " + origin());
             return (o instanceof Label)
                     && ((Label) o).origin().equals(origin());
         }

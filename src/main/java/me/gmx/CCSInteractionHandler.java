@@ -22,25 +22,20 @@ public class CCSInteractionHandler {
             System.out.println("------| Actionable Labels |------");
             Set<Label> actionable = template.getActionableLabels();
             //Find complements for tau
-            Collection<TauLabelNode> tauMatches = SetUtil.getTauMatches(actionable);
+            actionable.addAll(SetUtil.getTauMatches(actionable));
+            //Print out labels
+            int i = 0;
+            for (Label na : template.getActionableLabels())
+                System.out.printf("[%d] %s%n",i++,na.origin());
 
-            for (Label na : template.getActionableLabels()){
-                System.out.println(na.origin());
-            }
-            for (TauLabelNode e : tauMatches){
-                System.out.println(String.format(
-                        "Tau{%s, %s}"
-                        , e.getA().origin()
-                        , e.getB().origin()
-                ));
-            }
             System.out.println("------------");
-
             System.out.println(String.format("%s", template.prettyString()));
             System.out.println("Please type the label you'd like to act on:");
             String st = scan.next();
-            //a.getActionableLabels()
-            if (st == "") continue;
+
+            //iNpUt VaLiDaTiOn
+            if (st == "")
+                continue;
             Label n = LabelFactory.parseNode(st);
 
             try{

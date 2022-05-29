@@ -34,8 +34,8 @@ public abstract class Label extends ProgramNode{
     }
 
     public boolean isComplementOf(Label node){
-        return node.origin().equals(String.format("\'%s", this.origin()))
-                || origin().equals(String.format("\'%s", node.origin()));
+        return node.origin().equals(String.format("'%s", this.origin()))
+                || origin().equals(String.format("'%s", node.origin()));
     }
 
 

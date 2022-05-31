@@ -8,14 +8,13 @@ import java.util.regex.Matcher;
 public class LabelFactory {
 
     public static Label parseNode(String s){
+        //TODO: for future reference, can check if start with ', then everything = complement
         Matcher m = CCSGrammar.OUT_LABEL.match(s);
         if (m.find()) {
-            //System.out.println("Parsing out node " + s);
             return new ComplementLabelNode(m.group());
         }
         m = CCSGrammar.LABEL.match(s);
         if (m.find()) {
-            //System.out.println("Parsing node " + s);
             return new LabelNode(m.group());
         }
 

@@ -20,7 +20,7 @@ public class CCSInteractionHandler {
         Scanner scan = new Scanner(System.in);
         while(!template.getActionableLabels().isEmpty()){
             System.out.println("------| Actionable Labels |------");
-            Set<Label> actionable = template.getActionableLabels();
+            ArrayList<Label> actionable = new ArrayList<Label>(template.getActionableLabels());
             //Find complements for tau
             actionable.addAll(SetUtil.getTauMatches(actionable));
             //Print out labels
@@ -30,13 +30,25 @@ public class CCSInteractionHandler {
 
             System.out.println("------------");
             System.out.println(String.format("%s", template.prettyString()));
-            System.out.println("Please type the label you'd like to act on:");
+            /*System.out.println("Please type the label you'd like to act on:");
             String st = scan.next();
 
             //iNpUt VaLiDaTiOn
             if (st == "")
                 continue;
-            Label n = LabelFactory.parseNode(st);
+
+            Label n = LabelFactory.parseNode(st);*/
+            System.out.println("Please input the index of the label you'd like to act on:");
+            String st = scan.next();
+            Label n;
+            if (st == "") continue;
+            try{
+                int in = Integer.parseInt(st);
+                n = (Label) template.getActionableLabels().toArray()[in];
+            } catch(Exception e){
+                System.out.println("Failed to recognize label!");
+                continue;
+            }
 
             try{
                 System.out.println(String.format("%s -%s-> %s",

@@ -42,7 +42,7 @@ public class ActionPrefixProcess extends Process {
     }
 
     @Override
-    public Process act(Label label) {
+    public Process actOn(Label label) {
         //System.out.println("Acting on " + label.origin() + " (actionprefix)");
         return process;
     }

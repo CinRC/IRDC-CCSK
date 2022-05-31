@@ -17,7 +17,7 @@ public class NullProcess extends Process{
     }
 
     @Override
-    public Process act(Label label) {
+    public Process actOn(Label label) {
         return this;
     }
 

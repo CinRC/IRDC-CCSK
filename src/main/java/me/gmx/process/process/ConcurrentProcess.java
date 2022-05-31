@@ -2,10 +2,6 @@ package me.gmx.process.process;
 
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
-
-import java.util.Collection;
-import java.util.Set;
 
 public class ConcurrentProcess extends ComplexProcess{
 
@@ -27,11 +23,11 @@ public class ConcurrentProcess extends ComplexProcess{
     }
 
     @Override
-    public Process act(Label label) {
+    public Process actOn(Label label) {
         if (left.canAct(label))
-            left = left.act(label);
+            left = left.actOn(label);
         if (right.canAct(label))
-            right = right.act(label);
+            right = right.actOn(label);
 
         return this;
     }

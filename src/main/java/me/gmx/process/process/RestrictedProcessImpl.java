@@ -1,7 +1,6 @@
 package me.gmx.process.process;
 
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.*;
@@ -29,8 +28,8 @@ public class RestrictedProcessImpl extends ProcessImpl {
     }
 
     @Override
-    public Process act(Label label) {
-        return process.act(label);
+    public Process actOn(Label label) {
+        return process.actOn(label);
     }
 
     @Override

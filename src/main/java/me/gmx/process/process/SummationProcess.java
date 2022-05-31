@@ -3,7 +3,6 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
 
 public class SummationProcess extends ComplexProcess{
 
@@ -23,11 +22,11 @@ public class SummationProcess extends ComplexProcess{
      * @return self-process, having acted on label
      */
     @Override
-    public Process act(Label label) {
+    public Process actOn(Label label) {
         if (left.canAct(label)) {
-            return left.act(label);
+            return left.actOn(label);
         }else if (right.canAct(label)){
-            return right.act(label);
+            return right.actOn(label);
         }else throw new CCSTransitionException(this,label);
 
     }

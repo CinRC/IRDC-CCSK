@@ -1,11 +1,9 @@
 package me.gmx.process;
 
-import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
 

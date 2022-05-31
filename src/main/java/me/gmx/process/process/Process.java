@@ -1,9 +1,7 @@
 package me.gmx.process.process;
 
-import me.gmx.RCCS;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.nodes.ProgramNode;
 import me.gmx.util.SetUtil;
 
@@ -44,7 +42,17 @@ public abstract class Process extends ProgramNode {
         return restrictions.contains(label);
     }
 
-    public abstract Process act(Label label);
+    protected abstract Process actOn(Label label);
+
+    public Process act(Label label){
+        rememberLife(label);
+        return this.actOn(label);
+    }
+
+    protected void rememberLife(Label label){
+        this.key = new LabelKey(label);
+        this.previousLife = this;
+    }
 
     public boolean canReverse(LabelKey key){
         return hasKey() && getKey().equals(key);

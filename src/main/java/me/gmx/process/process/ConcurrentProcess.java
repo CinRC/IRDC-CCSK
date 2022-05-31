@@ -6,7 +6,6 @@ import me.gmx.process.nodes.Label;
 public class ConcurrentProcess extends ComplexProcess{
 
 
-    public static String representString = "|";
     /**
      * @param left - left side me.gmx.process
      * @param right - right side me.gmx.process
@@ -15,7 +14,6 @@ public class ConcurrentProcess extends ComplexProcess{
         super(left,right);
         operator = CCSGrammar.OP_CONCURRENT;
     }
-
 
     @Override
     public boolean canAct(Label label) {

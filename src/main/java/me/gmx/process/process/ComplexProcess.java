@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.LabelNode;
 
 import java.util.*;
@@ -17,9 +18,10 @@ public abstract class ComplexProcess extends Process{
     CCSGrammar operator;
 
 
-    public ComplexProcess(Process left, Process right){
+    public ComplexProcess(Process left, Process right, CCSGrammar operator){
         this.left = left;
         this.right = right;
+        this.operator = operator;
     }
 
     /**
@@ -52,7 +54,7 @@ public abstract class ComplexProcess extends Process{
      */
     @Override
     public Collection<Label> getActionableLabels(){
-        Set<Label> s = new HashSet<>();
+        Collection<Label> s = super.getActionableLabels();
         s.addAll(left.getActionableLabels());
         s.addAll(right.getActionableLabels());
         return s;
@@ -97,9 +99,9 @@ public abstract class ComplexProcess extends Process{
     public String represent(){
         return super.represent(String.format(
                 "(%s)%s(%s)"
-                , left.origin()
+                , left == null ? "" : left.represent()
                 , operator.toString()
-                , right.origin()
+                , right == null ? "" : right.represent()
         ));
     }
 
@@ -111,11 +113,9 @@ public abstract class ComplexProcess extends Process{
     public String origin(){
         StringBuilder b = new StringBuilder();
 
-            b.append("(");
         if (left == null) b.append(""); else b.append(left.origin());
         b.append(operator);
         if (right == null) b.append(""); else b.append(right.origin());
-        b.append(")");
         return b.toString();
 
 

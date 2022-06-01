@@ -11,13 +11,12 @@ import java.util.regex.Matcher;
 
 public class CCSParser {
 
-    private List<Process> processes;
     public CCSParser(){
     }
 
 
 
-    public ProcessTemplate parseLine(String line){
+    public static ProcessTemplate parseLine(String line){
         StringWalker walker = new StringWalker(line);
         walker.setIgnore(' ');
 

@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.Set;
 
 public class ProcessImpl extends Process{
-    //Unimplemented
-    private Process next;
-
 
     public ProcessImpl(String s) {
         super(s);
@@ -19,6 +16,11 @@ public class ProcessImpl extends Process{
 
     public ProcessImpl(String s, Collection<Label> restrictions){
         super(s, restrictions);
+    }
+
+    @Override
+    protected Process clone() {
+        return new ProcessImpl(origin);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class ProcessImpl extends Process{
 
     @Override
     public Collection<Label> getActionableLabels() {
-        return Collections.emptySet();
+        return super.getActionableLabels();
     }
 
     @Override

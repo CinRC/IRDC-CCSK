@@ -59,7 +59,7 @@ public class ProcessTemplate {
     public String prettyString(){
         StringBuilder sb = new StringBuilder();
         for (Process o : tList) {
-            sb.append(o.origin());
+            sb.append(o.represent());
         }
         return sb.toString();
     }

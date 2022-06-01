@@ -31,9 +31,10 @@ public class NullProcess extends Process{
         return Collections.emptySet();
     }
 
+    //Not needed?
     @Override
     public Collection<Label> getActionableLabels() {
-        return Collections.emptySet();
+        return super.getActionableLabels();
     }
 
     @Override

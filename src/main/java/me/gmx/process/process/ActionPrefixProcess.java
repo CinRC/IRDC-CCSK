@@ -35,21 +35,42 @@ public class ActionPrefixProcess extends Process {
         this.prefix = label;
     }
 
-
+/*    *//**
+     * Gross code, but works for now. Alternatively, just reparse from origin()
+     * @return
+     *//*
     @Override
-    public boolean canAct(Label label) {
-        return !restrictions.contains(label) && prefix.equals(label);
+    protected Process clone() {
+        ArrayList<Label> prefixes = new ArrayList<>();
+        Process p = process;
+        while (p instanceof ActionPrefixProcess){
+            prefixes.add(((ActionPrefixProcess)p).getPrefix());
+            p = ((ActionPrefixProcess) p).getProcess();
+        }
+        Collections.reverse(prefixes);
+        Process pr = p.clone();
+        for (Label l : prefixes)
+            pr = new ActionPrefixProcess(pr,l);
+
+        return pr;
+    }*/
+
+    protected Label getPrefix(){
+        return prefix;
+    }
+
+    protected Process getProcess(){
+        return process;
     }
 
     @Override
     public Process actOn(Label label) {
-        //System.out.println("Acting on " + label.origin() + " (actionprefix)");
         return process;
     }
 
     @Override
     public String represent() {
-        return String.format("[%s.%s]",prefix.origin(),process.represent());
+        return super.represent(String.format("%s.%s",prefix.origin(),process.represent()));
     }
 
     @Override
@@ -59,7 +80,9 @@ public class ActionPrefixProcess extends Process {
 
     @Override
     public Collection<Label> getActionableLabels(){
-        return Collections.singleton(this.prefix);
+        Collection<Label> s = super.getActionableLabels();
+        s.add(prefix);
+        return s;
     }
 
 

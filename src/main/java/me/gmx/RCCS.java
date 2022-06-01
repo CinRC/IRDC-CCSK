@@ -10,9 +10,11 @@ public class RCCS {
 
     //Print debug info?
     public static final boolean DEBUG = true;
-
     //Should every channel parsed be given a unique ID? (This breaks things right now. I only leave it in for future use.
     public static final boolean UNIQUE_CHANNELS = false;
+    //Should reversal keys be treated as actionable labels?
+    public static final boolean KEYS_AS_LABELS = true;
+
     public static void main(String[] args){
         String formula = "";
         Set<CCSFlag> flags = new HashSet<>();

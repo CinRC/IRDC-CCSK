@@ -7,13 +7,7 @@ import me.gmx.process.nodes.Label;
 public class SummationProcess extends ComplexProcess{
 
     public SummationProcess(Process left, Process right) {
-        super(left,right);
-        operator = CCSGrammar.OP_SUMMATION;
-    }
-
-    @Override
-    public boolean canAct(Label label) {
-        return left.canAct(label) || right.canAct(label);
+        super(left,right,CCSGrammar.OP_SUMMATION);
     }
 
     /**
@@ -24,9 +18,9 @@ public class SummationProcess extends ComplexProcess{
     @Override
     public Process actOn(Label label) {
         if (left.canAct(label)) {
-            return left.actOn(label);
+            return left.act(label);
         }else if (right.canAct(label)){
-            return right.actOn(label);
+            return right.act(label);
         }else throw new CCSTransitionException(this,label);
 
     }

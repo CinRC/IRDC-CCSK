@@ -12,8 +12,7 @@ import me.gmx.process.nodes.Label;
 
 public class SequentialProcess extends ComplexProcess{
     public SequentialProcess(Process left, Process right) {
-        super(left, right);
-        operator = CCSGrammar.OP_SEQUENTIAL;
+        super(left, right, CCSGrammar.OP_SEQUENTIAL);
     }
 
     @Override

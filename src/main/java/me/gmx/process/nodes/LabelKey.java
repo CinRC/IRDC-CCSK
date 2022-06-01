@@ -31,4 +31,8 @@ public class LabelKey extends Label {
     public String origin() {
         return String.format("[%s]",from.origin());
     }
+
+    public Object clone(){
+        return new LabelKey((Label)from.clone(), from.getId());
+    }
 }

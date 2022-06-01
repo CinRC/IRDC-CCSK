@@ -21,21 +21,15 @@ public abstract class Process extends ProgramNode {
 
     Set<Label> restrictions = new HashSet<>();
 
-    public Process(String s) {
-        origin = s;
-    }
-
     public Process(){
-        origin = "0";
+
     }
 
-    public Process(String s, Collection<Label> restrictions){
-        origin = s;
+    public Process(Collection<Label> restrictions){
         this.restrictions.addAll(restrictions);
     }
 
-    public Process(String s, Collection<Label> restrictions, Process previousLife, LabelKey key){
-        origin = s;
+    public Process(Collection<Label> restrictions, Process previousLife, LabelKey key){
         this.restrictions.addAll(restrictions);
         this.previousLife = previousLife;
         this.key = key;
@@ -45,9 +39,15 @@ public abstract class Process extends ProgramNode {
     //tried to find another way, but shallow fakes are overwhelming and I
     //'already' have the code for this.
     protected Process clone(){
-        return CCSParser.parseLine(origin()).export();
+        Process p = CCSParser.parseLine(origin()).export();
+        if (previousLife != null)
+        p.setPastLife(CCSParser.parseLine(previousLife.origin()).export());
+        return p;
     }
 
+    protected void setPastLife(Process p){
+        this.previousLife = p;
+    }
     /**
      * Determines whether process can act on given label, without actually acting on it.
      * @param label label to act on
@@ -120,9 +120,7 @@ public abstract class Process extends ProgramNode {
         return l;
     }
 
-    public String origin(){
-        return origin;
-    }
+    public abstract String origin();
 
 
 }

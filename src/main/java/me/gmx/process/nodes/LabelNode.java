@@ -13,9 +13,17 @@ public class LabelNode extends Label {
         this.id = UUID.randomUUID();
     }
 
+    public LabelNode(String s, UUID id){
+        origin = s;
+        grammar = CCSGrammar.LABEL;
+        this.id = id;
+    }
+
     //Basically, check if given node is '[this] or [this] is '[given node]
     //TODO: fix
-
+    public Object clone(){
+        return new LabelNode(new String(origin), getId());
+    }
 
 
 }

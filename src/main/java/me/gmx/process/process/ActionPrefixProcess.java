@@ -1,6 +1,7 @@
 package me.gmx.process.process;
 
 import me.gmx.RCCS;
+import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.LabelNode;
@@ -10,7 +11,7 @@ import java.util.*;
 
 public class ActionPrefixProcess extends Process {
 
-    private Label prefix;
+    private LinkedList<Label> prefix;
     private Process process;
 
 
@@ -30,9 +31,23 @@ public class ActionPrefixProcess extends Process {
 
 
     public ActionPrefixProcess(Process process, Label label){
-        super(label.origin() + "." + process.origin());
+        this.origin = (label.origin() + "." + process.origin());
         this.process = process;
-        this.prefix = label;
+        this.prefix = new LinkedList<Label>();
+        this.prefix.add(label);
+    }
+
+    public ActionPrefixProcess(Process p, List<Label> labels){
+        String s = "";
+        for (Label label : labels){
+            s += label.origin();
+            s += ".";
+        }
+        s += p.represent();
+        this.origin = s;
+        this.process = process;
+        this.prefix = new LinkedList<Label>();
+        this.prefix.addAll(labels);
     }
 
 /*    *//**
@@ -56,7 +71,7 @@ public class ActionPrefixProcess extends Process {
     }*/
 
     protected Label getPrefix(){
-        return prefix;
+        return prefix.get(0);
     }
 
     protected Process getProcess(){
@@ -65,12 +80,19 @@ public class ActionPrefixProcess extends Process {
 
     @Override
     public Process actOn(Label label) {
-        return process;
+        List<Label> l = new ArrayList<>();
+        //Add every label except the first (because that's the one we act on)
+        for (int i = 1; i < prefix.size(); i++)
+            if (prefix.get(i).equals(label))
+                l.add((Label) prefix.get(i).clone());
+            else throw new CCSTransitionException(this, label);
+
+        return new ActionPrefixProcess(getProcess(), l);
     }
 
     @Override
     public String represent() {
-        return super.represent(String.format("%s.%s",prefix.origin(),process.represent()));
+        return super.represent(origin());
     }
 
     @Override
@@ -81,8 +103,13 @@ public class ActionPrefixProcess extends Process {
     @Override
     public Collection<Label> getActionableLabels(){
         Collection<Label> s = super.getActionableLabels();
-        s.add(prefix);
+        if (!prefix.isEmpty())
+            s.add(prefix.get(0));
         return s;
+    }
+
+    public String origin(){
+        return origin;
     }
 
 

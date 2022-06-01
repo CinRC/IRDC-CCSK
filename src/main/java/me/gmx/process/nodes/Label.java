@@ -38,5 +38,7 @@ public abstract class Label extends ProgramNode{
                 || origin().equals(String.format("'%s", node.origin()));
     }
 
+    public abstract Object clone();
+
 
 }

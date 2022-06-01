@@ -16,5 +16,8 @@ public class ComplementLabelNode extends Label{
         return this.origin();
     }
 
+    public Object clone(){
+        return new ComplementLabelNode(new String(origin));
+    }
 
 }

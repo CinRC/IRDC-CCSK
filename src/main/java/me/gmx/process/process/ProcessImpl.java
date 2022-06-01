@@ -11,16 +11,12 @@ import java.util.Set;
 public class ProcessImpl extends Process{
 
     public ProcessImpl(String s) {
-        super(s);
-    }
-
-    public ProcessImpl(String s, Collection<Label> restrictions){
-        super(s, restrictions);
+        this.origin = s;
     }
 
     @Override
     protected Process clone() {
-        return new ProcessImpl(origin);
+        return new ProcessImpl(new String(origin));
     }
 
     @Override

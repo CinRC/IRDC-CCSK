@@ -101,6 +101,13 @@ public class CCSParser {
                             template.add(new ActionPrefixProcess(new ProcessImpl(walker.readMemory()), prefixes));
                             prefixes.clear();
                         }
+                    }else if (g == CCSGrammar.NULL_PROCESS){
+                        if (prefixes.isEmpty())
+                            template.add(new NullProcess());
+                        else {
+                            template.add(new ActionPrefixProcess(new NullProcess(), prefixes));
+                            prefixes.clear();
+                        }
                     }else if (g == CCSGrammar.OP_CONCURRENT){
                         //RCCS.log("Parsing into concurrent...");
                         template.add(new ConcurrentProcess(null,null));

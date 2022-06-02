@@ -5,8 +5,15 @@ import java.util.Set;
 public class OriginMatchTest {
 
     public void OriginMatch(){
-        me.gmx.process.process.Process p = CCSParser.parseLine("a.b.P").export();
-        assert p.origin().equals("a.b.P");
+        String[] matchTest = new String[]{
+                "a.b.P",
+                "a|b",
+                "(a.b.P|a.b.P)",
+                "a.P|(a+b)"
+        };
+        //Basically, can a process be parsed and tokenized while retaining its properties
+        for (String s : matchTest)
+            assert CCSParser.parseLine(s).export().origin().equals(s);
 
 
     }

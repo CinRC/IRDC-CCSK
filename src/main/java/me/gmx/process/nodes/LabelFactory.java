@@ -7,6 +7,11 @@ import java.util.regex.Matcher;
 
 public class LabelFactory {
 
+    /**
+     * Simply matches the first node, ignores everything else
+     * @param s
+     * @return
+     */
     public static Label parseNode(String s){
         //TODO: for future reference, can check if start with ', then everything = complement
         Matcher m = CCSGrammar.OUT_LABEL.match(s);

@@ -2,6 +2,7 @@ package me.gmx.process.nodes;
 
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.CCSParser;
 import me.gmx.parser.StringWalker;
 import me.gmx.process.ProcessTemplate;
 import me.gmx.process.process.ActionPrefixProcess;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 
+@Deprecated
 public class ActionPrefixProcessFactory {
 
 
@@ -22,7 +24,7 @@ public class ActionPrefixProcessFactory {
     public static ActionPrefixProcess parseString(String s){
         ActionPrefixProcess F_c = null;
         //Separate process from labels, assure it is last
-        RCCS.log("Creating prefix " + s);
+        //RCCS.log("Creating prefix " + s);
         StringWalker w = new StringWalker(s);
         LinkedList<Label> prefixes = new LinkedList<>();
         Process process;
@@ -35,7 +37,14 @@ public class ActionPrefixProcessFactory {
                 w.clearMemory();
             }
             //No more labels, must be a process now or breaks syntax
-            process = ProcessFactory.determineRestriction(w.look());
+            //a.b.P
+            //a.b.(c+z)
+            //If acting as a sequential process, it MUST use parenthesis or it will fail
+            if (w.look().startsWith("(")){
+                process = CCSParser.parseLine(w.look()).export();
+            }else{
+                process = ProcessFactory.determineRestriction(w.look());
+            }
             }while(w.canWalk());
 
             Collections.reverse(prefixes);
@@ -44,5 +53,4 @@ public class ActionPrefixProcessFactory {
         return F_c;
     }
 
-    //TODO: parse
 }

@@ -24,15 +24,15 @@ public class ActionPrefixProcess extends Process {
      * Prefixes are nested, so instead of having a single
      * prefix me.gmx.process with a list of prefixes, they will
      * recursively nest eachother as prefix(prefix(prefix(P),c),b),a)
-     * @param process Underlying process to be accessed via label
+     * @param p Underlying process to be accessed via label
      * @param label Label used to access underlying process
      * a.b.c.P --> c.P, b.(c.P), a.(b.(c.P))
      */
 
 
-    public ActionPrefixProcess(Process process, Label label){
-        this.origin = (label.origin() + "." + process.origin());
-        this.process = process;
+    public ActionPrefixProcess(Process p, Label label){
+        this.origin = (label.origin() + "." + p.origin());
+        this.process = p;
         this.prefix = new LinkedList<Label>();
         this.prefix.add(label);
     }
@@ -45,7 +45,7 @@ public class ActionPrefixProcess extends Process {
         }
         s += p.represent();
         this.origin = s;
-        this.process = process;
+        this.process = p;
         this.prefix = new LinkedList<Label>();
         this.prefix.addAll(labels);
     }
@@ -82,9 +82,10 @@ public class ActionPrefixProcess extends Process {
     public Process actOn(Label label) {
         List<Label> l = new ArrayList<>();
         //Add every label except the first (because that's the one we act on)
-        for (int i = 1; i < prefix.size(); i++)
-            if (prefix.get(i).equals(label))
-                l.add((Label) prefix.get(i).clone());
+        if (prefix.get(0).equals(label))
+            for (int i = 1; i < prefix.size(); i++)
+                //Clone here?
+                l.add((Label) prefix.get(i));
             else throw new CCSTransitionException(this, label);
 
         return new ActionPrefixProcess(getProcess(), l);

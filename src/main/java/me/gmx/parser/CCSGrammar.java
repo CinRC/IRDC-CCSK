@@ -1,6 +1,7 @@
 package me.gmx.parser;
 
 import me.gmx.process.nodes.ComplementLabelNode;
+import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.process.*;
 
@@ -17,8 +18,10 @@ public enum CCSGrammar {
     NULL_PROCESS("[0]",NullProcess.class,"0"),
     OP_SEQUENTIAL("\\.", null, "."),
     OUT_LABEL(String.format("'%s",LABEL.pString), ComplementLabelNode.class, null),
-    OP_ACTIONPREFIX(String.format("((%s)|(%s))%s",
+    OP_ACTIONPREFIX(String.format("(%s)|(%s)%s",
             LABEL.pString,OUT_LABEL.pString,OP_SEQUENTIAL.pString),null, null),
+    LABEL_COMBINED(String.format("(%s)|(%s)",
+            LABEL.pString,OUT_LABEL.pString), Label.class, null),
     OP_ACTIONPREFIX_REVERSE(String.format("%s(%s|%s)", OP_SEQUENTIAL.pString,LABEL.pString,OUT_LABEL.pString),null, null),
     ACTIONPREFIX_COMPLETE(String.format("(%s)*%s",OP_ACTIONPREFIX.pString,PROCESS.pString), ActionPrefixProcess.class, null),
     OP_CONCURRENT("\\|", ConcurrentProcess.class, "|"),

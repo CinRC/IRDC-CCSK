@@ -22,6 +22,7 @@ public abstract class ComplexProcess extends Process{
         this.left = left;
         this.right = right;
         this.operator = operator;
+        this.origin = origin();
     }
 
     /**

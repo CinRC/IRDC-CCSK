@@ -68,11 +68,34 @@ public class StringWalker implements Iterable<Character>, CharSequence{
     }
 
     /**
+     * Overload walk method
+     * @param readMemory Should memory be stored?
+     */
+    public void walk(boolean readMemory){
+        if (!canWalk())
+            throw new IndexOutOfBoundsException(
+                    String.format("String walker cannot walk to index %d with string length %d",
+                            curPos, length()));
+        curPos += getDirection().inc;
+        if (readMemory)
+            if (!ignore.contains(read()))
+                memory.addLast(read());
+    }
+
+    /**
      * Looks ahead to the rest of the string it has to walk, in addition to its own memory
      * @return The memory it would return if it were to walk until the end of the string
      */
     public String look(){
         return readMemory() + stringBase.substring(this.curPos+1,this.length);
+    }
+
+    /**
+     * Look at the next character
+     * @return Next character in order
+     */
+    public String peek(){
+        return String.valueOf(charAt(curPos+ getDirection().inc));
     }
 
     /**

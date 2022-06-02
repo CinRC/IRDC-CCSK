@@ -2,16 +2,16 @@ package me.gmx.process.process;
 
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
-public class ProcessImpl extends Process{
+public class LabelProcess extends Process{
 
-    public ProcessImpl(String s) {
-        this.origin = s;
+    private Label label;
+    public LabelProcess(Label label){
+        this.origin = label.origin();
+        this.label = label;
     }
 
     @Override
@@ -19,14 +19,20 @@ public class ProcessImpl extends Process{
         return new ProcessImpl(new String(origin));
     }
 
+    public Label getLabel(){
+        return label;
+    }
+
     @Override
     public boolean canAct(Label label) {
-        return false;
+        return getLabel().equals(label);
     }
 
     @Override
     public Process actOn(Label label) {
-        return new NullProcess();
+        if (!canAct(label))
+            return new NullProcess();
+        else throw new CCSTransitionException(this, label);
     }
 
     public String represent() {
@@ -47,7 +53,5 @@ public class ProcessImpl extends Process{
     public String origin(){
         return origin;
     }
-
-
 
 }

@@ -21,7 +21,8 @@ public class LabelNode extends Label {
 
     //Basically, check if given node is '[this] or [this] is '[given node]
     //TODO: fix
-    public Object clone(){
+    @Override
+    public LabelNode clone(){
         return new LabelNode(new String(origin), getId());
     }
 

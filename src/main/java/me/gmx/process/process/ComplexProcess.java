@@ -118,8 +118,8 @@ public abstract class ComplexProcess extends Process{
         b.append(operator);
         if (right == null) b.append(""); else b.append(right.origin());
         return b.toString();
-
-
     }
+
+    public abstract ComplexProcess clone();
 
 }

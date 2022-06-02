@@ -24,7 +24,8 @@ public class TauLabelNode extends Label {
         return complement;
     }
 
-    public Object clone(){
+    @Override
+    public TauLabelNode clone(){
         return new TauLabelNode((Label) getA().clone(),(Label) getB().clone());
     }
 

@@ -21,6 +21,9 @@ public abstract class Process extends ProgramNode {
 
     Set<Label> restrictions = new HashSet<>();
 
+    //Is this process capable of remembering a past life
+    protected boolean canHoldLife = true;
+
     public Process(){
 
     }
@@ -41,7 +44,7 @@ public abstract class Process extends ProgramNode {
     protected Process clone(){
         Process p = CCSParser.parseLine(origin()).export();
         if (previousLife != null)
-        p.setPastLife(CCSParser.parseLine(previousLife.origin()).export());
+            p.setPastLife(CCSParser.parseLine(previousLife.origin()).export());
         return p;
     }
 
@@ -62,11 +65,15 @@ public abstract class Process extends ProgramNode {
 
     protected abstract Process actOn(Label label);
 
+    //Currently, I am unsure if I should leave this as a method that returns a process,
+    //Because it usually just returns this;. It may be a good move to change this to
+    //a void method. I have not decided which is best. I could also just have act return clone(),
+    //but thinking into the future, that would be super inefficient.
     public Process act(Label label){
         if (label instanceof LabelKey)
             return previousLife;
-
-        rememberLife(label);
+        if (canHoldLife)
+            rememberLife(label);
         return this.actOn(label);
     }
 

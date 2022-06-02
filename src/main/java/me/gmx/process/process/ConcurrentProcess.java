@@ -13,26 +13,23 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     public ConcurrentProcess(Process left, Process right) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
+        this.canHoldLife = false;
     }
 
 
     //TODO: Need to clone instead of copy reference, while still carrying over past life
     @Override
     public Process actOn(Label label) {
-
         if (left.canAct(label))
             left = left.act(label);
         if (right.canAct(label))
             right = right.act(label);
         return this;
-/*
-        if (left.canAct(label))
-            return new ConcurrentProcess(left.act(label), right);
-        if (right.canAct(label))
-            return new ConcurrentProcess(left, right.act(label));
-*/
+    }
 
-        //else throw new CCSTransitionException(this, label);
+    @Override
+    public ConcurrentProcess clone(){
+        return new ConcurrentProcess(left.clone(), right.clone());
     }
 
 }

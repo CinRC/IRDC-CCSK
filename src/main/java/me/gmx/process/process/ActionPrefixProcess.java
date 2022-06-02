@@ -1,17 +1,13 @@
 package me.gmx.process.process;
 
-import me.gmx.RCCS;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.LabelNode;
-import me.gmx.util.SetUtil;
 
 import java.util.*;
 
 public class ActionPrefixProcess extends Process {
 
-    private LinkedList<Label> prefix;
+    private LinkedList<Label> prefixes;
     private Process process;
 
 
@@ -33,8 +29,8 @@ public class ActionPrefixProcess extends Process {
     public ActionPrefixProcess(Process p, Label label){
         this.origin = (label.origin() + "." + p.origin());
         this.process = p;
-        this.prefix = new LinkedList<Label>();
-        this.prefix.add(label);
+        this.prefixes = new LinkedList<Label>();
+        this.prefixes.add(label);
     }
 
     public ActionPrefixProcess(Process p, List<Label> labels){
@@ -46,32 +42,30 @@ public class ActionPrefixProcess extends Process {
         s += p.represent();
         this.origin = s;
         this.process = p;
-        this.prefix = new LinkedList<Label>();
-        this.prefix.addAll(labels);
+        this.prefixes = new LinkedList<Label>();
+        this.prefixes.addAll(labels);
     }
 
-/*    *//**
-     * Gross code, but works for now. Alternatively, just reparse from origin()
+    /**
+     * Clones process
      * @return
-     *//*
+     */
+    //Do clones need to remember their past lives? I am actually not sure. Seems like an ethical question
     @Override
     protected Process clone() {
-        ArrayList<Label> prefixes = new ArrayList<>();
-        Process p = process;
-        while (p instanceof ActionPrefixProcess){
-            prefixes.add(((ActionPrefixProcess)p).getPrefix());
-            p = ((ActionPrefixProcess) p).getProcess();
+        LinkedList<Label> prf = new LinkedList<>();
+        prf.addAll(prefixes);
+        ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), prf);
+        if (previousLife != null) {
+            p.setPastLife(previousLife.clone());
+            p.key = key.clone();
         }
-        Collections.reverse(prefixes);
-        Process pr = p.clone();
-        for (Label l : prefixes)
-            pr = new ActionPrefixProcess(pr,l);
 
-        return pr;
-    }*/
+        return p;
+    }
 
     protected Label getPrefix(){
-        return prefix.get(0);
+        return prefixes.get(0);
     }
 
     protected Process getProcess(){
@@ -82,10 +76,10 @@ public class ActionPrefixProcess extends Process {
     public Process actOn(Label label) {
         List<Label> l = new ArrayList<>();
         //Add every label except the first (because that's the one we act on)
-        if (prefix.get(0).equals(label))
-            for (int i = 1; i < prefix.size(); i++)
+        if (prefixes.get(0).equals(label))
+            for (int i = 1; i < prefixes.size(); i++)
                 //Clone here?
-                l.add((Label) prefix.get(i));
+                l.add((Label) prefixes.get(i));
             else throw new CCSTransitionException(this, label);
 
         return new ActionPrefixProcess(getProcess(), l);
@@ -104,8 +98,8 @@ public class ActionPrefixProcess extends Process {
     @Override
     public Collection<Label> getActionableLabels(){
         Collection<Label> s = super.getActionableLabels();
-        if (!prefix.isEmpty())
-            s.add(prefix.get(0));
+        if (!prefixes.isEmpty())
+            s.add(prefixes.get(0));
         return s;
     }
 

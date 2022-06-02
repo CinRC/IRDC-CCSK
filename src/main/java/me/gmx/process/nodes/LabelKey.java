@@ -32,7 +32,7 @@ public class LabelKey extends Label {
         return String.format("[%s]",from.origin());
     }
 
-    public Object clone(){
+    public LabelKey clone(){
         return new LabelKey((Label)from.clone(), from.getId());
     }
 }

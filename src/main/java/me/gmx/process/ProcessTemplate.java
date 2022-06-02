@@ -91,10 +91,10 @@ public class ProcessTemplate {
 
 
     public ProcessTemplate actOn(Label node){
-        for(int i = 0; i < tList.size();i++){
+        for(int i = 0; i < tList.size();i++) {
             Process p = tList.get(i);
-            if (p.canAct(node)){
-                tList.set(i,p.act(node));
+            if (p.canAct(node)) {
+                tList.set(i, p.act(node));
                 return this;
             }
         }

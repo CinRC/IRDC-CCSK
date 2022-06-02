@@ -10,6 +10,7 @@ import me.gmx.process.nodes.Label;
  * as a complex process
  */
 
+@Deprecated
 public class SequentialProcess extends ComplexProcess{
     public SequentialProcess(Process left, Process right) {
         super(left, right, CCSGrammar.OP_SEQUENTIAL);
@@ -23,6 +24,11 @@ public class SequentialProcess extends ComplexProcess{
     @Override
     public Process actOn(Label label) {
         return left.actOn(label);
+    }
+
+    @Override
+    public SequentialProcess clone(){
+        return new SequentialProcess(left.clone(), right.clone());
     }
 
 }

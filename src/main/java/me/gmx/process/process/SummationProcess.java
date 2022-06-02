@@ -25,5 +25,11 @@ public class SummationProcess extends ComplexProcess{
 
     }
 
+    //TODO: Prev life
+    @Override
+    public SummationProcess clone(){
+        return new SummationProcess(left.clone(), right.clone());
+    }
+
 
 }

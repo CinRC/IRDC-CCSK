@@ -20,6 +20,7 @@ public class CCSParser {
 
 
     public static ProcessTemplate parseLine(String line){
+        RCCS.log("Starting parsing of " + line);
         StringWalker walker = new StringWalker(line);
         walker.setIgnore(' ');
 
@@ -28,10 +29,33 @@ public class CCSParser {
         boolean inParenthesis = false;
         LinkedList<Label> prefixes = new LinkedList<>();
 
-        while(walker.canWalk()){
+        do{
             walker.walk();
-            RCCS.log(String.format("Begin matching with memory %s",walker.readMemory()));
-            for (CCSGrammar g : CCSGrammar.values()) {
+            RCCS.log(String.format("Begin matching with memory %s, counter: %d",walker.readMemory(), counter));
+
+
+            if (CCSGrammar.OPEN_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
+                counter++;
+                //If it's the first parenthesis (opening) then delete first one
+                inParenthesis = true;
+            }
+
+            if (inParenthesis) {
+                if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
+                    counter--;
+                    if (counter == 0) {
+                        template.add(parseLine(walker.readMemory()//sub to remove paren
+                                .substring(1,walker.readMemory().length()-1)).export());
+                        inParenthesis = false;
+                        walker.clearMemory();
+                    }
+                }
+            }
+
+
+
+                if (!inParenthesis)
+                for (CCSGrammar g : CCSGrammar.values()) {
                 /**"Skip if:
                  * 1. The grammar does not have an initializable class AND the grammar is not a parenthesis
                  * OR
@@ -41,9 +65,7 @@ public class CCSParser {
                  *
                  **/
                 if (
-                        (g.getClassObject() == null
-                        && g != CCSGrammar.OPEN_PARENTHESIS
-                        && g != CCSGrammar.CLOSE_PARENTHESIS)
+                        g.getClassObject() == null
 
                         || g == CCSGrammar.LABEL
                         //|| g == CCSGrammar.PROCESS
@@ -53,32 +75,15 @@ public class CCSParser {
                 )
                     continue;
 
-                //Start matching memory with grammar
+
+
+
                 Matcher m = g.match(walker.readMemory());
                 if (m.find()){
                     RCCS.log("Found match: " + m.group() + " Grammar: " + g.name());
                     //While in parenthesis, do not match anything. Simply move to the closing parenthesis and send memory to this function for reparsing
-                    if (inParenthesis) {
-                        if (g == CCSGrammar.CLOSE_PARENTHESIS) {
-                            counter--;
-                            if (counter == 0) {
-                                //RCCS.log("Parenthesis close: " + walker.readMemory());
-                                template.add(parseLine(walker.readMemory()//sub to remove paren
-                                        .substring(1,walker.readMemory().length()-1)).export());
-                                inParenthesis = false;
-                            }
-                        }else {
-                            //RCCS.log("Started, so no matching");
-                            continue;
-                        }
 
-                    }
-                    //RCCS.log("\nFound match!: " + m.group() + " INDEX: " + g.name());
-
-                    if (g == CCSGrammar.OPEN_PARENTHESIS){
-                        counter++;
-                        inParenthesis = true;
-                    }else if (g == CCSGrammar.LABEL_COMBINED) { //a , 'b , c
+                    if (g == CCSGrammar.LABEL_COMBINED) { //a , 'b , c
                         RCCS.log("Adding prefix: " + m.group());
                         prefixes.add(LabelFactory.parseNode(m.group()));
                         //If there is a . after label, then skip over it and continue.
@@ -105,12 +110,14 @@ public class CCSParser {
                     }else if (g == CCSGrammar.OP_SEQUENTIAL){
                         RCCS.log("Found sequential match: " + m.group());
                     }
-                    if (!inParenthesis)
-                        walker.clearMemory();
+
+
+                    walker.clearMemory();
                 }
             }
 
-        }
+        }while(walker.canWalk());
+
         return template;
     }
 

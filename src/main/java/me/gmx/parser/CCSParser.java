@@ -33,7 +33,6 @@ public class CCSParser {
             walker.walk();
             RCCS.log(String.format("Begin matching with memory %s, counter: %d",walker.readMemory(), counter));
 
-
             if (CCSGrammar.OPEN_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
                 counter++;
                 //If it's the first parenthesis (opening) then delete first one
@@ -51,9 +50,6 @@ public class CCSParser {
                     }
                 }
             }
-
-
-
                 if (!inParenthesis)
                 for (CCSGrammar g : CCSGrammar.values()) {
                 /**"Skip if:
@@ -71,27 +67,24 @@ public class CCSParser {
                         //|| g == CCSGrammar.PROCESS
                         || g == CCSGrammar.OUT_LABEL
                         || g == CCSGrammar.ACTIONPREFIX_COMPLETE
-
                 )
                     continue;
-
-
-
-
                 Matcher m = g.match(walker.readMemory());
                 if (m.find()){
                     RCCS.log("Found match: " + m.group() + " Grammar: " + g.name());
                     //While in parenthesis, do not match anything. Simply move to the closing parenthesis and send memory to this function for reparsing
-
                     if (g == CCSGrammar.LABEL_COMBINED) { //a , 'b , c
                         RCCS.log("Adding prefix: " + m.group());
                         prefixes.add(LabelFactory.parseNode(m.group()));
                         //If there is a . after label, then skip over it and continue.
-                        if (walker.peek().equals(CCSGrammar.OP_SEQUENTIAL.toString())) {
+                        if (!walker.canWalk()){
+                            template.add(new ActionPrefixProcess(new NullProcess(), prefixes));
+                            prefixes.clear();
+                        }else if (walker.peek().equals(CCSGrammar.OP_SEQUENTIAL.toString())) {
                             walker.walk(false);
                         //If there is no ., then treat it as an implicit "Z" process
                         }else {
-                            template.add(new ActionPrefixProcess(new ProcessImpl("Z"), prefixes));
+                            template.add(new ActionPrefixProcess(new NullProcess(), prefixes));
                             prefixes.clear();
                         }
                     }else if (g == CCSGrammar.PROCESS){

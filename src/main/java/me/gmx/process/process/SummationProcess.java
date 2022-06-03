@@ -3,6 +3,11 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.util.SetUtil;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class SummationProcess extends ComplexProcess{
 
@@ -31,5 +36,14 @@ public class SummationProcess extends ComplexProcess{
         return new SummationProcess(left.clone(), right.clone());
     }
 
+    /**
+     * Overriden method to reflect the fact that a summation process can, by definition
+     * not be synchronized across both of its child processes.
+     * @return
+     */
+    @Override
+    public Collection<TauLabelNode> getTauMatches(Collection<Label> labels){
+        return Collections.emptySet();
+    }
 
 }

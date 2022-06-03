@@ -3,8 +3,6 @@ package me.gmx.process.process;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.LabelNode;
 
 import java.util.*;
 
@@ -50,7 +48,7 @@ public abstract class ComplexProcess extends Process{
     }
 
     /**
-     *
+     * Returns collection of labels to be acted on
      * @return Collection of all labels that can be acted upon
      */
     @Override

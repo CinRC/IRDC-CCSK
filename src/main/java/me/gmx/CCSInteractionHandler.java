@@ -53,6 +53,7 @@ public class CCSInteractionHandler {
             try{
                 System.out.println(String.format("%s -%s-> %s",
                         template.prettyString(),n.origin(),template.actOn(n).prettyString()));
+
             }catch (Exception e){
                 System.out.println("Could not act on label!");
                 if (RCCS.DEBUG) e.printStackTrace();

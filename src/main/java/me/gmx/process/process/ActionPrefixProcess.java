@@ -95,6 +95,11 @@ public class ActionPrefixProcess extends Process {
         return Collections.singleton(process);
     }
 
+    /**
+     * Get actionable labels for given process. This process will only ever return a single prefix,
+     * so we do not need to worry about tau nodes
+     * @return
+     */
     @Override
     public Collection<Label> getActionableLabels(){
         Collection<Label> s = super.getActionableLabels();

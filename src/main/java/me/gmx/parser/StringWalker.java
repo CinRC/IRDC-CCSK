@@ -107,7 +107,7 @@ public class StringWalker implements Iterable<Character>, CharSequence{
 
     /**
      * Reads walker memory. Does not clear
-     * @return Memory as an ArrayDequeue
+     * @return Memory as a string
      */
     public String readMemory() {
         StringBuilder sb = new StringBuilder();

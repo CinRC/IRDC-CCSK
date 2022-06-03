@@ -1,7 +1,6 @@
 package me.gmx.process.process;
 
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
 
 import java.util.Collection;
 import java.util.Collections;

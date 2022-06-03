@@ -15,8 +15,8 @@ public class SetUtil {
         if (set.isEmpty())
             return "";
         StringBuilder sb = new StringBuilder();
-        for (Object o : set){
-            sb.append(o.toString());
+        for (Label o : set){
+            sb.append(o.origin());
             sb.append(",");
         }
         sb.deleteCharAt(sb.length()-1);

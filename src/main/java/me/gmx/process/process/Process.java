@@ -5,6 +5,7 @@ import me.gmx.parser.CCSParser;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -120,14 +121,23 @@ public abstract class Process extends ProgramNode {
 
     public abstract Collection<Process> getChildren();
 
+    /**
+     * Base superclass method for getting labels. Only adds any keys
+     * @return
+     */
     public Collection<Label> getActionableLabels(){
         Set<Label> l = new HashSet<>();
         if (RCCS.KEYS_AS_LABELS && hasKey())
             l.add(getKey());
+
         return l;
     }
 
     public abstract String origin();
+
+    public Collection<TauLabelNode> getTauMatches(Collection<Label> labels){
+        return SetUtil.getTauMatches(labels);
+    }
 
 
 }

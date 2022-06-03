@@ -68,6 +68,8 @@ public class ProcessTemplate {
         Set<Label> nodes = new HashSet<>();
         for(Process p : tList)
             nodes.addAll(p.getActionableLabels());
+
+
         return nodes;
     }
 

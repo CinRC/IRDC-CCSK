@@ -11,6 +11,7 @@ import java.util.*;
 
 public class SetUtil {
 
+
     public static String csvSet(Collection<Label> set){
         if (set.isEmpty())
             return "";
@@ -23,6 +24,11 @@ public class SetUtil {
         return sb.toString();
     }
 
+    /**
+     * Returns a hashset of TauLabelNodes representing matching complements of labels provided in the given collection
+     * @param nodes Collection of Labels to find tau matches from
+     * @return Set of TauLabelNode that apply to the given collection
+     */
     public static Collection<TauLabelNode> getTauMatches(Collection<Label> nodes){
         Set<TauLabelNode> tau = new HashSet<>();
         for (Label node : nodes){

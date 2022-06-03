@@ -48,7 +48,7 @@ public class ActionPrefixProcess extends Process {
 
     /**
      * Clones process
-     * @return
+     * @return Deep clone (hopefully) of this process
      */
     //Do clones need to remember their past lives? I am actually not sure. Seems like an ethical question
     @Override
@@ -90,6 +90,10 @@ public class ActionPrefixProcess extends Process {
         return super.represent(origin());
     }
 
+    /**
+     * Gets child processes
+     * @return ActionPrefixProcess will always return only a single child process
+     */
     @Override
     public Collection<Process> getChildren() {
         return Collections.singleton(process);
@@ -98,7 +102,7 @@ public class ActionPrefixProcess extends Process {
     /**
      * Get actionable labels for given process. This process will only ever return a single prefix,
      * so we do not need to worry about tau nodes
-     * @return
+     * @return Set of actionable labels
      */
     @Override
     public Collection<Label> getActionableLabels(){

@@ -3,6 +3,9 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.util.SetUtil;
+
+import java.util.Collection;
 
 public class ConcurrentProcess extends ComplexProcess{
 
@@ -30,6 +33,19 @@ public class ConcurrentProcess extends ComplexProcess{
     @Override
     public ConcurrentProcess clone(){
         return new ConcurrentProcess(left.clone(), right.clone());
+    }
+
+    /**
+     * Returns a set of labels that can be acted on, including tau matches. Theoretically, this is the only
+     * process that should be able to support synchronizations.
+     * @return Set of labels that can be acted on, including tau matches
+     */
+    @Override
+    public Collection<Label> getActionableLabels(){
+        Collection<Label> l = super.getActionableLabels();
+        if (!l.isEmpty())
+            l.addAll(SetUtil.getTauMatches(l));
+        return l;
     }
 
 }

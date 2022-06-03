@@ -129,15 +129,14 @@ public abstract class Process extends ProgramNode {
         Set<Label> l = new HashSet<>();
         if (RCCS.KEYS_AS_LABELS && hasKey())
             l.add(getKey());
+        if (!l.isEmpty())
+            l.addAll(SetUtil.getTauMatches(l));
 
         return l;
     }
 
     public abstract String origin();
 
-    public Collection<TauLabelNode> getTauMatches(Collection<Label> labels){
-        return SetUtil.getTauMatches(labels);
-    }
 
 
 }

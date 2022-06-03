@@ -36,14 +36,22 @@ public class SummationProcess extends ComplexProcess{
         return new SummationProcess(left.clone(), right.clone());
     }
 
-    /**
-     * Overriden method to reflect the fact that a summation process can, by definition
-     * not be synchronized across both of its child processes.
-     * @return
-     */
     @Override
-    public Collection<TauLabelNode> getTauMatches(Collection<Label> labels){
-        return Collections.emptySet();
+    public Collection<Label> getActionableLabels(){
+        Collection<Label> s = super.getActionableLabels();
+
+        //Very unelegant
+        Collection<Label> l = left.getActionableLabels();
+        Collection<Label> r = right.getActionableLabels();
+        for (Label ll: l){
+            for (Label rl : r){
+                ll.addSynchronizationLock(rl);
+                rl.addSynchronizationLock(ll);
+            }
+        }
+        s.addAll(l);
+        s.addAll(r);
+        return s;
     }
 
 }

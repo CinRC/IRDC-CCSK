@@ -25,7 +25,7 @@ public class CCSInteractionHandler {
             actionable.addAll(SetUtil.getTauMatches(actionable));
             //Print out labels
             int i = 0;
-            for (Label na : template.getActionableLabels())
+            for (Label na : actionable)
                 System.out.printf("[%d] %s%n",i++,na.origin());
 
             System.out.println("------------");

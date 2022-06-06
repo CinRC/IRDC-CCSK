@@ -46,6 +46,7 @@ public class ActionPrefixProcess extends Process {
         this.prefixes.addAll(labels);
     }
 
+
     /**
      * Clones process
      * @return Deep clone (hopefully) of this process
@@ -78,11 +79,15 @@ public class ActionPrefixProcess extends Process {
         //Add every label except the first (because that's the one we act on)
         if (prefixes.get(0).equals(label))
             for (int i = 1; i < prefixes.size(); i++)
-                //Clone here?
                 l.add((Label) prefixes.get(i));
             else throw new CCSTransitionException(this, label);
 
-        return new ActionPrefixProcess(getProcess(), l);
+        ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), l);
+        if (previousLife != null) {
+            p.setPastLife(previousLife.clone());
+            p.key = key.clone();
+        }
+        return p;
     }
 
     @Override

@@ -40,10 +40,8 @@ public class SetUtil {
                             if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node))
                             //Cool, we found a complement, let's add it to our map.
                             tau.add(new TauLabelNode(node,innerNode));
-
             }
         }
-
         return tau;
 
     }

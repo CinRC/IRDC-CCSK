@@ -18,31 +18,25 @@ public class CCSInteractionHandler {
 
     public boolean startInteraction(){
         Scanner scan = new Scanner(System.in);
-        ArrayList<Label> actionable = new ArrayList<Label>(template.getActionableLabels());
-        while(!actionable.isEmpty()){
+        while(true){
+            ArrayList<Label> actionable = new ArrayList<Label>(template.getActionableLabels());
+            if (actionable.isEmpty())
+                break;
+
             System.out.println("------| Actionable Labels |------");
             //Print out labels
             int i = 0;
             for (Label na : actionable)
                 System.out.printf("[%d] %s%n",i++,na.origin());
-
             System.out.println("------------");
             System.out.println(String.format("%s", template.prettyString()));
-            /*System.out.println("Please type the label you'd like to act on:");
-            String st = scan.next();
-
-            //iNpUt VaLiDaTiOn
-            if (st == "")
-                continue;
-
-            Label n = LabelFactory.parseNode(st);*/
             System.out.println("Please input the index of the label you'd like to act on:");
             String st = scan.next();
             Label n;
             if (st == "") continue;
             try{
                 int in = Integer.parseInt(st);
-                n = (Label) template.getActionableLabels().toArray()[in];
+                n = (Label) actionable.get(in);
             } catch(Exception e){
                 System.out.println("Failed to recognize label!");
                 continue;
@@ -57,7 +51,11 @@ public class CCSInteractionHandler {
                 if (RCCS.DEBUG) e.printStackTrace();
             }
 
+
+
+
         }
+
         return true;
     }
 

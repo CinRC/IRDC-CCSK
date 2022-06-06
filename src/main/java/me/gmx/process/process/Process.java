@@ -71,16 +71,16 @@ public abstract class Process extends ProgramNode {
     //a void method. I have not decided which is best. I could also just have act return clone(),
     //but thinking into the future, that would be super inefficient.
     public Process act(Label label){
-        if (label instanceof LabelKey)
+        if (label instanceof LabelKey && label.equals(getKey()))
             return previousLife;
-        if (canHoldLife)
+        else if (canHoldLife)
             rememberLife(label);
         return this.actOn(label);
     }
 
     protected void rememberLife(Label label){
-        this.key = new LabelKey(label);
-        this.previousLife = this.clone();
+        key = new LabelKey(label);
+        previousLife = clone();
     }
 
     @Deprecated
@@ -113,10 +113,7 @@ public abstract class Process extends ProgramNode {
                 , getKey().origin()
                 , base)
                 : String.format("%s",base);
-/*        s += !restrictions.isEmpty() ? String.format("\\{Restriction: %s}"
-                , SetUtil.csvSet(restrictions)) : "";*/
         return s;
-
     }
 
     public abstract Collection<Process> getChildren();

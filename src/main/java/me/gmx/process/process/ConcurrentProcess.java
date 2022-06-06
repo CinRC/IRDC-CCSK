@@ -17,7 +17,7 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     public ConcurrentProcess(Process left, Process right) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
-        this.canHoldLife = false;
+        canHoldLife = false;
     }
 
 

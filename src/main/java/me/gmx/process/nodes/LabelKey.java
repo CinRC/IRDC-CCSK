@@ -19,6 +19,7 @@ public class LabelKey extends Label {
      */
     public LabelKey(Label node, UUID id){
         this.uuid = id;
+        this.from = node;
     }
 
     @Override

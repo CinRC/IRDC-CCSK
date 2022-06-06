@@ -20,6 +20,7 @@ public class SummationProcess extends ComplexProcess{
      * @param label Label to act on
      * @return self-process, having acted on label
      */
+
     @Override
     public Process actOn(Label label) {
         if (left.canAct(label)) {
@@ -27,7 +28,6 @@ public class SummationProcess extends ComplexProcess{
         }else if (right.canAct(label)){
             return right.act(label);
         }else throw new CCSTransitionException(this,label);
-
     }
 
     //TODO: Prev life

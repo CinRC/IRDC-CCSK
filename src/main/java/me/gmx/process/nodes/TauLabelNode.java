@@ -5,10 +5,12 @@ package me.gmx.process.nodes;
 public class TauLabelNode extends Label {
 
     private Label node, complement;
+    public boolean consumeLeft, consumeRight;
 
     public TauLabelNode(Label node, Label comp) {
         this.node = node;
         this.complement = comp;
+        consumeLeft = consumeRight = false;
     }
 
 

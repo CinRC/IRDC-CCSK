@@ -18,11 +18,9 @@ public class CCSInteractionHandler {
 
     public boolean startInteraction(){
         Scanner scan = new Scanner(System.in);
-        while(!template.getActionableLabels().isEmpty()){
+        ArrayList<Label> actionable = new ArrayList<Label>(template.getActionableLabels());
+        while(!actionable.isEmpty()){
             System.out.println("------| Actionable Labels |------");
-            ArrayList<Label> actionable = new ArrayList<Label>(template.getActionableLabels());
-            //Find complements for tau
-            actionable.addAll(SetUtil.getTauMatches(actionable));
             //Print out labels
             int i = 0;
             for (Label na : actionable)

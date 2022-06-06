@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -43,8 +44,32 @@ public class ConcurrentProcess extends ComplexProcess{
     @Override
     public Collection<Label> getActionableLabels(){
         Collection<Label> l = super.getActionableLabels();
+        Collection<Label> le = left.getActionableLabels();
+        Collection<Label> ri = right.getActionableLabels();
+        boolean leftAdded, rightAdded;
+        leftAdded = rightAdded = false;
+
+        //If left or right already has tau nodes, dont add them
+        if (!le.stream().anyMatch(TauLabelNode.class::isInstance)) {
+            l.addAll(le);
+            leftAdded = true;
+        }
+        //If left or right already has tau nodes, dont add them
+        if (!ri.stream().anyMatch(TauLabelNode.class::isInstance)) {
+            l.addAll(ri);
+            rightAdded = true;
+        }
+        //Check tau nodes in current set
         if (!l.isEmpty())
             l.addAll(SetUtil.getTauMatches(l));
+
+        //If we didn't add for tau matching, add now
+        if (!rightAdded)
+            l.addAll(ri);
+        if (!leftAdded)
+            l.addAll(le);
+
+
         return l;
     }
 

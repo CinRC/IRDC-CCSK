@@ -47,17 +47,6 @@ public abstract class ComplexProcess extends Process{
             return s;
     }
 
-    /**
-     * Returns collection of labels to be acted on
-     * @return Collection of all labels that can be acted upon
-     */
-    @Override
-    public Collection<Label> getActionableLabels(){
-        Collection<Label> s = super.getActionableLabels();
-        s.addAll(left.getActionableLabels());
-        s.addAll(right.getActionableLabels());
-        return s;
-    }
 
     /**
      * Checks if the process has been packed

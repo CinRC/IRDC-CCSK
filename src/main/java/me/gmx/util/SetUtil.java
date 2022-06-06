@@ -35,10 +35,11 @@ public class SetUtil {
             if (node instanceof ComplementLabelNode){
                 //Cool, there is a complement in the set. Let's see if any matches
                 for (Label innerNode : nodes)
-                    if (node.isComplementOf(innerNode))
-                        if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node))
-                        //Cool, we found a complement, let's add it to our map.
-                        tau.add(new TauLabelNode(node,innerNode));
+                    if (innerNode != node)
+                        if (node.isComplementOf(innerNode))
+                            if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node))
+                            //Cool, we found a complement, let's add it to our map.
+                            tau.add(new TauLabelNode(node,innerNode));
 
             }
         }

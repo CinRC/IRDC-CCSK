@@ -1,30 +1,63 @@
+import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 public class ParseTest {
 
-    //TODO: add maven/junit
-    public void OriginMatch(){
-        String[] matchTest = new String[]{
-                "a.b.P",
-                "a|b",
-                "(a.b.P|a.b.P)",
-                "a.P|(a+b)"
-        };
-        //Basically, can a process be parsed and tokenized while retaining its properties
-        for (String s : matchTest)
-            assert CCSParser.parseLine(s).export().origin().equals(s);
+
+    private boolean compare(String given, String expected){
+        System.out.println("[Test] Comparing " + given + " with expected result " + expected);
+        return given.equals(expected);
+
     }
 
-    public void testParenthesis(){
-        String[] str = new String[]{
-                "(a.b.'c.P) | ((('c.b.'a.P + ('a.b.Q) )))"
-        };
 
-        for (String s : str)
+
+    @Test
+    public void testOriginMatching(){
+        String[] matchTest;
+            if (RCCS.DISPLAY_PARENTHESIS) {
+                matchTest = new String[]{
+                        "a.b.P",
+                        "(a|b)",
+                        "(P|Q)",
+                        "(0|0)",
+                        "(a.b.P|a.b.P)",
+                        "(a.P|(a+b))"
+                };
+            }else{
+                matchTest = new String[]{
+                        "a.b.P",
+                        "a|b",
+                        "P|Q",
+                        "0|0",
+                        "a.b.P|a.b.P",
+                        "a.P|a+b"
+                };
+            }
+        //Basically, can a process be parsed and tokenized while retaining its properties
+        for (String s : matchTest) {
+            assert compare(CCSParser.parseLine(s).export().origin(), s);
+        }
+    }
+
+    @Test
+    public void testRedundantParenthesis(){
+        //There's likely a better way to do this with a hashmap, but it works.
+        //Mainly just want to see if the program doesnt die when trying to parse. Result should be stable
+        String[] given = new String[]{
+                "(((((a)))))",
+                "(a.b.'c.P) | ((( 'c.b.'a.P + ('a.b.Q) )))"
+        };
+        String[] expected = new String[]{
+                "a",
+                "(a.b.'c.P|('c.b.'a.P+'a.b.Q))"
+        };
+        for (int i = 0; i < expected.length; i++)
             assert (
-                    CCSParser.parseLine(s).export() != null
+                    compare(CCSParser.parseLine(given[i]).export().origin(),expected[i])
                     );
 
     }

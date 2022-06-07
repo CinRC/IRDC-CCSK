@@ -15,6 +15,12 @@ public class RCCS {
     //Should reversal keys be treated as actionable labels?
     public static final boolean KEYS_AS_LABELS = true;
 
+    //Should null processes be implicit or explicit
+    public static final boolean IMPLICIT_NULL_PROCESSES = false;
+
+    //Should complex processes be displayed with parenthesis
+    public static final boolean DISPLAY_PARENTHESIS = true;
+
     public static void main(String[] args){
         String formula = "";
         Set<CCSFlag> flags = new HashSet<>();

@@ -100,10 +100,14 @@ public abstract class ComplexProcess extends Process{
     @Override
     public String origin(){
         StringBuilder b = new StringBuilder();
-
+        if (RCCS.DISPLAY_PARENTHESIS)
+            b.append(CCSGrammar.OPEN_PARENTHESIS.toString());
         if (left == null) b.append(""); else b.append(left.origin());
         b.append(operator);
         if (right == null) b.append(""); else b.append(right.origin());
+        if (RCCS.DISPLAY_PARENTHESIS)
+            b.append(CCSGrammar.CLOSE_PARENTHESIS.toString());
+
         return b.toString();
     }
 

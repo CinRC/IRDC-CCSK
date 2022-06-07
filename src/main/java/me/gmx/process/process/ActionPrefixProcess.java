@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import me.gmx.RCCS;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 
@@ -9,21 +10,6 @@ public class ActionPrefixProcess extends Process {
 
     private LinkedList<Label> prefixes;
     private Process process;
-
-
-    //a.b.c.P
-
-    // prefix c, process P
-    // prefix b, process ^
-    // prefix a, process ^
-    /**
-     * Prefixes are nested, so instead of having a single
-     * prefix me.gmx.process with a list of prefixes, they will
-     * recursively nest eachother as prefix(prefix(prefix(P),c),b),a)
-     * @param p Underlying process to be accessed via label
-     * @param label Label used to access underlying process
-     * a.b.c.P --> c.P, b.(c.P), a.(b.(c.P))
-     */
 
 
     public ActionPrefixProcess(Process p, Label label){
@@ -39,7 +25,12 @@ public class ActionPrefixProcess extends Process {
             s += label.origin();
             s += ".";
         }
-        s += p.represent();
+        //If we don't want to see null processes, then remove last . and dont represent
+        if (!RCCS.IMPLICIT_NULL_PROCESSES && p instanceof NullProcess) {
+            s = s.substring(0,s.length()-1);
+        }else{
+            s += p.represent();
+        }
         this.origin = s;
         this.process = p;
         this.prefixes = new LinkedList<Label>();

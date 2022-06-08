@@ -33,7 +33,7 @@ public class SummationProcess extends ComplexProcess{
     @Override
     public SummationProcess clone() {
         SummationProcess p = new SummationProcess(left.clone(), right.clone());
-        p.setPastLife(previousLife.clone());
+        p.setPastLife(previousLife);
         p.setKey(key.clone());
         p.addRestrictions(restrictions);
         return p;

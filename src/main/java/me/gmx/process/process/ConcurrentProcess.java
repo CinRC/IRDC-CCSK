@@ -34,8 +34,8 @@ public class ConcurrentProcess extends ComplexProcess{
     @Override
     public ConcurrentProcess clone() {
         ConcurrentProcess p = new ConcurrentProcess(left.clone(), right.clone());
-        p.setPastLife(previousLife.clone());
-        p.setKey(key.clone());
+        p.setPastLife(previousLife);
+        p.setKey(key);
         p.addRestrictions(restrictions);
         return p;
     }

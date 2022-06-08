@@ -11,30 +11,11 @@ public class ActionPrefixProcess extends Process {
     private LinkedList<Label> prefixes;
     private Process process;
 
-
-    public ActionPrefixProcess(Process p, Label label){
-        this.origin = (label.origin() + "." + p.origin());
-        this.process = p;
-        this.prefixes = new LinkedList<Label>();
-        this.prefixes.add(label);
-    }
-
     public ActionPrefixProcess(Process p, List<Label> labels){
-        String s = "";
-        for (Label label : labels){
-            s += label.origin();
-            s += ".";
-        }
-        //If we don't want to see null processes, then remove last . and dont represent
-        if (!RCCS.IMPLICIT_NULL_PROCESSES && p instanceof NullProcess) {
-            s = s.substring(0,s.length()-1);
-        }else{
-            s += p.represent();
-        }
-        this.origin = s;
         this.process = p;
         this.prefixes = new LinkedList<Label>();
         this.prefixes.addAll(labels);
+        recalculateOrigin();
     }
 
 
@@ -49,7 +30,7 @@ public class ActionPrefixProcess extends Process {
         prf.addAll(prefixes);
         ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), prf);
         if (previousLife != null) {
-            p.setPastLife(previousLife.clone());
+            p.setPastLife(previousLife);
             p.setKey(getKey().clone());
         }
         p.addRestrictions(getRestriction());
@@ -71,7 +52,21 @@ public class ActionPrefixProcess extends Process {
             if (pr.getPrefix().equals(label))
                 pr.prefixes.removeFirst();
             else throw new CCSTransitionException(this, label);
+            pr.recalculateOrigin();
             return pr;
+    }
+
+    private void recalculateOrigin(){
+        String s = "";
+        for (Label label : prefixes)
+            s += String.format("%s.",label.origin());
+        //If we don't want to see null processes, then remove last . and dont represent
+        if (!RCCS.IMPLICIT_NULL_PROCESSES && getProcess() instanceof NullProcess) {
+            s = s.substring(0,s.length()-1);
+        }else{
+            s += getProcess().represent();
+        }
+        this.origin = s;
     }
 
     @Override

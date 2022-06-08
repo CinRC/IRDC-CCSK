@@ -31,7 +31,7 @@ public class ActionPrefixProcess extends Process {
         ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), prf);
         if (previousLife != null) {
             p.setPastLife(previousLife);
-            p.setKey(getKey().clone());
+            p.setKey(getKey());
         }
         p.addRestrictions(getRestriction());
 
@@ -48,12 +48,11 @@ public class ActionPrefixProcess extends Process {
 
     @Override
     public Process actOn(Label label) {
-            ActionPrefixProcess pr = clone();
-            if (pr.getPrefix().equals(label))
-                pr.prefixes.removeFirst();
+            if (label.equals(getPrefix()))
+                prefixes.removeFirst();
             else throw new CCSTransitionException(this, label);
-            pr.recalculateOrigin();
-            return pr;
+            recalculateOrigin();
+            return this;
     }
 
     private void recalculateOrigin(){

@@ -32,9 +32,14 @@ public class ConcurrentProcess extends ComplexProcess{
     }
 
     @Override
-    public ConcurrentProcess clone(){
-        return new ConcurrentProcess(left.clone(), right.clone());
+    public ConcurrentProcess clone() {
+        ConcurrentProcess p = new ConcurrentProcess(left.clone(), right.clone());
+        p.setPastLife(previousLife.clone());
+        p.setKey(key.clone());
+        return p;
     }
+
+
 
     /**
      * Returns a set of labels that can be acted on, including tau matches. Theoretically, this is the only

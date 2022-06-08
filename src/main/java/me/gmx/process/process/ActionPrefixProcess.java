@@ -50,7 +50,7 @@ public class ActionPrefixProcess extends Process {
         ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), prf);
         if (previousLife != null) {
             p.setPastLife(previousLife.clone());
-            p.key = key.clone();
+            p.setKey(getKey().clone());
         }
 
         return p;

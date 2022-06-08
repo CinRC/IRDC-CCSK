@@ -16,7 +16,7 @@ public class LabelProcess extends Process{
 
     @Override
     protected Process clone() {
-        return new ProcessImpl(new String(origin));
+        return new ProcessImpl(origin);
     }
 
     public Label getLabel(){

@@ -49,6 +49,7 @@ public abstract class Label extends ProgramNode{
         return origin();
     }
 
+    @Override
     public boolean equals(Object o){
         if (RCCS.UNIQUE_CHANNELS)
             return (o instanceof Label)

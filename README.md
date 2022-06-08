@@ -56,6 +56,10 @@ or link it.
 To build this project, execute `mvn package` in the project root dir. This will create an executable jar file
 in `target/`.
 
+### Testing
+
+To run unit tests, execute `mvn test` in the project root dir. It will run through a set of pre-written unit tests that are designed to represent difficult examples or niche scenarios.
+
 ### Running
 
 Running this is fairly simple. One approach is to load the program into an IDE and run through its compiler.

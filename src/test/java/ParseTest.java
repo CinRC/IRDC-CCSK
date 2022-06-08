@@ -1,17 +1,16 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
+import me.gmx.process.process.SummationProcess;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 public class ParseTest {
-
-
     private boolean compare(String given, String expected){
         System.out.println("[Test] Comparing " + given + " with expected result " + expected);
         return given.equals(expected);
-
     }
+
 
 
 
@@ -59,6 +58,12 @@ public class ParseTest {
             assert (
                     compare(CCSParser.parseLine(given[i]).export().origin(),expected[i])
                     );
+    }
+
+    @Test
+    public void testBasicParse(){
+
+
 
     }
 

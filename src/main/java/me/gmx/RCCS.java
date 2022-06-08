@@ -7,7 +7,6 @@ import java.util.*;
 
 public class RCCS {
     static Scanner scan;
-
     //Print debug info?
     public static final boolean DEBUG = true;
     //Should every channel parsed be given a unique ID? (This breaks things right now. I only leave it in for future use.
@@ -22,6 +21,7 @@ public class RCCS {
     public static final boolean DISPLAY_PARENTHESIS = true;
 
     public static void main(String[] args){
+
         String formula = "";
         Set<CCSFlag> flags = new HashSet<>();
         if (args.length == 0){

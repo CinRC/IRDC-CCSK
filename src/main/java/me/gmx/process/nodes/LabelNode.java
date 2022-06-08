@@ -23,7 +23,7 @@ public class LabelNode extends Label {
     //TODO: fix
     @Override
     public LabelNode clone(){
-        return new LabelNode(new String(origin), getId());
+        return new LabelNode(origin, getId());
     }
 
 

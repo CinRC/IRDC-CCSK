@@ -5,7 +5,6 @@ import me.gmx.parser.CCSParser;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
-import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -25,9 +24,7 @@ public abstract class Process extends ProgramNode {
     //Is this process capable of remembering a past life
     protected boolean canHoldLife = true;
 
-    public Process(){
-
-    }
+    public Process(){}
 
     public Process(Collection<Label> restrictions){
         this.restrictions.addAll(restrictions);
@@ -39,18 +36,24 @@ public abstract class Process extends ProgramNode {
         this.key = key;
     }
 
-    //TODO: There has to be a better way to do this than reparsing. I really
-    //tried to find another way, but shallow fakes are overwhelming and I
-    //'already' have the code for this.
-    protected Process clone(){
-        Process p = CCSParser.parseLine(origin()).export();
-        if (previousLife != null)
-            p.setPastLife(CCSParser.parseLine(previousLife.origin()).export());
-        return p;
-    }
+    protected abstract Process clone();
 
+    /**
+     * Set past life of this process to the given process
+     * Note that it should be good practice to clone a process before giving it to another
+     * in the form of a past life.
+     * @param p process (hopefully a clone) to set as past life
+     */
     protected void setPastLife(Process p){
         this.previousLife = p;
+    }
+
+    /**
+     * Set CCSK key to provided LabelKey
+     * @param key key to set
+     */
+    protected void setKey(LabelKey key){
+        this.key = key;
     }
     /**
      * Determines whether process can act on given label, without actually acting on it.
@@ -64,8 +67,21 @@ public abstract class Process extends ProgramNode {
                 : getActionableLabels().contains(label);
     }
 
+    /**
+     * Internal act method to differentiate different processes behavior when given
+     * a certain label to act on
+     * @param label label to act on
+     * @return process after having been acted on given label
+     */
     protected abstract Process actOn(Label label);
 
+
+    /**
+     * Act on a given label. This is the only method that should be called outside
+     * of subclasses.
+     * @param label label to act on
+     * @return will return this, after having acted on the given label
+     */
     //Currently, I am unsure if I should leave this as a method that returns a process,
     //Because it usually just returns this;. It may be a good move to change this to
     //a void method. I have not decided which is best. I could also just have act return clone(),
@@ -78,11 +94,23 @@ public abstract class Process extends ProgramNode {
         return this.actOn(label);
     }
 
+    /**
+     * Saves this process as a clone to memory, and assigns a unique key formed from
+     * the given label that links this process to the process in memory. This should not
+     * be called by any method other than internal acting methods.
+     * @param label label to set as key
+     */
     protected void rememberLife(Label label){
         key = new LabelKey(label);
         previousLife = clone();
     }
 
+    /**
+     * Whether or not a given process can reverse on a key
+     * Deprecated in favor of just checking keys match
+     * @param key given key
+     * @return true if the process is capable of reversing on the given key
+     */
     @Deprecated
     public boolean canReverse(LabelKey key){
         return hasKey() && getKey().equals(key);
@@ -90,6 +118,7 @@ public abstract class Process extends ProgramNode {
 
     /**
      * Reverses the last action performed on this process
+     * Deprecated in favor of just acting on a LabelKey.
      * @return Process after reversal
      */
     @Deprecated
@@ -97,16 +126,35 @@ public abstract class Process extends ProgramNode {
         return previousLife;
     }
 
+    /**
+     * Returns if this process has a CCSK key assigned to it
+     * @return true if there is a key assigned to this process
+     */
     public boolean hasKey(){
         return this.key != null;
     }
 
+    /**
+     * Returns the assigned key
+     * @return this process's key, can be null
+     */
     public LabelKey getKey(){
         return this.key;
     }
 
+    /**
+     * A formatted version of this process to be printed. This is the only method that
+     * should be called to print to screen unless you will be comparing processes
+     * @return
+     */
     public abstract String represent();
 
+    /**
+     * Internal represent method to be called by subclasses. This sets the 'format' for
+     * all subclasses to take regarding keys and other syntax.
+     * @param base Subclass representation
+     * @return
+     */
     protected String represent(String base){
         String s = "";
         s += hasKey() ? String.format("%s%s"
@@ -114,6 +162,21 @@ public abstract class Process extends ProgramNode {
                 , base)
                 : String.format("%s",base);
         return s;
+    }
+
+    //TODO: make betterer
+    public boolean equals(Object o){
+        if (!(o instanceof Process))
+            return false;
+        Process p = (Process) o;
+        if (
+                !(p.previousLife.equals(previousLife) || p.getKey().equals(getKey()))
+                ||
+                (p.origin() != origin())
+        )
+            return false;
+
+        return true;
     }
 
     public abstract Collection<Process> getChildren();

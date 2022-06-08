@@ -1,13 +1,17 @@
 package me.gmx.process.process;
 
 import me.gmx.process.nodes.Label;
-
 import java.util.Collection;
 import java.util.Collections;
 
 public class NullProcess extends Process{
     public NullProcess() {
         super();
+    }
+
+    @Override
+    public Process clone(){
+        return new NullProcess();
     }
 
     @Override

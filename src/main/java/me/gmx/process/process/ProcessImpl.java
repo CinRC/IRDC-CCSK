@@ -5,7 +5,7 @@ import me.gmx.process.nodes.Label;
 import java.util.Collection;
 import java.util.Collections;
 
-public class ProcessImpl extends Process{
+public class ProcessImpl extends Process implements ActionableProcess{
 
     public ProcessImpl(String s) {
         this.origin = s;
@@ -14,6 +14,12 @@ public class ProcessImpl extends Process{
     @Override
     protected Process clone() {
         return new ProcessImpl(new String(origin));
+    }
+
+    //TODO: implement
+    @Override
+    public void execute(){
+
     }
 
     @Override

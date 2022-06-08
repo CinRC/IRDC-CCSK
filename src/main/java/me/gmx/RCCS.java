@@ -15,7 +15,7 @@ public class RCCS {
     public static final boolean KEYS_AS_LABELS = true;
 
     //Should null processes be implicit or explicit
-    public static final boolean IMPLICIT_NULL_PROCESSES = false;
+    public static final boolean IMPLICIT_NULL_PROCESSES = true;
 
     //Should complex processes be displayed with parenthesis
     public static final boolean DISPLAY_PARENTHESIS = true;

@@ -74,6 +74,7 @@ public class ConcurrentProcess extends ComplexProcess{
         if (!leftAdded)
             l.addAll(le);
 
+        l.removeAll(restrictions);
 
         return l;
     }

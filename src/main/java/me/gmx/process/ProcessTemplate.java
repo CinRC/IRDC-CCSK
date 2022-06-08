@@ -103,6 +103,11 @@ public class ProcessTemplate {
         throw new CCSTransitionException(node);
     }
 
+    public void addRestrictionToLastProcess(Collection<Label> restrictions){
+        this.tList.getLast().addRestrictions(restrictions);
+
+    }
+
     public LinkedList<Process> getProcesses(){
         return this.tList;
     }

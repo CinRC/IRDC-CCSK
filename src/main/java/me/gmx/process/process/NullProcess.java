@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class NullProcess extends Process{
+
     public NullProcess() {
         super();
     }

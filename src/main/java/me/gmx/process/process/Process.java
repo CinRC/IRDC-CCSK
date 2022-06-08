@@ -26,6 +26,22 @@ public abstract class Process extends ProgramNode {
 
     public Process(){}
 
+    public void addRestriction(Label... labels){
+        for (Label l : labels)
+            restrictions.add(l);
+    }
+
+    //Very annoying that java cannot process collections as ... streams :(
+    public void addRestrictions(Collection<Label> labels){
+        for (Label l : labels){
+            restrictions.add(l);
+        }
+    }
+
+    public Collection<Label> getRestriction(){
+        return restrictions;
+    }
+
     public Process(Collection<Label> restrictions){
         this.restrictions.addAll(restrictions);
     }
@@ -63,8 +79,7 @@ public abstract class Process extends ProgramNode {
     public boolean canAct(Label label){
         RCCS.log(String.format("Checking if %s can act on %s",represent(),label.origin()));
         RCCS.log(SetUtil.csvSet(getActionableLabels()));
-        return restrictions.contains(label) ? false
-                : getActionableLabels().contains(label);
+        return getActionableLabels().contains(label);
     }
 
     /**
@@ -164,7 +179,7 @@ public abstract class Process extends ProgramNode {
         return s;
     }
 
-    //TODO: make betterer
+ /*   //TODO: make betterer
     public boolean equals(Object o){
         if (!(o instanceof Process))
             return false;
@@ -177,7 +192,7 @@ public abstract class Process extends ProgramNode {
             return false;
 
         return true;
-    }
+    }*/
 
     public abstract Collection<Process> getChildren();
 

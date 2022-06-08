@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 public class ProcessFactory {
 
     public static Process determineRestriction(String s){
-        Matcher m = CCSGrammar.RESTRICTION.match(s);
+        Matcher m = CCSGrammar.OPEN_RESTRICTION.match(s);
         Set<Label> re = null;
         if (m.find()){
             re = Set.of(LabelFactory.parseNode(m.group()));

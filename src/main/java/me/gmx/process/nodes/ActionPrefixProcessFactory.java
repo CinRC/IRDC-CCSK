@@ -7,6 +7,7 @@ import me.gmx.parser.StringWalker;
 import me.gmx.process.ProcessTemplate;
 import me.gmx.process.process.ActionPrefixProcess;
 import me.gmx.process.process.Process;
+import me.gmx.process.process.ProcessImpl;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -43,7 +44,7 @@ public class ActionPrefixProcessFactory {
             if (w.look().startsWith("(")){
                 process = CCSParser.parseLine(w.look()).export();
             }else{
-                process = ProcessFactory.determineRestriction(w.look());
+                process = new ProcessImpl(w.peek());
             }
             }while(w.canWalk());
 

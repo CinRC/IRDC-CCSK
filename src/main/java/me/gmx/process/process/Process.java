@@ -116,8 +116,9 @@ public abstract class Process extends ProgramNode {
      * @param label label to set as key
      */
     protected void rememberLife(Label label){
-        key = new LabelKey(label);
         previousLife = clone();
+        key = new LabelKey(label);
+
     }
 
     /**

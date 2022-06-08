@@ -51,14 +51,23 @@ public abstract class Label extends ProgramNode{
 
     @Override
     public boolean equals(Object o){
+        if (!(o instanceof Label))
+            return false;
+        Label label = (Label) o;
         if (RCCS.UNIQUE_CHANNELS)
-            return (o instanceof Label)
-                    && ((Label)o).getId().equals(getId());
+            return label.getId().equals(getId());
         else {
-            return (o instanceof Label)
-                    && ((Label) o).origin().equals(origin());
+            boolean c = label.origin().equals(origin());
+            return label.origin().equals(origin());
         }
     }
+
+    @Override
+    public int hashCode(){
+        return 0;
+    }
+
+
 
     /**
      * Determines whether the given label is the complement of this, or this is the complement of the given label.

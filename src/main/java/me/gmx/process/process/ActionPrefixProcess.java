@@ -44,7 +44,7 @@ public class ActionPrefixProcess extends Process {
      */
     //Do clones need to remember their past lives? I am actually not sure. Seems like an ethical question
     @Override
-    protected Process clone() {
+    protected ActionPrefixProcess clone() {
         LinkedList<Label> prf = new LinkedList<>();
         prf.addAll(prefixes);
         ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), prf);
@@ -52,6 +52,7 @@ public class ActionPrefixProcess extends Process {
             p.setPastLife(previousLife.clone());
             p.setKey(getKey().clone());
         }
+        p.addRestrictions(getRestriction());
 
         return p;
     }
@@ -66,19 +67,11 @@ public class ActionPrefixProcess extends Process {
 
     @Override
     public Process actOn(Label label) {
-        List<Label> l = new ArrayList<>();
-        //Add every label except the first (because that's the one we act on)
-        if (prefixes.get(0).equals(label))
-            for (int i = 1; i < prefixes.size(); i++)
-                l.add((Label) prefixes.get(i));
+            ActionPrefixProcess pr = clone();
+            if (pr.getPrefix().equals(label))
+                pr.prefixes.removeFirst();
             else throw new CCSTransitionException(this, label);
-
-        ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), l);
-        if (previousLife != null) {
-            p.setPastLife(previousLife.clone());
-            p.key = key.clone();
-        }
-        return p;
+            return pr;
     }
 
     @Override

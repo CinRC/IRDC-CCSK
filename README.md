@@ -33,6 +33,7 @@ This program follows a slightly modified semantic structure based off of CCSK. I
   - More specifically, `a.a + b | c \{a}` is to be read as `(a.a) + (b | (c\a))` (infix notation) or `+ . a a | b \a c`  (postfix notation).
 - Of course, parenthesis take precedence over all operators.
   - Redundant parenthesis are permitted `(((a)|(b)))`
+- If a summation process contains identical labels (`a+a`), the leftmost process will always be acted on. It is up to the user to specify separate labels to prevent this issue.
 
 
 ## Requirements

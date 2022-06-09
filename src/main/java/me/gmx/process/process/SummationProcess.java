@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
@@ -21,12 +22,20 @@ public class SummationProcess extends ComplexProcess{
      * @return self-process, having acted on label
      */
 
+    //Returns left or right, setting their past life to a clone of this
     @Override
     public Process actOn(Label label) {
+        Process b = clone();
         if (left.canAct(label)) {
-            return left.act(label);
+            Process p = left.act(label);
+            p.setPastLife(b);
+            p.setKey(new LabelKey(label));
+            return p;
         }else if (right.canAct(label)){
-            return right.act(label);
+            Process p = right.act(label);
+            p.setPastLife(b);
+            p.setKey(new LabelKey(label));
+            return p;
         }else throw new CCSTransitionException(this,label);
     }
 
@@ -37,7 +46,6 @@ public class SummationProcess extends ComplexProcess{
             p.setPastLife(previousLife);
             p.setKey(key);
         }
-
         p.addRestrictions(restrictions);
         return p;
     }

@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
@@ -21,9 +22,12 @@ public class ConcurrentProcess extends ComplexProcess{
     }
 
 
-    //TODO: Need to clone instead of copy reference, while still carrying over past life
+    //Note: Concurrent processes will never need to hold a key, because data is not destroyed at
+    //the complex-process level in this situation.
     @Override
     public Process actOn(Label label) {
+        setPastLife(clone());
+        setKey(new LabelKey(label));
         if (left.canAct(label))
             left = left.act(label);
         if (right.canAct(label))

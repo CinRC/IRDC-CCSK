@@ -97,15 +97,9 @@ public abstract class Process extends ProgramNode {
      * @param label label to act on
      * @return will return this, after having acted on the given label
      */
-    //Currently, I am unsure if I should leave this as a method that returns a process,
-    //Because it usually just returns this;. It may be a good move to change this to
-    //a void method. I have not decided which is best. I could also just have act return clone(),
-    //but thinking into the future, that would be super inefficient.
     public Process act(Label label){
         if (label instanceof LabelKey && label.equals(getKey()))
             return previousLife;
-        else if (canHoldLife)
-            rememberLife(label);
         return this.actOn(label);
     }
 
@@ -116,9 +110,8 @@ public abstract class Process extends ProgramNode {
      * @param label label to set as key
      */
     protected void rememberLife(Label label){
-        previousLife = clone();
+        previousLife = this;
         key = new LabelKey(label);
-
     }
 
     /**

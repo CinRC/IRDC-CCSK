@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 
 import java.util.*;
 
@@ -29,7 +30,7 @@ public class ActionPrefixProcess extends Process {
         LinkedList<Label> prf = new LinkedList<>();
         prf.addAll(prefixes);
         ActionPrefixProcess p = new ActionPrefixProcess(getProcess().clone(), prf);
-        if (previousLife != null) {
+        if (hasKey()) {
             p.setPastLife(previousLife);
             p.setKey(getKey());
         }
@@ -46,13 +47,21 @@ public class ActionPrefixProcess extends Process {
         return process;
     }
 
+
+    /**
+     * Acts on label. sets past life to clone of this
+     * @param label label to act on
+     * @return Clone of this process
+     */
     @Override
     public Process actOn(Label label) {
-            if (label.equals(getPrefix()))
-                prefixes.removeFirst();
-            else throw new CCSTransitionException(this, label);
-            recalculateOrigin();
-            return this;
+        if (getPrefix().equals(label)) {
+            setPastLife(clone());
+            prefixes.removeFirst();
+            setKey(new LabelKey(label));
+        }
+        recalculateOrigin();
+        return this;
     }
 
     private void recalculateOrigin(){

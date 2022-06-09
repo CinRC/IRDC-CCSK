@@ -20,6 +20,7 @@ This program follows a slightly modified semantic structure based off of CCSK. I
 - Of course, parenthesis take precedence over all operators.
 -- Redundant parenthesis are permitted `(((a)|(b)))`
 
+
 ## Requirements
 
 ### Building

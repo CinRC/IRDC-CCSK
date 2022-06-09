@@ -12,11 +12,13 @@ Everything in this program was written from scratch, down to even the string uti
 ### Syntax and Precedence of Operators
 
 This program follows a slightly modified semantic structure based off of CCSK. I've included some notes below.
-- By default, all labels are given implicit null processes (a is implied to represent a.0). This is toggleable in the main config
+- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable in the main config
 - Restrictions are applied under the following format: `a.P\{a,b,c}`
+- Channel labels are limited to lowercase english letters [a-z]
+- We assume that all channels sharing the same label are duplicates. This means that the program is limited to 26 channels
 - We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.
   - This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`
-  - More specifically, a.a + b | c \{a} is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c  (postfix notation).
+  - More specifically, `a.a + b | c \{a}` is to be read as `(a.a) + (b | (c\a))` (infix notation) or `+ . a a | b \a c`  (postfix notation).
 - Of course, parenthesis take precedence over all operators.
   - Redundant parenthesis are permitted `(((a)|(b)))`
 

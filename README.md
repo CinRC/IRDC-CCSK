@@ -15,10 +15,10 @@ This program follows a slightly modified semantic structure based off of CCSK. I
 - By default, all labels are given implicit null processes (a is implied to represent a.0). This is toggleable in the main config
 - Restrictions are applied under the following format: `a.P\{a,b,c}`
 - We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.
--- This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`
--- More specifically, a.a + b | c \{a} is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c  (postfix notation).
+  - This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`
+  - More specifically, a.a + b | c \{a} is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c  (postfix notation).
 - Of course, parenthesis take precedence over all operators.
--- Redundant parenthesis are permitted `(((a)|(b)))`
+  - Redundant parenthesis are permitted `(((a)|(b)))`
 
 
 ## Requirements

@@ -9,13 +9,25 @@ At its core, this is a parser and discovery tool. The program takes user input i
 Everything in this program was written from scratch, down to even the string utilities used internally.
 
 
+### Developer slang
+
+During the design of this program, I was by no means an expert in CCS or CCSK. Thus, my understanding was limited.
+Because of this, I refer to things internally slightly differently then an expert may have. I have listed some of the relevant mappings below:
+1. Channel names are referred to as 'Labels'
+2. Parallel operators (`|`) are referred to as 'Concurrent Processes'
+3. Deterministic operators (`+`) are referred to as 'Summation Processes'
+4. Label prefixings (`a.b.P`) are referred to as 'Action Prefix Processes'
+5. CCSK keys (`[a].b.P`) are referred to as Label Keys
+
 ### Syntax and Precedence of Operators
 
 This program follows a slightly modified semantic structure based off of CCSK. I've included some notes below.
 - By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable in the main config
-- Restrictions are applied under the following format: `a.P\{a,b,c}`
 - Channel labels are limited to lowercase english letters [a-z]
-- We assume that all channels sharing the same label are duplicates. This means that the program is limited to 26 channels
+- Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc
+- Process names are limited to uppercase english letters [A-Z]
+- We assume that all channels sharing the same label are duplicates. This means that `'a` is the complement to `a`, `'b` to `b`, and so forth
+- Restrictions are applied under the following format: `a.P\{a,b,c}`
 - We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.
   - This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`
   - More specifically, `a.a + b | c \{a}` is to be read as `(a.a) + (b | (c\a))` (infix notation) or `+ . a a | b \a c`  (postfix notation).

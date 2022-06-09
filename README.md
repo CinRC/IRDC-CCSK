@@ -3,13 +3,22 @@
 ## What is RCCS?
 RCCS, or Reversible Calculus of Communicating Systems, is a formal language that describes the interaction of concurrent systems in a reversible paradigm.
 
+## What is this project?
+This project is a collaboration attempt between me and Dr. Clément Aubert (seen in commits) to be the first to implement a reversible formal language.
+At its core, this is a parser and discovery tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
+Everything in this program was written from scratch, down to even the string utilities used internally.
+
+
 ### Syntax and Precedence of Operators
 
-We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.
-    
-So, a.a + b | c \a is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c  (postfix notation).
-
-Of course, parenthesises take precedence over all operators.
+This program follows a slightly modified semantic structure based off of CCSK. I've included some notes below.
+- By default, all labels are given implicit null processes (a is implied to represent a.0). This is toggleable in the main config
+- Restrictions are applied under the following format: `a.P\{a,b,c}`
+- We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.
+-- This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`
+-- More specifically, a.a + b | c \{a} is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c  (postfix notation).
+- Of course, parenthesis take precedence over all operators.
+-- Redundant parenthesis are permitted `(((a)|(b)))`
 
 ## Requirements
 
@@ -65,5 +74,5 @@ To run unit tests, execute `mvn test` in the project root dir. It will run throu
 Running this is fairly simple. One approach is to load the program into an IDE and run through its compiler.
 The main class is `me.gmx.RCCS`. 
 
-Alternatively, you can run the executable jar specified above with the command `java -jar target/RCCS-1.0-SNAPSHOT.jar`.
+Alternatively, you can run the jar file created from the **building** section above with the command `java -jar target/RCCS-<version>.jar`.
 

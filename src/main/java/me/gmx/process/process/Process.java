@@ -177,6 +177,7 @@ public abstract class Process extends ProgramNode {
                 , getKey().origin()
                 , base)
                 : String.format("%s",base);
+        s+= getRestriction().isEmpty() ? "" : String.format("\\{%s}",SetUtil.csvSet(getRestriction()));
         return s;
     }
 

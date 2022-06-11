@@ -15,6 +15,14 @@ public class TauLabelNode extends Label {
 
 
     @Override
+    public boolean equals(Object o){
+        if (!(o instanceof TauLabelNode))
+            return false;
+        TauLabelNode node = (TauLabelNode) o;
+        return node.getA().equals(getA()) && node.getB().equals(getB());
+    }
+
+    @Override
     public String origin(){
         return String.format("Tau{%s, %s}",node.origin(),complement.origin());
     }

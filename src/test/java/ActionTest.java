@@ -1,6 +1,8 @@
 import me.gmx.parser.CCSParser;
+import me.gmx.process.nodes.ComplementLabelNode;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelNode;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.Process;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +24,8 @@ public class ActionTest {
                 Set.of(new LabelNode("a"), new LabelNode("b")));
         canAct.put(CCSParser.parseLine("a|b+c").export(),
                 Set.of(new LabelNode("a"), new LabelNode("b"), new LabelNode("c")));
-
+        canAct.put(CCSParser.parseLine("( ((a|'a)|('a|b))|'b)").export(),
+                Set.of(new TauLabelNode(new LabelNode("a"), new ComplementLabelNode("'a"))));
         for (Map.Entry<Process, Collection<Label>> e: canAct.entrySet()){
             Collection<Label> zz = e.getKey().getActionableLabels();
             assert (zz.containsAll(e.getValue()));

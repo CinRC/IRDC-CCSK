@@ -21,9 +21,6 @@ public abstract class Process extends ProgramNode {
 
     Set<Label> restrictions = new HashSet<>();
 
-    //Is this process capable of remembering a past life
-    protected boolean canHoldLife = true;
-
     public Process(){}
 
     public void addRestriction(Label... labels){

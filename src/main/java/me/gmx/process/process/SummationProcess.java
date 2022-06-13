@@ -27,16 +27,15 @@ public class SummationProcess extends ComplexProcess{
     public Process actOn(Label label) {
         Process b = clone();
         if (left.canAct(label)) {
-            Process p = left.act(label);
-            p.setPastLife(b);
-            p.setKey(new LabelKey(label));
-            return p;
+            left.act(label);
+            left.setPastLife(b);
+            left.setKey(new LabelKey(label));
         }else if (right.canAct(label)){
-            Process p = right.act(label);
-            p.setPastLife(b);
-            p.setKey(new LabelKey(label));
-            return p;
+            right.act(label);
+            right.setPastLife(b);
+            right.setKey(new LabelKey(label));
         }else throw new CCSTransitionException(this,label);
+        return this;
     }
 
     @Override
@@ -55,6 +54,11 @@ public class SummationProcess extends ComplexProcess{
         Collection<Label> s = super.getActionableLabels();
         Collection<Label> l = left.getActionableLabels();
         Collection<Label> r = right.getActionableLabels();
+        //If left is annotated, clear all right labels
+        if (l.stream().anyMatch(LabelKey.class::isInstance))
+            r.clear();
+        if (r.stream().anyMatch(LabelKey.class::isInstance))
+            l.clear();
         for (Label ll: l)
             for (Label rl : r){
                 ll.addSynchronizationLock(rl);

@@ -25,8 +25,6 @@ public class ConcurrentProcess extends ComplexProcess{
     //the complex-process level in this situation.
     @Override
     public Process actOn(Label label) {
-        setPastLife(clone());
-        setKey(new LabelKey(label));
         if (left.canAct(label))
             left = left.act(label);
         if (right.canAct(label))
@@ -37,10 +35,9 @@ public class ConcurrentProcess extends ComplexProcess{
     @Override
     public ConcurrentProcess clone() {
         ConcurrentProcess p = new ConcurrentProcess(left.clone(), right.clone());
-        if (hasKey()){
-            p.setPastLife(previousLife);
-            p.setKey(key);
-        }
+        p.isGhost = isGhost;
+        p.setPastLife(previousLife);
+        p.setKey(key);
         p.addRestrictions(restrictions);
         return p;
     }

@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
@@ -9,6 +10,7 @@ import me.gmx.util.SetUtil;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 
 public class SummationProcess extends ComplexProcess{
 
@@ -25,15 +27,20 @@ public class SummationProcess extends ComplexProcess{
     //Returns left or right, setting their past life to a clone of this
     @Override
     public Process actOn(Label label) {
-        Process b = clone();
+        if (ghostKey == null)//Only need to remember once, theoretically
+            setPastLife(clone());
         if (left.canAct(label)) {
-            left.act(label);
-            left.setPastLife(b);
-            left.setKey(new LabelKey(label));
+            left = left.act(label);
+            right.isGhost = true;
+            if (ghostKey == null) {
+                ghostKey = new LabelKey(label);
+            }
         }else if (right.canAct(label)){
-            right.act(label);
-            right.setPastLife(b);
-            right.setKey(new LabelKey(label));
+            right = right.act(label);
+            left.isGhost = true;
+            if (ghostKey == null) {
+                ghostKey = new LabelKey(label);
+            }
         }else throw new CCSTransitionException(this,label);
         return this;
     }
@@ -41,33 +48,103 @@ public class SummationProcess extends ComplexProcess{
     @Override
     public SummationProcess clone() {
         SummationProcess p = new SummationProcess(left.clone(), right.clone());
-        if (hasKey()){
-            p.setPastLife(previousLife);
-            p.setKey(key);
-        }
+        p.setPastLife(previousLife);
+        p.setKey(key);
+        p.ghostKey = ghostKey;
         p.addRestrictions(restrictions);
         return p;
+    }
+
+
+    @Override
+    public boolean canRewind(Label label){
+        if (!(label instanceof LabelKey))
+            return false;
+
+        LabelKey key = (LabelKey) label;
+        if (ghostKey.equals(key)){ //Oh no! We are trying to unlock the ghost :O
+            //Do we need to do anything before rewinding?
+            //So, as far as I know, whenever a decision is made, it must be in the
+            //EXACT same state as it was directly after being made in order to rewind.
+            //So, in other words: We can only undo a summation choice if the rewinding
+            //is the only reverse action that can be taken
+
+        }
+        return true;
     }
 
     @Override
     public Collection<Label> getActionableLabels(){
         Collection<Label> s = super.getActionableLabels();
-        Collection<Label> l = left.getActionableLabels();
-        Collection<Label> r = right.getActionableLabels();
-        //If left is annotated, clear all right labels
-        if (l.stream().anyMatch(LabelKey.class::isInstance))
-            r.clear();
-        if (r.stream().anyMatch(LabelKey.class::isInstance))
-            l.clear();
+        Collection<Label> l = left.isGhost ? Collections.emptySet()
+                : left.getActionableLabels();
+        Collection<Label> r = right.isGhost ? Collections.emptySet()
+                : right.getActionableLabels();
         for (Label ll: l)
             for (Label rl : r){
                 ll.addSynchronizationLock(rl);
                 rl.addSynchronizationLock(ll);
             }
-
         s.addAll(l);
         s.addAll(r);
+
+        if (ghostKey != null) { //If we have a ghost key
+            if (s.contains(ghostKey)) //If ghost key is on the table
+                s.remove(ghostKey);   //Remove ghost key (temporarily)
+            if (!s.stream().anyMatch(LabelKey.class::isInstance)) //Any more keys in list?
+                s.add(ghostKey); //No? ok we can do ghost key
+            //Otherwise nope
+        }
         return s;
+    }
+
+    @Override
+    public String represent(){
+        if (ghostKey != null)
+            switch (RCCS.SUMMATION_STYLE){
+                case 0:
+                    return super.represent(String.format(
+                            "(%s)%s(%s)"
+                            , left == null ? "" : left.represent()
+                            , operator.toString()
+                            , right == null ? "" : right.represent()
+                    ));
+                case 1:
+                        if (left.isGhost)
+                            return super.represent(String.format(
+                                    "%s{%s} %s (%s)"
+                                    , ghostKey.origin()
+                                    , left == null ? "" : left.represent()
+                                    , operator.toString()
+                                    , right == null ? "" : right.represent()
+                            ));
+                        if (right.isGhost)
+                            return super.represent(String.format(
+                                    "(%s) %s %s{%s}"
+                                    , left == null ? "" : left.represent()
+                                    , operator.toString()
+                                    , ghostKey.origin()
+                                    , right == null ? "" : right.represent()
+                            ));
+                case 2:
+                    if (left.isGhost)
+                        return super.represent(String.format(
+                                "%s"
+                                , right == null ? "" : right.represent()
+                        ));
+                    if (right.isGhost)
+                        return super.represent(String.format(
+                                "%s"
+                                , left == null ? "" : left.represent()
+                        ));
+
+            }
+        return super.represent(String.format(
+                "(%s)%s(%s)"
+                , left == null ? "" : left.represent()
+                , operator.toString()
+                , right == null ? "" : right.represent()
+        ));
     }
 
 }

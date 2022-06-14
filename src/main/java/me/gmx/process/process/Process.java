@@ -19,6 +19,11 @@ public abstract class Process extends ProgramNode {
     //Actual process of previous life
     Process previousLife = null;
 
+    //Passthru key for summation processes
+    protected LabelKey ghostKey = null;
+
+    protected boolean isGhost = false;
+
     Set<Label> restrictions = new HashSet<>();
 
     public Process(){}
@@ -75,7 +80,6 @@ public abstract class Process extends ProgramNode {
      */
     public boolean canAct(Label label){
         RCCS.log(String.format("Checking if %s can act on %s",represent(),label.origin()));
-        RCCS.log(SetUtil.csvSet(getActionableLabels()));
         return getActionableLabels().contains(label);
     }
 
@@ -88,6 +92,14 @@ public abstract class Process extends ProgramNode {
     protected abstract Process actOn(Label label);
 
 
+    public boolean canRewind(Label key){
+        return getActionableLabels().contains(key);
+    }
+
+    public boolean isAnnotated(){
+        return getActionableLabels().stream().anyMatch(LabelKey.class::isInstance);
+    }
+
     /**
      * Act on a given label. This is the only method that should be called outside
      * of subclasses.
@@ -95,8 +107,17 @@ public abstract class Process extends ProgramNode {
      * @return will return this, after having acted on the given label
      */
     public Process act(Label label){
-        if (label instanceof LabelKey && label.equals(getKey()))
-            return previousLife;
+        if (label instanceof LabelKey) {
+            if (ghostKey == null && hasKey()) //Just a regular process? Is it reversible?
+                if (getKey().equals(label)) //Make sure keys match
+                    return previousLife; //Rewind!
+            //Ghost key present?
+            if (label.equals(ghostKey)) { //Is the key correct?
+                ghostKey = null;
+                return previousLife; //Okay, rewind!
+            }else return this.actOn(label); //Key incorrect? passthru!
+
+        }
         return this.actOn(label);
     }
 
@@ -118,7 +139,7 @@ public abstract class Process extends ProgramNode {
      * @return true if the process is capable of reversing on the given key
      */
     @Deprecated
-    public boolean canReverse(LabelKey key){
+    public boolean canReverse(Label key){
         return hasKey() && getKey().equals(key);
     }
 
@@ -162,12 +183,14 @@ public abstract class Process extends ProgramNode {
      * @return
      */
     protected String represent(String base){
+
         String s = "";
         s += hasKey() ? String.format("%s%s"
                 , getKey().origin()
                 , base)
                 : String.format("%s",base);
         s+= getRestriction().isEmpty() ? "" : String.format("\\{%s}",SetUtil.csvSet(getRestriction()));
+
         return s;
     }
 

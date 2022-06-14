@@ -7,6 +7,6 @@ This is just for me, so it may not make sense. But it can stay public.
 - Loading examples
 - Unicode symbols
 - Asymmetrical branch concurrency tau-checking (will a top level branch match tau from left right to right left?)
-
+- Actionable label caching
 
 Ideally, acting should always return a clone.

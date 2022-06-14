@@ -4,6 +4,8 @@ import me.gmx.RCCS;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.util.SetUtil;
 
 import java.util.*;
 
@@ -47,6 +49,20 @@ public class ActionPrefixProcess extends Process {
         return process;
     }
 
+    @Override
+    public boolean canAct(Label label){
+        RCCS.log(String.format("Checking if %s can act on %s",represent(),label.origin()));
+        Collection<Label> labels = getActionableLabels();
+        if (label instanceof TauLabelNode) {
+            TauLabelNode tau = (TauLabelNode) label;
+            return labels.contains(tau.getA()) && !tau.consumeLeft ? true
+                    : labels.contains(tau.getB()) && !tau.consumeRight ? true
+                    : false; //Basically check if it can either act on left or right, and if it has
+            // already been acted on
+        }
+        else return labels.contains(label); //super.canAct(label);
+    }
+
 
     /**
      * Acts on label. sets past life to clone of this
@@ -55,6 +71,18 @@ public class ActionPrefixProcess extends Process {
      */
     @Override
     public Process actOn(Label label) {
+        if (label instanceof TauLabelNode){
+            TauLabelNode tau = (TauLabelNode) label;
+            if (getPrefix().equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
+                actInternal(tau);
+                tau.consumeLeft = true;
+            }else if (getPrefix().equals(tau.getB()) && !tau.consumeRight){
+                actInternal(tau);
+                tau.consumeRight = true;
+            }
+            return this;
+        }
+
         if (getPrefix().equals(label)) {
             setPastLife(clone());
             prefixes.removeFirst();
@@ -62,6 +90,12 @@ public class ActionPrefixProcess extends Process {
         }
         recalculateOrigin();
         return this;
+    }
+
+    private void actInternal(Label label){ //to save some lines of code. does not check label equality
+        setPastLife(clone());
+        setKey(new LabelKey(label));
+        prefixes.removeFirst();
     }
 
     private void recalculateOrigin(){

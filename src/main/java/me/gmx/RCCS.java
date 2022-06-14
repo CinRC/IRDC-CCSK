@@ -14,6 +14,11 @@ public class RCCS {
     //Should reversal keys be treated as actionable labels?
     public static final boolean KEYS_AS_LABELS = true;
 
+    //0, 1 -> id, origin
+    public static final int KEY_MATCHING_MODE = 0;
+    //0 = keep summation, 1 = annotate summation, 2 = don't show summation
+    public static final int SUMMATION_STYLE = 1;
+
     //Should null processes be implicit or explicit
     public static final boolean IMPLICIT_NULL_PROCESSES = true;
 

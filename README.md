@@ -1,9 +1,11 @@
 # Presentation
 
 ## What is RCCS?
+
 RCCS, or Reversible Calculus of Communicating Systems, is a formal language that describes the interaction of concurrent systems in a reversible paradigm.
 
 ## What is this project?
+
 This project is a collaboration attempt between me and Dr. Clément Aubert (seen in commits) to be the first to implement a reversible formal language.
 At its core, this is a parser and discovery tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
 Everything in this program was written from scratch, down to even the string utilities used internally.
@@ -13,6 +15,7 @@ Everything in this program was written from scratch, down to even the string uti
 
 During the design of this program, I was by no means an expert in CCS or CCSK. Thus, my understanding was limited.
 Because of this, I refer to things internally slightly differently then an expert may have. I have listed some of the relevant mappings below:
+
 1. Channel names are referred to as 'Labels'
 2. Parallel operators (`|`) are referred to as 'Concurrent Processes'
 3. Deterministic operators (`+`) are referred to as 'Summation Processes'
@@ -72,7 +75,16 @@ then use
 or link it.
 
 ### Running
+
 `JRE >= 8`
+
+Please use e.g. 
+
+```
+java -jar target/RCCS-2.0-jar-with-dependencies.jar "a|b"
+```
+
+then select the possible labels to act on by their number.
 
 ## Usage
 

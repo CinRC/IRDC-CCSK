@@ -103,7 +103,7 @@ public class ActionPrefixProcess extends Process {
         for (Label label : prefixes)
             s += String.format("%s.",label.origin());
         //If we don't want to see null processes, then remove last . and dont represent
-        if (!RCCS.IMPLICIT_NULL_PROCESSES && getProcess() instanceof NullProcess) {
+        if (!RCCS.DISPLAY_NULL_PROCESSES && getProcess() instanceof NullProcess) {
             s = s.substring(0,s.length()-1);
         }else{
             s += getProcess().represent();

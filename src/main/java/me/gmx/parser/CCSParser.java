@@ -56,20 +56,11 @@ public class CCSParser {
             }
                 if (!inParenthesis)
                 for (CCSGrammar g : CCSGrammar.values()) {
-                /**"Skip if:
-                 * 1. The grammar does not have an initializable class AND the grammar is not a parenthesis
-                 * OR
-                 * 2. The grammar is a LABEL or PROCESS
-                 *
-                 * It will skip labels and processes because I am CCSGrammar.ACTION
-                 *
-                 **/
                 if (!g.canBeParsed())
                     continue;
                 Matcher m = g.match(walker.readMemory());
                 if (m.find()){
                     RCCS.log("Found match: " + m.group() + " Grammar: " + g.name());
-
                     if (inSetNotation){
                         if (g == CCSGrammar.LABEL_COMBINED){
                             restrictions.add(LabelFactory.parseNode(m.group())); //Add restriction to list
@@ -83,8 +74,6 @@ public class CCSParser {
                         walker.clearMemory();
                         continue;
                     }
-
-
                     if (g == CCSGrammar.LABEL_COMBINED) { //a , 'b , c
                         RCCS.log("Adding prefix: " + m.group());
                         prefixes.add(LabelFactory.parseNode(m.group()));
@@ -100,7 +89,6 @@ public class CCSParser {
                                 prefixes.clear();
                             }else
                                 throw new CCSParserException("Could not find process for prefixes: " + SetUtil.csvSet(prefixes));
-
                         }
                     }else if (g == CCSGrammar.PROCESS){
                         if (prefixes.isEmpty())

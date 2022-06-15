@@ -9,10 +9,8 @@ import java.util.*;
 public class CCSInteractionHandler {
 
     public ProcessTemplate template;
-    public Collection<RCCS.CCSFlag> flags;
-    public CCSInteractionHandler(ProcessTemplate template, Collection<RCCS.CCSFlag> flags){
+    public CCSInteractionHandler(ProcessTemplate template){
         this.template = template;
-        this.flags = flags;
     }
 
 

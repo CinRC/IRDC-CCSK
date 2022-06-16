@@ -10,18 +10,20 @@ public class LabelKey extends Label {
 
     private Label from;
     public LabelKey(Label node){
+        super(node.dupe, node.getChannel());
         this.id = node.getId();
         this.from = node;
     }
 
     /**
      * To replicate UUIDs for tau transitions
-     * @param node
-     * @param id
+     * @param key LabelKEy to copy from
      */
-    public LabelKey(Label node, UUID id){
-        this.id = id;
-        this.from = node;
+    public LabelKey(LabelKey key){
+        super(key.dupe, key.getChannel());
+        id = key.getId();
+        from = key.from.clone();
+        origin = key.origin();
     }
 
     @Override
@@ -51,6 +53,6 @@ public class LabelKey extends Label {
     }
 
     public LabelKey clone(){
-        return new LabelKey((Label)from.clone(), from.getId());
+        return new LabelKey(this);
     }
 }

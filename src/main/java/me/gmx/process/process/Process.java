@@ -122,17 +122,6 @@ public abstract class Process extends ProgramNode {
     }
 
     /**
-     * Saves this process as a clone to memory, and assigns a unique key formed from
-     * the given label that links this process to the process in memory. This should not
-     * be called by any method other than internal acting methods.
-     * @param label label to set as key
-     */
-    protected void rememberLife(Label label){
-        previousLife = this;
-        key = new LabelKey(label);
-    }
-
-    /**
      * Whether or not a given process can reverse on a key
      * Deprecated in favor of just checking keys match
      * @param key given key

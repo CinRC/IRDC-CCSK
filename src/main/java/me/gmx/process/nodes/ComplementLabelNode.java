@@ -10,9 +10,18 @@ import java.util.UUID;
 public class ComplementLabelNode extends Label{
 
     public ComplementLabelNode(String s) {
-        origin = s;
+        //Remove the ' when applying channel
+        super(NodeIDGenerator.nextAvailable(), s.replaceFirst("'",""));
         grammar = CCSGrammar.OUT_LABEL;
         this.id = UUID.randomUUID();
+        origin = s;
+    }
+
+    private ComplementLabelNode(ComplementLabelNode node){
+        super(node.dupe, node.getChannel());
+        grammar = CCSGrammar.OUT_LABEL;
+        id = node.getId();
+        origin = node.origin();
     }
 
     public String toString(){
@@ -21,7 +30,11 @@ public class ComplementLabelNode extends Label{
 
     @Override
     public ComplementLabelNode clone(){
-        return new ComplementLabelNode(new String(origin));
+        return new ComplementLabelNode(this);
+    }
+
+    public String origin(){
+        return String.format("%s%s%s", CCSGrammar.COMPLEMENT_SIG,getChannel(),dupe);
     }
 
 }

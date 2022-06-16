@@ -10,12 +10,12 @@ public class TauLabelNode extends Label {
     public boolean consumeLeft, consumeRight;
 
     public TauLabelNode(Label node, Label comp) {
+        super(-1, node.getChannel());
         this.node = node;
         this.complement = comp;
         consumeLeft = consumeRight = false;
         this.id = UUID.randomUUID();
     }
-
 
     @Override
     public boolean equals(Object o){

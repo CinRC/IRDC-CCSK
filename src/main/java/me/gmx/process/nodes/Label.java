@@ -12,6 +12,13 @@ public abstract class Label extends ProgramNode{
     public CCSGrammar grammar;
     UUID id;
     protected Collection<Label> synchronizeLock;
+    public int dupe;
+    private String channel;
+
+    public Label(int dupeId, String channel){
+        dupe = dupeId;
+        this.channel = channel;
+    }
     //Instanced initializer block ??
     {
         synchronizeLock = new HashSet<>();
@@ -21,10 +28,6 @@ public abstract class Label extends ProgramNode{
         return id;
     }
 
-    @Override
-    public String origin() {
-        return origin;
-    }
 
     /**
      * Determines whether this process can synchronize via tau transition with the given label
@@ -62,6 +65,8 @@ public abstract class Label extends ProgramNode{
         }
     }
 
+    public String getChannel(){ return channel; }
+
     @Override
     public int hashCode(){
         return 0;
@@ -75,8 +80,7 @@ public abstract class Label extends ProgramNode{
      * @return true if the given node is 'synchronizable'
      */
     public boolean isComplementOf(Label node){
-        return node.origin().equals(String.format("'%s", origin()))
-                || origin().equals(String.format("'%s", node.origin()));
+        return node.getChannel().equals(getChannel());
     }
 
     public abstract Label clone();

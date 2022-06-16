@@ -79,7 +79,7 @@ public class ActionPrefixProcess extends Process {
             }else if (getPrefix().equals(tau.getB()) && !tau.consumeRight){
                 actInternal(tau);
                 tau.consumeRight = true;
-            }
+            } else throw new CCSTransitionException(this, label);
             return this;
         }
 
@@ -87,7 +87,7 @@ public class ActionPrefixProcess extends Process {
             setPastLife(clone());
             prefixes.removeFirst();
             setKey(new LabelKey(label));
-        }
+        }else throw new CCSTransitionException(this, label);
         recalculateOrigin();
         return this;
     }

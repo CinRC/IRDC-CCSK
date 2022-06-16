@@ -17,6 +17,7 @@ public enum CCSGrammar {
     PROCESS("[A-Z]", ProcessImpl.class, null, true),
     NULL_PROCESS("[0]",NullProcess.class,"0", true),
     OP_SEQUENTIAL("\\.", null, ".", true),
+    COMPLEMENT_SIG("'",null, "'", false),
     OUT_LABEL(String.format("'%s",LABEL.pString), ComplementLabelNode.class, null, false),
     OP_ACTIONPREFIX(String.format("(%s)|(%s)%s",
             LABEL.pString,OUT_LABEL.pString,OP_SEQUENTIAL.pString),null, null, false),

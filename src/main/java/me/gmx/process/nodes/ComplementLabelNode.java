@@ -34,7 +34,7 @@ public class ComplementLabelNode extends Label{
     }
 
     public String origin(){
-        return String.format("%s%s%s", CCSGrammar.COMPLEMENT_SIG,getChannel(),dupe);
+        return String.format("%s%s", CCSGrammar.COMPLEMENT_SIG,super.origin());
     }
 
 }

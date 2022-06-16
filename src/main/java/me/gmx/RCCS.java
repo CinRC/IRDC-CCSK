@@ -9,10 +9,11 @@ public class RCCS {
     static Scanner scan;
     //Print debug info?
     public static final boolean DEBUG = true;
-    //Should every channel parsed be given a unique ID? (This breaks things right now. I only leave it in for future use.
     public static final boolean UNIQUE_CHANNELS = false;
     //Should reversal keys be treated as actionable labels?
     public static final boolean KEYS_AS_LABELS = true;
+    //Should labels be *visibly* different? (a0 a1 vs a0 a1)
+    public static final boolean DIFFERENTIATE_LABELS = false;
     //0, 1 -> id, origin
     public static final int KEY_MATCHING_MODE = 0;
     //0 = keep summation, 1 = annotate summation, 2 = don't show summation
@@ -44,6 +45,22 @@ public class RCCS {
     public static void log(String s){
         if (RCCS.DEBUG)
             System.out.println("[debug] " + s);
+    }
+
+    public enum RCCSFlag{
+        DEBUG("Should program print debug info", "--debug",false),
+        UNIQUE_CHANNELS("[broken] Should each channel's identity be dictated by it's unique ID",
+                "--unique-channels",false),
+        KEYS_AS_LABELS("Should CCSK keys be treated as labels", "--keys",
+                true);
+
+
+        private String description;
+
+        RCCSFlag(String desc, String flag, boolean defState){
+            description = desc;
+        }
+
     }
 
 }

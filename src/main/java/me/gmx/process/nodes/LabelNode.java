@@ -1,5 +1,6 @@
 package me.gmx.process.nodes;
 
+import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 
 import java.util.UUID;
@@ -28,9 +29,5 @@ public class LabelNode extends Label {
         return new LabelNode(this);
     }
 
-    @Override
-    public String origin(){
-        return getChannel()+dupe;
-    }
 
 }

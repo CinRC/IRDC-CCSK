@@ -85,5 +85,11 @@ public abstract class Label extends ProgramNode{
 
     public abstract Label clone();
 
+    @Override
+    public String origin(){
+        String s = RCCS.DIFFERENTIATE_LABELS ? String.valueOf(dupe) : "";
+        return getChannel()+s;
+    }
+
 
 }

@@ -32,7 +32,8 @@ public class ParseTest {
             }
         //Basically, can a process be parsed and tokenized while retaining its properties
         for (String s : matchTest) {
-            assert compare(CCSParser.parseLine(s).export().origin(), s);
+            String a = CCSParser.parseLine(s).export().origin();
+            assert compare(a, s);
         }
     }
 

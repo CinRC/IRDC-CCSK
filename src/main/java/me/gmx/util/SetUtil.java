@@ -1,9 +1,6 @@
 package me.gmx.util;
 
-import me.gmx.process.nodes.ComplementLabelNode;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
-import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.process.nodes.*;
 import me.gmx.process.process.Process;
 
 import java.security.KeyPair;
@@ -35,7 +32,7 @@ public class SetUtil {
             if (node instanceof ComplementLabelNode){
                 //Cool, there is a complement in the set. Let's see if any matches
                 for (Label innerNode : nodes)
-                    if (innerNode != node)
+                    if (innerNode != node && !(innerNode instanceof LabelKey))
                         if (node.isComplementOf(innerNode))
                             if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node))
                             //Cool, we found a complement, let's add it to our map.

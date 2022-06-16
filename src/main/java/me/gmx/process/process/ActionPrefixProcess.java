@@ -36,6 +36,8 @@ public class ActionPrefixProcess extends Process {
             p.setPastLife(previousLife);
             p.setKey(getKey());
         }
+        p.ghostKey = ghostKey;
+        p.isGhost = isGhost;
         p.addRestrictions(getRestriction());
 
         return p;
@@ -73,6 +75,8 @@ public class ActionPrefixProcess extends Process {
     public Process actOn(Label label) {
         if (label instanceof TauLabelNode){
             TauLabelNode tau = (TauLabelNode) label;
+            if (prefixes.isEmpty())
+                throw new CCSTransitionException(this, label);
             if (getPrefix().equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
                 actInternal(tau);
                 tau.consumeLeft = true;
@@ -103,7 +107,8 @@ public class ActionPrefixProcess extends Process {
         for (Label label : prefixes)
             s += String.format("%s.",label.origin());
         //If we don't want to see null processes, then remove last . and dont represent
-        if (!RCCS.DISPLAY_NULL_PROCESSES && getProcess() instanceof NullProcess) {
+        if (!RCCS.DISPLAY_NULL_PROCESSES && getProcess() instanceof NullProcess
+                && !prefixes.isEmpty()) {
             s = s.substring(0,s.length()-1);
         }else{
             s += getProcess().represent();

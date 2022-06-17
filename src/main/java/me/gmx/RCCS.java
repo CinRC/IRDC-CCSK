@@ -13,7 +13,7 @@ public class RCCS {
     //Should reversal keys be treated as actionable labels?
     public static final boolean KEYS_AS_LABELS = true;
     //Should labels be *visibly* different? (a0 a1 vs a0 a1)
-    public static final boolean DIFFERENTIATE_LABELS = false;
+    public static final boolean DIFFERENTIATE_LABELS = true;
     //0, 1 -> id, origin
     public static final int KEY_MATCHING_MODE = 0;
     //0 = keep summation, 1 = annotate summation, 2 = don't show summation

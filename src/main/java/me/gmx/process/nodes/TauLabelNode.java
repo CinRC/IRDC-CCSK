@@ -6,13 +6,13 @@ import java.util.UUID;
 //TODO: NYI
 public class TauLabelNode extends Label {
 
-    private Label node, complement;
+    private Label a, b;
     public boolean consumeLeft, consumeRight;
 
     public TauLabelNode(Label node, Label comp) {
-        super(-1, node.getChannel());
-        this.node = node;
-        this.complement = comp;
+        super(-1, node.getChannel() + ":" + comp.getChannel());
+        this.a = node;
+        this.b = comp;
         consumeLeft = consumeRight = false;
         this.id = UUID.randomUUID();
     }
@@ -22,19 +22,20 @@ public class TauLabelNode extends Label {
         if (!(o instanceof TauLabelNode))
             return false;
         TauLabelNode node = (TauLabelNode) o;
-        return node.getA().equals(getA()) && node.getB().equals(getB());
+        return (node.getA().equals(getA()) && node.getB().equals(getB()))
+                || (node.getB().equals(getA()) && node.getA().equals(getB()));
     }
 
     @Override
     public String origin(){
-        return String.format("Tau{%s, %s}",node.origin(),complement.origin());
+        return String.format("Tau{%s, %s}",a.origin(),b.origin());
     }
 
     public Label getA(){
-        return node;
+        return a;
     }
     public Label getB(){
-        return complement;
+        return b;
     }
 
     @Override

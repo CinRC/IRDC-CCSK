@@ -34,9 +34,12 @@ public class SetUtil {
                 for (Label innerNode : nodes)
                     if (innerNode != node && !(innerNode instanceof LabelKey))
                         if (node.isComplementOf(innerNode))
-                            if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node))
-                            //Cool, we found a complement, let's add it to our map.
-                            tau.add(new TauLabelNode(node,innerNode));
+                            if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node)) {
+                                //Cool, we found a complement, let's add it to our map.
+                                TauLabelNode n = new TauLabelNode(node, innerNode); //Don't want duplicates
+                                if (!tau.contains(n))
+                                    tau.add(n);
+                            }
             }
         }
         return tau;

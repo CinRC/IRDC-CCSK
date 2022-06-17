@@ -81,6 +81,13 @@ public abstract class Label extends ProgramNode{
      * @return true if the given node is 'synchronizable'
      */
     public boolean isComplementOf(Label node){
+        if (this instanceof LabelNode) {
+            if (node instanceof LabelNode)
+                return false;
+        }else if (this instanceof ComplementLabelNode) {
+            if (node instanceof ComplementLabelNode)
+                return false;
+        }
         return node.getChannel().equals(getChannel());
     }
 

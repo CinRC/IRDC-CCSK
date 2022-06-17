@@ -23,7 +23,7 @@ Ideally, acting should always return a clone.
 - Fix the restriction: if you have ""(a|'a)\{a}"", then you cannot act on a nor 'a, you can only do tau. Restriction on a means "you cannot communicate along channel a", which means "you cannot input or output on a", so both a and 'a should be forbidden: the only possible transition is tau.
 
 - For a process such as "((a)|('a))+((a)|('a))", there are 6 different transitions (first a, first 'a, first tau, second a, second a', second tau), but the program lists only 3.
-
+**FIXED**
 - There should be a way of giving arguments to the program to give the strategy (for testing purposes?). So that, e.g. a flag "s" could be given with a series of decisions to do:
 
 java -jar target/RCCS-2.0-jar-with-dependencies.jar "(a|'a)+(a|'a)" -s 0,1 

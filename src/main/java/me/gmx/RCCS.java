@@ -50,9 +50,25 @@ public class RCCS {
     public enum RCCSFlag{
         DEBUG("Should program print debug info", "--debug",false),
         UNIQUE_CHANNELS("[broken] Should each channel's identity be dictated by it's unique ID",
-                "--unique-channels",false),
-        KEYS_AS_LABELS("Should CCSK keys be treated as labels", "--keys",
-                true);
+                "--uC",false),
+        KEYS_AS_LABELS("Should CCSK keys be treated as labels",
+                "--kL", true),
+        DIFFERENTIATE_LABELS("Should labels be given numerical identifiers to differentiate them",
+                "--dL", false),
+        KEY_MATCHING_MODE("[broken] Should a label's identity be determined by its unique ID?",
+                "--kM", false), //0 = true 1 = false
+        SUMMATION_STYLE_1("Alternative display mode for summation processes. Reversible summations are not annotated",
+                "--sA", false),
+        SUMMATION_STYLE_2("Alternative display mode for summation processes. Reversible summations are annotated",
+                "--sB", true),
+        SUMMATION_STYLE_3("Alternative display mode for summation processes. Reversible summations are hidden after execution",
+                "--sC", false),
+        IMPLICIT_NULL("Should labels without processes attached be implicitly implied to have a trailing null process",
+                "--iN", true),
+        DISPLAY_PARENTHESIS("Should complex processes display parenthesis to group its components",
+                "--dP", true),
+        DISPLAY_NULL("Should null processes be displayed?",
+                "dN", false);
 
 
         private String description;

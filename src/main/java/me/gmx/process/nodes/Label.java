@@ -60,8 +60,9 @@ public abstract class Label extends ProgramNode{
         if (RCCS.UNIQUE_CHANNELS)
             return label.getId().equals(getId());
         else {
-            boolean c = label.origin().equals(origin());
-            return label.origin().equals(origin());
+            String t = getChannel() + dupe;
+            String n = label.getChannel() + label.dupe;
+            return t.equals(n); //Check if label + dupe id are equal // a0 == a0, a1 != a0
         }
     }
 

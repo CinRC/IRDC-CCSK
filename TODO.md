@@ -16,9 +16,9 @@ Ideally, acting should always return a clone.
 
 <!-- Should those be issues instead? -->
 
-- The key should *not* be identical to the label.
+- The key should *not* be identical to the label. // **FIXED**
 
-- Document restricition in "Developer slang"?
+- Document restricition in "Developer slang"? // **FIXED**
 
 - Fix the restriction: if you have ""(a|'a)\{a}"", then you cannot act on a nor 'a, you can only do tau. Restriction on a means "you cannot communicate along channel a", which means "you cannot input or output on a", so both a and 'a should be forbidden: the only possible transition is tau.
 

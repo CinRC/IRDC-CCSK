@@ -29,7 +29,9 @@ public enum RCCSFlag {
     DISPLAY_NULL("Null processes will be displayed",
             "--dN"),
     IGNORE_UNRECOGNIZED("Unrecognized characters in process are ignored",
-            "--iU");
+            "--iU"),
+    KEYS_MATCH_LABELS("Keys will be visibly similar to the label they represent",
+            "--kL");
 
 
     private String description;

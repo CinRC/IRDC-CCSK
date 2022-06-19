@@ -14,6 +14,7 @@ public class LabelKey extends Label {
         super(node.dupe, node.getChannel());
         this.id = node.getId();
         this.from = node;
+        this.dupe = NodeIDGenerator.nextAvailableKey();
     }
 
     /**
@@ -25,6 +26,7 @@ public class LabelKey extends Label {
         id = key.getId();
         from = key.from.clone();
         origin = key.origin();
+        this.dupe = key.dupe;
     }
 
     @Override
@@ -43,7 +45,9 @@ public class LabelKey extends Label {
 
     @Override
     public String origin() {
-        return String.format("[%s]",from.origin());
+        if (RCCS.config.contains(RCCSFlag.KEYS_MATCH_LABELS))
+            return String.format("[%s]",from.origin());
+        else return String.format("[k%s]", dupe);
     }
 
     public LabelKey clone(){

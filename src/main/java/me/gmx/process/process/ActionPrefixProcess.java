@@ -5,6 +5,7 @@ import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
 import java.util.*;
@@ -107,7 +108,7 @@ public class ActionPrefixProcess extends Process {
         for (Label label : prefixes)
             s += String.format("%s.",label.origin());
         //If we don't want to see null processes, then remove last . and dont represent
-        if (!RCCS.DISPLAY_NULL_PROCESSES && getProcess() instanceof NullProcess
+        if (!RCCS.config.contains(RCCSFlag.DISPLAY_NULL) && getProcess() instanceof NullProcess
                 && !prefixes.isEmpty()) {
             s = s.substring(0,s.length()-1);
         }else{

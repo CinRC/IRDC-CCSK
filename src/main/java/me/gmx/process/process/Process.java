@@ -5,6 +5,7 @@ import me.gmx.parser.CCSParser;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
+import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -206,7 +207,7 @@ public abstract class Process extends ProgramNode {
      */
     public Collection<Label> getActionableLabels(){
         Set<Label> l = new HashSet<>();
-        if (RCCS.KEYS_AS_LABELS && hasKey())
+        if (hasKey())
             l.add(getKey());
 
         return l;

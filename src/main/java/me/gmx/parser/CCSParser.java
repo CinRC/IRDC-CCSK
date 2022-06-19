@@ -1,17 +1,15 @@
 package me.gmx.parser;
 
 import me.gmx.RCCS;
-import me.gmx.process.ProcessTemplate;
-import me.gmx.process.nodes.ActionPrefixProcessFactory;
+import me.gmx.thread.ProcessTemplate;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
 import me.gmx.process.process.*;
+import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
-import java.lang.Process;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 
 public class CCSParser {
@@ -61,6 +59,14 @@ public class CCSParser {
                 Matcher m = g.match(walker.readMemory());
                 if (m.find()){
                     RCCS.log("Found match: " + m.group() + " Grammar: " + g.name());
+                    //If
+                    if (!RCCS.config.contains(RCCSFlag.IGNORE_UNRECOGNIZED))
+                        if (!g.match(walker.readMemory()).matches()) {
+                            String tempString = walker.readMemory().replace(m.group(),"");
+                            System.out.println("Unrecognized character(s): " + tempString);
+                            System.exit(1);
+                        }
+
                     if (inSetNotation){
                         if (g == CCSGrammar.LABEL_COMBINED){
                             restrictions.add(LabelFactory.parseNode(m.group())); //Add restriction to list
@@ -84,7 +90,7 @@ public class CCSParser {
                             walker.walk(false);
                         //If there is no ., then treat it as an implicit "0" process
                         }else {
-                            if (RCCS.IMPLICIT_NULL_PROCESSES){
+                            if (!RCCS.config.contains(RCCSFlag.EXPLICIT_NULL)){
                                 template.add(new ActionPrefixProcess(new NullProcess(), prefixes));
                                 prefixes.clear();
                             }else

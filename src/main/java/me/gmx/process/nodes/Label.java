@@ -2,6 +2,7 @@ package me.gmx.process.nodes;
 
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
+import me.gmx.util.RCCSFlag;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -57,7 +58,7 @@ public abstract class Label extends ProgramNode{
         if (!(o instanceof Label))
             return false;
         Label label = (Label) o;
-        if (RCCS.UNIQUE_CHANNELS)
+        if (RCCS.config.contains(RCCSFlag.UNIQUE_CHANNELS))
             return label.getId().equals(getId());
         else {
             String t = getChannel() + dupe;
@@ -95,7 +96,7 @@ public abstract class Label extends ProgramNode{
 
     @Override
     public String origin(){
-        String s = RCCS.DIFFERENTIATE_LABELS ? String.valueOf(dupe) : "";
+        String s = RCCS.config.contains(RCCSFlag.DIFFERENTIATE_LABELS) ? String.valueOf(dupe) : "";
         return getChannel()+s;
     }
 

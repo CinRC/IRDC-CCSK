@@ -1,6 +1,7 @@
 package me.gmx.process.nodes;
 
 import me.gmx.RCCS;
+import me.gmx.util.RCCSFlag;
 
 import java.util.UUID;
 
@@ -35,14 +36,7 @@ public class LabelKey extends Label {
     public boolean equals(Object o){
         if (!(o instanceof LabelKey))
             return false;
-
         LabelKey key = (LabelKey) o;
-        if (RCCS.KEY_MATCHING_MODE == 0)
-            return key.getId().equals(getId()); //Match IDs
-        else if (RCCS.KEY_MATCHING_MODE == 1)
-            return key.origin().equals(origin());
-
-
         return key.getId().equals(getId()); //defaults to id
     }
 

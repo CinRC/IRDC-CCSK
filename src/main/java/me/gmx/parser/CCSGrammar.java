@@ -32,7 +32,7 @@ public enum CCSGrammar {
 //    RESTRICTION(String.format("\\{(%s,?)*}",LABEL.pString), null, null),
 //    RESTRICTED_PROCESS(String.format("(%s)%s",PROCESS.pString,RESTRICTION.pString), RestrictedProcessImpl.class, null);
 
-    private String pString, rep;
+    public String pString, rep;
     private Pattern pattern;
     private Class classObject;
     private boolean canParse;
@@ -68,16 +68,6 @@ public enum CCSGrammar {
     public Matcher match(CharSequence c){
         return getPattern().matcher(c);
     }
-
-    CCSGrammar find(String s) throws Exception {
-        for (CCSGrammar g : values()){
-            if (g.match(s).find()){
-                return g;
-            }
-        }
-        throw new Exception(String.format("Cannot find grammar for: %s",s));
-    }
-
 
     public String toString(){
         return rep == null ? "" : rep;

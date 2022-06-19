@@ -1,23 +1,24 @@
 package me.gmx;
 
-import me.gmx.process.ProcessTemplate;
+import me.gmx.thread.ProcessContainer;
+import me.gmx.thread.ProcessTemplate;
 import me.gmx.process.nodes.*;
-import me.gmx.util.SetUtil;
+import me.gmx.util.RCCSFlag;
 
 import java.util.*;
 
 public class CCSInteractionHandler {
 
-    public ProcessTemplate template;
-    public CCSInteractionHandler(ProcessTemplate template){
-        this.template = template;
+    public ProcessContainer container;
+    public CCSInteractionHandler(ProcessContainer container){
+        this.container = container;
     }
 
 
     public boolean startInteraction(){
         Scanner scan = new Scanner(System.in);
         while(true){
-            ArrayList<Label> actionable = new ArrayList<Label>(template.getActionableLabels());
+            ArrayList<Label> actionable = new ArrayList<Label>(container.getActionableLabels());
             if (actionable.isEmpty())
                 break;
 
@@ -27,7 +28,7 @@ public class CCSInteractionHandler {
             for (Label na : actionable)
                 System.out.printf("[%d] %s%n",i++,na.origin());
             System.out.println("------------");
-            System.out.println(String.format("%s", template.prettyString()));
+            System.out.println(String.format("%s", container.prettyString()));
             System.out.println("Please input the index of the label you'd like to act on:");
             String st = scan.next();
             Label n;
@@ -40,18 +41,15 @@ public class CCSInteractionHandler {
                 continue;
             }
 
+            String past = container.prettyString();
             try{
-                System.out.println(String.format("%s -%s-> %s",
-                        template.prettyString(),n.origin(),template.actOn(n).prettyString()));
-
+                container.act(n);
             }catch (Exception e){
                 System.out.println("Could not act on label!");
-                if (RCCS.DEBUG) e.printStackTrace();
+                if (RCCS.config.contains(RCCSFlag.DEBUG)) e.printStackTrace();
             }
-
-
-
-
+            System.out.println(String.format("%s -%s-> %s",
+                    past,n.origin(),container.prettyString()));
         }
 
         return true;

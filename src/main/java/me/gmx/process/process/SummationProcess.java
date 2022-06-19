@@ -6,6 +6,7 @@ import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -99,46 +100,47 @@ public class SummationProcess extends ComplexProcess{
     }
 
     @Override
-    public String represent(){
+    public String represent() {
         if (ghostKey != null)
-            switch (RCCS.SUMMATION_STYLE){
-                case 0:
+            if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_1))
+                return super.represent(String.format(
+                        "(%s)%s(%s)"
+                        , left == null ? "" : left.represent()
+                        , operator.toString()
+                        , right == null ? "" : right.represent()
+                ));
+            else if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_3)){
+                if (left.isGhost)
                     return super.represent(String.format(
-                            "(%s)%s(%s)"
-                            , left == null ? "" : left.represent()
-                            , operator.toString()
+                            "%s"
                             , right == null ? "" : right.represent()
                     ));
-                case 1:
-                        if (left.isGhost)
-                            return super.represent(String.format(
-                                    "%s{%s} %s (%s)"
-                                    , ghostKey.origin()
-                                    , left == null ? "" : left.represent()
-                                    , operator.toString()
-                                    , right == null ? "" : right.represent()
-                            ));
-                        if (right.isGhost)
-                            return super.represent(String.format(
-                                    "(%s) %s %s{%s}"
-                                    , left == null ? "" : left.represent()
-                                    , operator.toString()
-                                    , ghostKey.origin()
-                                    , right == null ? "" : right.represent()
-                            ));
-                case 2:
+                else if (right.isGhost)
+                    return super.represent(String.format(
+                            "%s"
+                            , left == null ? "" : left.represent()
+                    ));
+                }else {
                     if (left.isGhost)
                         return super.represent(String.format(
-                                "%s"
+                                "%s{%s} %s (%s)"
+                                , ghostKey.origin()
+                                , left == null ? "" : left.represent()
+                                , operator.toString()
                                 , right == null ? "" : right.represent()
                         ));
-                    if (right.isGhost)
+                    else if (right.isGhost)
                         return super.represent(String.format(
-                                "%s"
+                                "(%s) %s %s{%s}"
                                 , left == null ? "" : left.represent()
+                                , operator.toString()
+                                , ghostKey.origin()
+                                , right == null ? "" : right.represent()
                         ));
+                }
 
-            }
+
+
         return super.represent(String.format(
                 "(%s)%s(%s)"
                 , left == null ? "" : left.represent()

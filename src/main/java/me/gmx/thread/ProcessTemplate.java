@@ -1,4 +1,4 @@
-package me.gmx.process;
+package me.gmx.thread;
 
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;
@@ -49,29 +49,6 @@ public class ProcessTemplate {
     }
 
 
-    @Deprecated
-    public void write(){
-        for (Process o : tList)
-            System.out.println(o.origin());
-        System.out.println();
-    }
-
-    public String prettyString(){
-        StringBuilder sb = new StringBuilder();
-        for (Process o : tList) {
-            sb.append(o.represent());
-        }
-        return sb.toString();
-    }
-
-    public Set<Label> getActionableLabels(){
-        Set<Label> nodes = new HashSet<>();
-        for(Process p : tList)
-            nodes.addAll(p.getActionableLabels());
-
-
-        return nodes;
-    }
 
     /**
      * Exports ProcessTemplate as a process. ProcessTemplate should always init down to
@@ -87,25 +64,16 @@ public class ProcessTemplate {
         else return tList.get(0);
     }
 
-    public boolean canAct(Label node){
-        return getActionableLabels().contains(node);
-    }
-
-
-    public ProcessTemplate actOn(Label node){
-        for(int i = 0; i < tList.size();i++) {
-            Process p = tList.get(i);
-            if (p.canAct(node)) {
-                tList.set(i, p.act(node));
-                return this;
-            }
-        }
-        throw new CCSTransitionException(node);
-    }
-
     public void addRestrictionToLastProcess(Collection<Label> restrictions){
         this.tList.getLast().addRestrictions(restrictions);
 
+    }
+
+    public String prettyString(){
+        StringBuilder sb = new StringBuilder();
+        for (Process p : tList)
+            sb.append(p.represent());
+        return sb.toString();
     }
 
     public LinkedList<Process> getProcesses(){

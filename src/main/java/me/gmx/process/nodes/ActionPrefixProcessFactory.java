@@ -1,10 +1,8 @@
 package me.gmx.process.nodes;
 
-import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.StringWalker;
-import me.gmx.process.ProcessTemplate;
 import me.gmx.process.process.ActionPrefixProcess;
 import me.gmx.process.process.Process;
 import me.gmx.process.process.ProcessImpl;

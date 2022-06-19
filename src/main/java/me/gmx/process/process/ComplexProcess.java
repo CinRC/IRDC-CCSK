@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
+import me.gmx.util.RCCSFlag;
 
 import java.util.*;
 
@@ -100,12 +101,12 @@ public abstract class ComplexProcess extends Process{
     @Override
     public String origin(){
         StringBuilder b = new StringBuilder();
-        if (RCCS.DISPLAY_PARENTHESIS)
+        if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS))
             b.append(CCSGrammar.OPEN_PARENTHESIS.toString());
         if (left == null) b.append(""); else b.append(left.origin());
         b.append(operator);
         if (right == null) b.append(""); else b.append(right.origin());
-        if (RCCS.DISPLAY_PARENTHESIS)
+        if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS))
             b.append(CCSGrammar.CLOSE_PARENTHESIS.toString());
 
         return b.toString();

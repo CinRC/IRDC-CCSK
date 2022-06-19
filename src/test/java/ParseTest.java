@@ -1,5 +1,6 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
+import me.gmx.util.RCCSFlag;
 import org.junit.jupiter.api.Test;
 
 public class ParseTest {
@@ -11,7 +12,7 @@ public class ParseTest {
     @Test
     public void testOriginMatching(){
         String[] matchTest;
-            if (RCCS.DISPLAY_PARENTHESIS) {
+            if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
                 matchTest = new String[]{
                         "a.b.P",
                         "(a|b)",

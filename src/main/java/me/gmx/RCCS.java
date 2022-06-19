@@ -1,14 +1,16 @@
 package me.gmx;
 
 import me.gmx.parser.CCSParser;
-import me.gmx.process.ProcessTemplate;
+import me.gmx.thread.ProcessContainer;
+import me.gmx.thread.ProcessTemplate;
+import me.gmx.util.RCCSFlag;
 
 import java.util.*;
 
 public class RCCS {
     static Scanner scan;
     //Print debug info?
-    public static final boolean DEBUG = true;
+/*    public static final boolean DEBUG = true;
     public static final boolean UNIQUE_CHANNELS = false;
     //Should reversal keys be treated as actionable labels?
     public static final boolean KEYS_AS_LABELS = true;
@@ -23,60 +25,54 @@ public class RCCS {
     //Should complex processes be displayed with parenthesis
     public static final boolean DISPLAY_PARENTHESIS = true;
     //Should null processes be displayed (a.0) or hidden (a)
-    public static final boolean DISPLAY_NULL_PROCESSES = false;
+    public static final boolean DISPLAY_NULL_PROCESSES = false;*/
+
+    public static List<RCCSFlag> config = new ArrayList<>();
     public static void main(String[] args){
         if (args.length == 0){
-            log("Incorrect arguments! Please use the form `java -jar RCCS.jar \"a.b|c.a\"");
+            System.out.println("Incorrect arguments! Please use the form `java -jar RCCS.jar \"a.b|c.a\"");
             System.exit(1);
         }
+        int tempC = args.length;
+        for (int i = 0; i < (args.length-1); i++) {
+            for (RCCSFlag flag : RCCSFlag.values()) {
+                if (flag.doesMatch(args[i])) {
+                    config.add(flag);
+                    tempC--;
+                }
+            }
+        }
+
+        if (tempC != 1){
+            System.out.println("Unrecognized config!");
+            System.exit(1);
+        }
+        String formula = args[args.length-1];
+
+        if (RCCS.config.contains(RCCSFlag.HELP_MSG)){
+            System.out.println("Help message:");
+            System.exit(0);
+        }
+
+
         CCSParser c = new CCSParser();
         try {
-            ProcessTemplate template = c.parseLine(args[0]);
+            ProcessTemplate template = c.parseLine(formula);
             log(String.format("Formula before complex init and minimization: %s", template.prettyString()));
             log("\nMinimizing and initializing function...");
             template.initComplex();
             log(String.format("Formula after complex init and minimization: %s", template.prettyString()));
-            new CCSInteractionHandler(template).startInteraction();
+            new CCSInteractionHandler(new ProcessContainer(template.export())).startInteraction();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
     public static void log(String s){
-        if (RCCS.DEBUG)
+        if (RCCS.config.contains(RCCSFlag.DEBUG))
             System.out.println("[debug] " + s);
     }
 
-    public enum RCCSFlag{
-        DEBUG("Should program print debug info", "--debug",false),
-        UNIQUE_CHANNELS("[broken] Should each channel's identity be dictated by it's unique ID",
-                "--uC",false),
-        KEYS_AS_LABELS("Should CCSK keys be treated as labels",
-                "--kL", true),
-        DIFFERENTIATE_LABELS("Should labels be given numerical identifiers to differentiate them",
-                "--dL", false),
-        KEY_MATCHING_MODE("[broken] Should a label's identity be determined by its unique ID?",
-                "--kM", false), //0 = true 1 = false
-        SUMMATION_STYLE_1("Alternative display mode for summation processes. Reversible summations are not annotated",
-                "--sA", false),
-        SUMMATION_STYLE_2("Alternative display mode for summation processes. Reversible summations are annotated",
-                "--sB", true),
-        SUMMATION_STYLE_3("Alternative display mode for summation processes. Reversible summations are hidden after execution",
-                "--sC", false),
-        IMPLICIT_NULL("Should labels without processes attached be implicitly implied to have a trailing null process",
-                "--iN", true),
-        DISPLAY_PARENTHESIS("Should complex processes display parenthesis to group its components",
-                "--dP", true),
-        DISPLAY_NULL("Should null processes be displayed?",
-                "dN", false);
 
-
-        private String description;
-
-        RCCSFlag(String desc, String flag, boolean defState){
-            description = desc;
-        }
-
-    }
 
 }

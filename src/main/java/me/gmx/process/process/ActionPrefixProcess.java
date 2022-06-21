@@ -89,9 +89,7 @@ public class ActionPrefixProcess extends Process {
         }
 
         if (getPrefix().equals(label)) {
-            setPastLife(clone());
-            prefixes.removeFirst();
-            setKey(new LabelKey(label));
+            actInternal(label);
         }else throw new CCSTransitionException(this, label);
         recalculateOrigin();
         return this;

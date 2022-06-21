@@ -184,21 +184,6 @@ public abstract class Process extends ProgramNode {
         return s;
     }
 
- /*   //TODO: make betterer
-    public boolean equals(Object o){
-        if (!(o instanceof Process))
-            return false;
-        Process p = (Process) o;
-        if (
-                !(p.previousLife.equals(previousLife) || p.getKey().equals(getKey()))
-                ||
-                (p.origin() != origin())
-        )
-            return false;
-
-        return true;
-    }*/
-
     public abstract Collection<Process> getChildren();
 
     /**

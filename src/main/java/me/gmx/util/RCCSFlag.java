@@ -6,12 +6,10 @@ import java.util.regex.Pattern;
 public enum RCCSFlag {
     DEBUG("Prints debug info",
             "--debug"),
-    HELP_MSG("Print help message",
+    HELP_MSG("Print this help message",
             "--help"),
     UNIQUE_CHANNELS("[broken] Should each channel's identity be dictated by it's unique ID",
             "--uC"),
-    KEYS_AS_LABELS("CCSK keys are treated as labels",
-            "--kL"),
     DIFFERENTIATE_LABELS("Labels are visibly differentiated by integers",
             "--dL"),
     KEY_MATCHING_MODE("[broken] Should a label's identity be determined by its unique ID?",
@@ -44,6 +42,13 @@ public enum RCCSFlag {
 
     public boolean doesMatch(String s){
         return s.equals(flagFlag);
+    }
+
+    public String getFlag(){
+        return flagFlag;
+    }
+    public String getDescription(){
+        return description;
     }
 
 

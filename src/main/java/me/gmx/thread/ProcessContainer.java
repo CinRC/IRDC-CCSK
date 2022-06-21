@@ -26,9 +26,8 @@ public class ProcessContainer {
         return getActionableLabels().contains(node);
     }
 
-
     public void act(Label node){
-        process.act(node);
+        process = process.act(node);
     }
 
 }

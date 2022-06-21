@@ -49,7 +49,6 @@ public class ConcurrentProcess extends ComplexProcess{
      * process that should be able to support synchronizations.
      * @return Set of labels that can be acted on, including tau matches
      */
-    //TODO: Divergent tree taus
     @Override
     public Collection<Label> getActionableLabels(){
         Collection<Label> l = super.getActionableLabels();

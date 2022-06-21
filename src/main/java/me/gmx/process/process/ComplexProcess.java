@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
 
 import java.util.*;
@@ -113,5 +114,17 @@ public abstract class ComplexProcess extends Process{
     }
 
     public abstract ComplexProcess clone();
+
+    @Override
+    public boolean canAct(Label label){
+        RCCS.log(String.format("Checking if %s can act on %s",represent(),label.origin()));
+        Collection<Label> l = getActionableLabels();
+        if (!(label instanceof TauLabelNode))
+            return l.contains(label);
+
+        TauLabelNode t = (TauLabelNode) label;
+        return l.contains(t.getA()) || l.contains(t.getB());
+
+    }
 
 }

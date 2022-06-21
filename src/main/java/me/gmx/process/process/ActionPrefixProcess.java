@@ -78,6 +78,7 @@ public class ActionPrefixProcess extends Process {
             TauLabelNode tau = (TauLabelNode) label;
             if (prefixes.isEmpty())
                 throw new CCSTransitionException(this, label);
+
             if (getPrefix().equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
                 actInternal(tau);
                 tau.consumeLeft = true;

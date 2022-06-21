@@ -7,14 +7,15 @@ import java.util.UUID;
 
 public class LabelKey extends Label {
 
-    private UUID uuid;
-
     private Label from;
     public LabelKey(Label node){
         super(node.dupe, node.getChannel());
         this.id = node.getId();
         this.from = node;
-        this.dupe = NodeIDGenerator.nextAvailableKey();
+        if (node instanceof TauLabelNode)
+            this.dupe = ((TauLabelNode)node).saveDupe;
+        else
+            this.dupe = NodeIDGenerator.nextAvailableKey();
     }
 
     /**

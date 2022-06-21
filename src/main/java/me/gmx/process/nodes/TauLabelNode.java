@@ -8,12 +8,14 @@ public class TauLabelNode extends Label {
 
     private Label a, b;
     public boolean consumeLeft, consumeRight;
+    int saveDupe;
 
     public TauLabelNode(Label node, Label comp) {
         super(-1, node.getChannel() + ":" + comp.getChannel());
         this.a = node;
         this.b = comp;
         consumeLeft = consumeRight = false;
+        this.saveDupe = NodeIDGenerator.nextAvailableKey();
         this.id = UUID.randomUUID();
     }
 

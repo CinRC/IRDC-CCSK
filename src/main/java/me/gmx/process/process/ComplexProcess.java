@@ -121,7 +121,6 @@ public abstract class ComplexProcess extends Process{
         Collection<Label> l = getActionableLabels();
         if (!(label instanceof TauLabelNode))
             return l.contains(label);
-
         TauLabelNode t = (TauLabelNode) label;
         return l.contains(t.getA()) || l.contains(t.getB());
 

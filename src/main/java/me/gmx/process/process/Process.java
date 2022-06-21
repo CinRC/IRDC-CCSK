@@ -5,6 +5,7 @@ import me.gmx.parser.CCSParser;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
@@ -116,7 +117,11 @@ public abstract class Process extends ProgramNode {
             if (label.equals(ghostKey)) { //Is the key correct?
                 ghostKey = null;
                 return previousLife; //Okay, rewind!
-            }else return this.actOn(label); //Key incorrect? passthru!
+            }else{
+                return this.actOn(label); //Key incorrect? passthru!
+            }
+
+        }else if (label instanceof TauLabelNode){
 
         }
         return this.actOn(label);

@@ -1,6 +1,7 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.CCSParserException;
+import me.gmx.parser.CCSTransitionException;
 import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 import org.junit.jupiter.api.Test;
@@ -64,15 +65,32 @@ public class ParseTest {
 
     @Test
     public void testInvalidParse(){
-        ProcessTemplate t = CCSParser.parseLine("ab");
         boolean isFailed = false;
+
+        ProcessTemplate t = CCSParser.parseLine("ab");
         try{
             t.export();
         }catch(CCSParserException e){
             isFailed = true;
         }
+        assert (isFailed);
 
-        assert (isFailed == true);
+
+        t = CCSParser.parseLine("a+b+");
+        try{
+            t.export();
+        }catch(CCSTransitionException e){
+            isFailed = true;
+        }
+        assert (isFailed);
+
+        t = CCSParser.parseLine("a++");
+        try{
+            t.export();
+        }catch(CCSTransitionException e){
+            isFailed = true;
+        }
+        assert (isFailed);
 
     }
 

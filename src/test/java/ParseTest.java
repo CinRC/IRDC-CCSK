@@ -70,7 +70,7 @@ public class ParseTest {
         ProcessTemplate t = CCSParser.parseLine("ab");
         try{
             t.export();
-        }catch(CCSParserException e){
+        }catch(Exception e){
             isFailed = true;
         }
         assert (isFailed);
@@ -79,7 +79,7 @@ public class ParseTest {
         t = CCSParser.parseLine("a+b+");
         try{
             t.export();
-        }catch(CCSTransitionException e){
+        }catch(Exception e){
             isFailed = true;
         }
         assert (isFailed);
@@ -87,7 +87,7 @@ public class ParseTest {
         t = CCSParser.parseLine("a++");
         try{
             t.export();
-        }catch(CCSTransitionException e){
+        }catch(Exception e){
             isFailed = true;
         }
         assert (isFailed);

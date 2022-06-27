@@ -44,8 +44,7 @@ public class ProcessImpl extends Process implements ActionableProcess{
     @Override
     public Collection<Label> getActionableLabels() {
         Collection<Label> l = getActionableLabelsStrict();
-        l.removeAll(getRestriction());
-        return l;
+        return withdrawRestrictions(l);
     }
 
     @Override

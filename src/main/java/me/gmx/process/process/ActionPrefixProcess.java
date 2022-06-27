@@ -140,8 +140,7 @@ public class ActionPrefixProcess extends Process {
         Collection<Label> s = super.getActionableLabels();
         if (!prefixes.isEmpty())
             s.add(prefixes.get(0));
-        s.removeAll(getRestriction());
-        return s;
+        return withdrawRestrictions(s);
     }
 
     @Override

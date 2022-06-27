@@ -55,12 +55,13 @@ public abstract class Label extends ProgramNode{
 
     @Override
     public boolean equals(Object o){
-        if (!(o instanceof Label))
+        if (!o.getClass().equals(getClass()))
             return false;
         Label label = (Label) o;
         if (RCCS.config.contains(RCCSFlag.UNIQUE_CHANNELS))
             return label.getId().equals(getId());
         else {
+
             String t = getChannel() + dupe;
             String n = label.getChannel() + label.dupe;
             return t.equals(n); //Check if label + dupe id are equal // a0 == a0, a1 != a0

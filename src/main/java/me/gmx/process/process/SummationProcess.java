@@ -85,8 +85,7 @@ public class SummationProcess extends ComplexProcess{
                 s.add(ghostKey); //No? ok we can do ghost key
             //Otherwise nope
         }
-        s.removeAll(getRestriction());
-        return s;
+        return withdrawRestrictions(s);
     }
 
     @Override

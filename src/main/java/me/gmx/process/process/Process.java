@@ -11,6 +11,7 @@ import me.gmx.util.SetUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public abstract class Process extends ProgramNode {
@@ -29,6 +30,25 @@ public abstract class Process extends ProgramNode {
     Set<Label> restrictions = new HashSet<>();
 
     public Process(){}
+
+    /**
+     * Removes restrictions from given process. Because of the way label equality
+     * checking works, the removeAll method in collection does not work.
+     * @param labels
+     * @return
+     */
+    protected Collection<Label> withdrawRestrictions(Collection<Label> labels){
+        Iterator<Label> iter = labels.iterator();
+        while (iter.hasNext()){
+            Label l = iter.next();
+            for (Label r : getRestriction()){
+                if (r.getClass().equals(l.getClass())) //Make sure 'a\{a} works
+                    if (r.getChannel().equals(l.getChannel()))
+                        iter.remove();
+            }
+        }
+        return labels;
+    }
 
     public void addRestriction(Label... labels){
         for (Label l : labels)

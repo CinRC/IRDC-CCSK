@@ -76,18 +76,7 @@ public class SummationProcess extends ComplexProcess{
 
     @Override
     public Collection<Label> getActionableLabels(){
-        Collection<Label> s = super.getActionableLabels();
-        Collection<Label> l = left.isGhost ? Collections.emptySet()
-                : left.getActionableLabels();
-        Collection<Label> r = right.isGhost ? Collections.emptySet()
-                : right.getActionableLabels();
-        for (Label ll: l)
-            for (Label rl : r){
-                ll.addSynchronizationLock(rl);
-                rl.addSynchronizationLock(ll);
-            }
-        s.addAll(l);
-        s.addAll(r);
+        Collection<Label> s = getActionableLabelsStrict();
 
         if (ghostKey != null) { //If we have a ghost key
             if (s.contains(ghostKey)) //If ghost key is on the table
@@ -96,8 +85,32 @@ public class SummationProcess extends ComplexProcess{
                 s.add(ghostKey); //No? ok we can do ghost key
             //Otherwise nope
         }
+        s.removeAll(getRestriction());
         return s;
     }
+
+    @Override
+    protected Collection<Label> getActionableLabelsStrict() {
+        return getActionableLabelsStrictInternal(true);
+    }
+
+    private Collection<Label> getActionableLabelsStrictInternal(boolean lock){
+        Collection<Label> s = super.getActionableLabels();
+        Collection<Label> l = left.isGhost ? Collections.emptySet()
+                : left.getActionableLabels();
+        Collection<Label> r = right.isGhost ? Collections.emptySet()
+                : right.getActionableLabels();
+        if (lock)
+            for (Label ll: l)
+                for (Label rl : r){
+                    ll.addSynchronizationLock(rl);
+                    rl.addSynchronizationLock(ll);
+                }
+        s.addAll(l);
+        s.addAll(r);
+        return s;
+    }
+
 
     @Override
     public String represent() {

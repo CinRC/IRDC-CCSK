@@ -51,12 +51,17 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     @Override
     public Collection<Label> getActionableLabels(){
+        Collection<Label> l = getActionableLabelsStrict();
+        l.addAll(SetUtil.getTauMatches(l));
+        l.removeAll(getRestriction());
+
+        return l;
+    }
+
+    protected Collection<Label> getActionableLabelsStrict(){
         Collection<Label> l = super.getActionableLabels();
         l.addAll(left.getActionableLabels());
         l.addAll(right.getActionableLabels());
-        l.addAll(SetUtil.getTauMatches(l));
-        l.removeAll(restrictions);
-
         return l;
     }
 

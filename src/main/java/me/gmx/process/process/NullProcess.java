@@ -38,6 +38,13 @@ public class NullProcess extends Process{
     //Not needed?
     @Override
     public Collection<Label> getActionableLabels() {
+        Collection<Label> l = getActionableLabelsStrict();
+        l.removeAll(getRestriction());
+        return l;
+    }
+
+    @Override
+    protected Collection<Label> getActionableLabelsStrict() {
         return super.getActionableLabels();
     }
 

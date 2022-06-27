@@ -203,6 +203,8 @@ public abstract class Process extends ProgramNode {
         return l;
     }
 
+    protected abstract Collection<Label> getActionableLabelsStrict();
+
     public abstract String origin();
 
 

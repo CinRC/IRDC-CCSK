@@ -14,7 +14,7 @@ Everything in this program was written from scratch, down to even the string uti
 ### Developer slang
 
 During the design of this program, I was by no means an expert in CCS or CCSK. Thus, my understanding was limited.
-Because of this, I refer to things internally slightly differently then an expert may have. I have listed some of the relevant mappings below:
+Because of this, I refer to things internally slightly differently than an expert may have. I have listed some of the relevant mappings below:
 
 1. Channel names are referred to as 'Labels'
 2. Parallel operators (`|`) are referred to as 'Concurrent Processes'

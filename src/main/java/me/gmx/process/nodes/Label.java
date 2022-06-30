@@ -29,7 +29,6 @@ public abstract class Label extends ProgramNode{
         return id;
     }
 
-
     /**
      * Determines whether this process can synchronize via tau transition with the given label
      * @param l the given label
@@ -64,6 +63,9 @@ public abstract class Label extends ProgramNode{
 
             String t = getChannel() + dupe;
             String n = label.getChannel() + label.dupe;
+            //If dupe of -1, do not check dupe
+            if (dupe == -1 || label.dupe == -1)
+                return getChannel().equals(label.getChannel());
             return t.equals(n); //Check if label + dupe id are equal // a0 == a0, a1 != a0
         }
     }

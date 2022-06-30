@@ -24,7 +24,11 @@ public class LabelFactory {
         }
 
         throw new CCSParserException(String.format("Could not parse %s into labels",s));
+    }
 
-
+    public static Label createDebugLabel(String channel){
+        Label c = parseNode(channel);
+        c.dupe = -1;
+        return c;
     }
 }

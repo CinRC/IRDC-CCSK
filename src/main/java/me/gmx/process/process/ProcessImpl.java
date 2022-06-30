@@ -57,6 +57,4 @@ public class ProcessImpl extends Process implements ActionableProcess{
         return origin;
     }
 
-
-
 }

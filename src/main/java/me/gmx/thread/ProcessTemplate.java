@@ -37,18 +37,14 @@ public class ProcessTemplate {
                     if (p.left == null)
                         //Subsume object to the left
                         p.left = tList.remove(tList.indexOf(p)-1);
-
                     if (p.right == null)
                         //Subsume object to the right
                         p.right = tList.remove(tList.indexOf(p)+1);
-
                 }
             }
         }
         isInit = true;
     }
-
-
 
     /**
      * Exports ProcessTemplate as a process. ProcessTemplate should always init down to
@@ -66,7 +62,6 @@ public class ProcessTemplate {
 
     public void addRestrictionToLastProcess(Collection<Label> restrictions){
         this.tList.getLast().addRestrictions(restrictions);
-
     }
 
     public String prettyString(){

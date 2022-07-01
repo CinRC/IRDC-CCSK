@@ -17,7 +17,6 @@ public class ProcessContainer {
     public String prettyString(){
         return process.represent();
     }
-
     public Collection<Label> getActionableLabels(){
         return process.getActionableLabels();
     }

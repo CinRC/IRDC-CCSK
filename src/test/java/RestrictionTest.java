@@ -18,11 +18,15 @@ public class RestrictionTest {
         assert !c.canAct(LabelFactory.createDebugLabel("a"));
 
         c = new ProcessContainer(CCSParser.parseLine("(a|'a)\\{a}").export());
-        assert !c.canAct(a);
-        assert c.canAct(oa);
-        assert c.canAct(new TauLabelNode(a,oa));
+        //Make sure process isn't wack
         assert !c.canAct(new TauLabelNode(a,b));
         assert !c.canAct(b);
+        //Make sure restrictions work
+        assert !c.canAct(a);
+        //Make sure restrictions don't overstep
+        assert c.canAct(oa);
+        assert c.canAct(new TauLabelNode(a,oa));
+
 
 
     }

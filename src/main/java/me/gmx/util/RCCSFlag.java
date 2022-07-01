@@ -1,8 +1,5 @@
 package me.gmx.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public enum RCCSFlag {
     DEBUG("Prints debug info",
             "--debug"),

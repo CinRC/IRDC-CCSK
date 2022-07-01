@@ -5,13 +5,10 @@ import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
-import me.gmx.util.SetUtil;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 
 public class SummationProcess extends ComplexProcess{
 
@@ -24,8 +21,6 @@ public class SummationProcess extends ComplexProcess{
      * @param label Label to act on
      * @return self-process, having acted on label
      */
-
-    //Returns left or right, setting their past life to a clone of this
     @Override
     public Process actOn(Label label) {
         if (ghostKey == null)//Only need to remember once, theoretically
@@ -56,24 +51,6 @@ public class SummationProcess extends ComplexProcess{
         return p;
     }
 
-
-    @Override
-    public boolean canRewind(Label label){
-        if (!(label instanceof LabelKey))
-            return false;
-
-        LabelKey key = (LabelKey) label;
-        if (ghostKey.equals(key)){ //Oh no! We are trying to unlock the ghost :O
-            //Do we need to do anything before rewinding?
-            //So, as far as I know, whenever a decision is made, it must be in the
-            //EXACT same state as it was directly after being made in order to rewind.
-            //So, in other words: We can only undo a summation choice if the rewinding
-            //is the only reverse action that can be taken
-
-        }
-        return true;
-    }
-
     @Override
     public Collection<Label> getActionableLabels(){
         Collection<Label> s = getActionableLabelsStrict();
@@ -81,7 +58,7 @@ public class SummationProcess extends ComplexProcess{
         if (ghostKey != null) { //If we have a ghost key
             if (s.contains(ghostKey)) //If ghost key is on the table
                 s.remove(ghostKey);   //Remove ghost key (temporarily)
-            if (!s.stream().anyMatch(LabelKey.class::isInstance)) //Any more keys in list?
+            if (s.stream().noneMatch(LabelKey.class::isInstance)) //Any more keys in list?
                 s.add(ghostKey); //No? ok we can do ghost key
             //Otherwise nope
         }
@@ -93,6 +70,11 @@ public class SummationProcess extends ComplexProcess{
         return getActionableLabelsStrictInternal(true);
     }
 
+    /**
+     * Returns list of actionable labels before any restrictions are applied
+     * @param lock whether or not to apply sync lock to internal labels
+     * @return
+     */
     private Collection<Label> getActionableLabelsStrictInternal(boolean lock){
         Collection<Label> s = super.getActionableLabels();
         Collection<Label> l = left.isGhost ? Collections.emptySet()
@@ -109,7 +91,6 @@ public class SummationProcess extends ComplexProcess{
         s.addAll(r);
         return s;
     }
-
 
     @Override
     public String represent() {
@@ -150,8 +131,6 @@ public class SummationProcess extends ComplexProcess{
                                 , right == null ? "" : right.represent()
                         ));
                 }
-
-
 
         return super.represent(String.format(
                 "(%s)%s(%s)"

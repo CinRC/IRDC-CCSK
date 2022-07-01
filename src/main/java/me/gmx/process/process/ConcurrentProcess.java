@@ -1,17 +1,12 @@
 package me.gmx.process.process;
 
 import me.gmx.parser.CCSGrammar;
-import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
 
 public class ConcurrentProcess extends ComplexProcess{
-
-
     /**
      * @param left - left side me.gmx.process
      * @param right - right side me.gmx.process

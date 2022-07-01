@@ -1,12 +1,10 @@
 package me.gmx.process.process;
 
 import me.gmx.RCCS;
-import me.gmx.parser.CCSParser;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
 import me.gmx.process.nodes.TauLabelNode;
-import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -34,8 +32,8 @@ public abstract class Process extends ProgramNode {
     /**
      * Removes restrictions from given process. Because of the way label equality
      * checking works, the removeAll method in collection does not work.
-     * @param labels
-     * @return
+     * @param labels Base set of labels to apply restrictions to
+     * @return Collection of labels with restrictions removed
      */
     protected Collection<Label> withdrawRestrictions(Collection<Label> labels){
         Iterator<Label> iter = labels.iterator();
@@ -50,16 +48,9 @@ public abstract class Process extends ProgramNode {
         return labels;
     }
 
-    public void addRestriction(Label... labels){
-        for (Label l : labels)
-            restrictions.add(l);
-    }
-
     //Very annoying that java cannot process collections as ... streams :(
     public void addRestrictions(Collection<Label> labels){
-        for (Label l : labels){
-            restrictions.add(l);
-        }
+        restrictions.addAll(labels);
     }
 
     public Collection<Label> getRestriction(){
@@ -113,11 +104,7 @@ public abstract class Process extends ProgramNode {
      */
     protected abstract Process actOn(Label label);
 
-
-    public boolean canRewind(Label key){
-        return getActionableLabels().contains(key);
-    }
-
+    @Deprecated
     public boolean isAnnotated(){
         return getActionableLabels().stream().anyMatch(LabelKey.class::isInstance);
     }
@@ -142,7 +129,7 @@ public abstract class Process extends ProgramNode {
             }
 
         }else if (label instanceof TauLabelNode){
-
+            //TODO: ?
         }
         return this.actOn(label);
     }
@@ -187,7 +174,7 @@ public abstract class Process extends ProgramNode {
     /**
      * A formatted version of this process to be printed. This is the only method that
      * should be called to print to screen unless you will be comparing processes
-     * @return
+     * @return String to be displayed to user that represents this process
      */
     public abstract String represent();
 
@@ -195,7 +182,7 @@ public abstract class Process extends ProgramNode {
      * Internal represent method to be called by subclasses. This sets the 'format' for
      * all subclasses to take regarding keys and other syntax.
      * @param base Subclass representation
-     * @return
+     * @return Internal string to be called and replaced
      */
     protected String represent(String base){
 
@@ -213,7 +200,7 @@ public abstract class Process extends ProgramNode {
 
     /**
      * Base superclass method for getting labels. Only adds any keys
-     * @return
+     * @return If hasKey, then key, otherwise empty set
      */
     public Collection<Label> getActionableLabels(){
         Set<Label> l = new HashSet<>();

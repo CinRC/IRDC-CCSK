@@ -41,6 +41,17 @@ public class SummationProcess extends ComplexProcess{
         return this;
     }
 
+    //Because summation should never hold a key on its own
+    @Override
+    public boolean hasKey(){
+        return this.ghostKey != null;
+    }
+
+    @Override
+    public LabelKey getKey(){
+        return ghostKey;
+    }
+
     @Override
     public SummationProcess clone() {
         SummationProcess p = new SummationProcess(left.clone(), right.clone());
@@ -50,6 +61,8 @@ public class SummationProcess extends ComplexProcess{
         p.addRestrictions(restrictions);
         return p;
     }
+
+
 
     @Override
     public Collection<Label> getActionableLabels(){

@@ -35,7 +35,7 @@ public class ActionTest {
         assert !p.canAct(b) && !p.canAct(d);
         p.act(a);
         assert p.canAct(b) && !p.canAct(c);
-
+        p.reverseLastAction();
 
     }
 

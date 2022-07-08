@@ -2,6 +2,7 @@ package me.gmx.thread;
 
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.process.Process;
 
 import java.util.Collection;
@@ -29,4 +30,20 @@ public class ProcessContainer {
         process = process.act(node);
     }
 
+    public void reverseLastAction(){
+        if (process.hasKey())
+            process = process.reverse();
+        else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
+    }
+
+    public boolean canReverse(){
+        return process.hasKey();
+    }
+
+    public void reverseOn(LabelKey key){
+        if (canReverse())
+            if (process.getKey().equals(key))
+                process = process.act(key);
+            else throw new CCSTransitionException(process, key);
+    }
 }

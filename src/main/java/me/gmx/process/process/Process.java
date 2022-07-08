@@ -140,7 +140,6 @@ public abstract class Process extends ProgramNode {
      * @param key given key
      * @return true if the process is capable of reversing on the given key
      */
-    @Deprecated
     public boolean canReverse(Label key){
         return hasKey() && getKey().equals(key);
     }
@@ -150,7 +149,6 @@ public abstract class Process extends ProgramNode {
      * Deprecated in favor of just acting on a LabelKey.
      * @return Process after reversal
      */
-    @Deprecated
     public Process reverse(){
         return previousLife;
     }

@@ -10,12 +10,14 @@ public class RestrictionTest {
 
     @Test
     public void testRestriction(){
+        //Create debug labels
         Label a,oa, b;
         a = LabelFactory.createDebugLabel("a");
         oa = LabelFactory.createDebugLabel("'a");
         b = LabelFactory.createDebugLabel("b");
+
         ProcessContainer c = new ProcessContainer(CCSParser.parseLine("a\\{a}").export());
-        assert !c.canAct(LabelFactory.createDebugLabel("a"));
+        assert !c.canAct(a);
 
         c = new ProcessContainer(CCSParser.parseLine("(a|'a)\\{a}").export());
         //Make sure process isn't wack
@@ -26,8 +28,6 @@ public class RestrictionTest {
         //Make sure restrictions don't overstep
         assert c.canAct(oa);
         assert c.canAct(new TauLabelNode(a,oa));
-
-
 
     }
 

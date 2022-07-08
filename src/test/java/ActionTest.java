@@ -1,9 +1,7 @@
 import me.gmx.parser.CCSParser;
-import me.gmx.process.nodes.ComplementLabelNode;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelNode;
-import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.process.nodes.*;
 import me.gmx.process.process.Process;
+import me.gmx.thread.ProcessContainer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -13,25 +11,32 @@ import java.util.Set;
 
 public class ActionTest {
 
-    //Currently bugged. I don't know why this is failing, because the lists
-    //are actually the same at runtime, but the assertion is not working properly
-/*    @Test
-    public void testBasicActions(){
-        HashMap<Process, Collection<Label>> canAct = new HashMap<>();
-        canAct.put(CCSParser.parseLine("a").export(),
-                Set.of(new LabelNode("a")));
-        canAct.put(CCSParser.parseLine("a+b").export(),
-                Set.of(new LabelNode("a"), new LabelNode("b")));
-        canAct.put(CCSParser.parseLine("a|b+c").export(),
-                Set.of(new LabelNode("a"), new LabelNode("b"), new LabelNode("c")));
-        canAct.put(CCSParser.parseLine("( ((a|'a)|('a|b))|'b)").export(),
-                Set.of(new TauLabelNode(new LabelNode("a"), new ComplementLabelNode("'a"))));
-        for (Map.Entry<Process, Collection<Label>> e: canAct.entrySet()){
-            Collection<Label> zz = e.getKey().getActionableLabels();
-            assert (zz.containsAll(e.getValue()));
-        }
-    }*/
+    @Test
+    public static void testBasicActions() {
+        Label a,b,c;
+        a = LabelFactory.createDebugLabel("a");
+        b = LabelFactory.createDebugLabel("b");
+        c = LabelFactory.createDebugLabel("c");
+        ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b").export());
+        p.act(a);
+        assert p.canAct(b);
+    }
+
+    @Test
+    public void testAdvancedActions() {
+        Label a,b,c,d ;
+        a = LabelFactory.createDebugLabel("a");
+        b = LabelFactory.createDebugLabel("b");
+        c = LabelFactory.createDebugLabel("c");
+        d = LabelFactory.createDebugLabel("d");
+
+        ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b+c.d").export());
+        assert p.canAct(a) && p.canAct(c);
+        assert !p.canAct(b) && !p.canAct(d);
+        p.act(a);
+        assert p.canAct(b) && !p.canAct(c);
 
 
+    }
 
 }

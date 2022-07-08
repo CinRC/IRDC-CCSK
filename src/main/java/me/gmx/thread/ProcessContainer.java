@@ -32,8 +32,12 @@ public class ProcessContainer {
 
     public void reverseLastAction(){
         if (process.hasKey())
-            process = process.reverse();
+            process = process.act(process.getKey());
         else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
+    }
+
+    public LabelKey getKey(){
+        return process.getKey();
     }
 
     public boolean canReverse(){

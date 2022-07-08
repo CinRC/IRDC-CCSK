@@ -134,24 +134,6 @@ public abstract class Process extends ProgramNode {
         return this.actOn(label);
     }
 
-    /**
-     * Whether or not a given process can reverse on a key
-     * Deprecated in favor of just checking keys match
-     * @param key given key
-     * @return true if the process is capable of reversing on the given key
-     */
-    public boolean canReverse(Label key){
-        return hasKey() && getKey().equals(key);
-    }
-
-    /**
-     * Reverses the last action performed on this process
-     * Deprecated in favor of just acting on a LabelKey.
-     * @return Process after reversal
-     */
-    public Process reverse(){
-        return previousLife;
-    }
 
     /**
      * Returns if this process has a CCSK key assigned to it

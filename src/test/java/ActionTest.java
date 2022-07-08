@@ -33,9 +33,11 @@ public class ActionTest {
         ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b+c.d").export());
         assert p.canAct(a) && p.canAct(c);
         assert !p.canAct(b) && !p.canAct(d);
-        p.act(a);
-        assert p.canAct(b) && !p.canAct(c);
-        p.reverseLastAction();
+        p.act(a); // a.b+c.d -a-> [k0]b
+        assert p.canAct(b) && !p.canAct(c) && !p.canAct(a);
+        p.reverseLastAction(); //[k0]b -[k0]-> a.b+c.d
+        assert p.canAct(a) && p.canAct(c);
+        assert !p.canAct(b) && !p.canAct(d);
 
     }
 

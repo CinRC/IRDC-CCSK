@@ -29,13 +29,13 @@ public class SummationProcess extends ComplexProcess{
             left = left.act(label);
             right.isGhost = true;
             if (ghostKey == null) {
-                ghostKey = new LabelKey(label);
+                ghostKey = left.getKey();
             }
         }else if (right.canAct(label)){
             right = right.act(label);
             left.isGhost = true;
             if (ghostKey == null) {
-                ghostKey = new LabelKey(label);
+                ghostKey = right.getKey();
             }
         }else throw new CCSTransitionException(this,label);
         return this;

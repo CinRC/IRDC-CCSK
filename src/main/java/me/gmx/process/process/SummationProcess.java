@@ -50,7 +50,12 @@ public class SummationProcess extends ComplexProcess{
 
     @Override
     public LabelKey getKey(){
-        return ghostKey;
+        //return ghostKey;
+        if (left.isGhost)
+            return right.getKey();
+        else if (right.isGhost)
+            return left.getKey();
+        else throw new CCSTransitionException(this, "Attempted to get key when no key exists");
     }
 
     @Override

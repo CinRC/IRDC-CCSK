@@ -39,6 +39,17 @@ public class ActionTest {
         assert p.canAct(a) && p.canAct(c);
         assert !p.canAct(b) && !p.canAct(d);
 
+        p.act(a);
+        p.act(b);
+        Collection<Label> act = p.getActionableLabels();
+        act.remove(p.getKey());
+        assert act.isEmpty();
+
+        p.reverseLastAction();
+        p.reverseLastAction();
+
+        assert p.canAct(a) && p.canAct(c);
+        assert !p.canAct(b) && !p.canAct(d);
     }
 
 }

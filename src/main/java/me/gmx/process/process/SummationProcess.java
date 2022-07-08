@@ -6,6 +6,7 @@ import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.util.RCCSFlag;
+import me.gmx.util.SetUtil;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,7 +45,7 @@ public class SummationProcess extends ComplexProcess{
     //Because summation should never hold a key on its own
     @Override
     public boolean hasKey(){
-        return this.ghostKey != null;
+        return ghostKey != null;
     }
 
     @Override
@@ -105,11 +106,18 @@ public class SummationProcess extends ComplexProcess{
         return s;
     }
 
+    //Override to remove duplicate key displaying issue
+    @Override
+    protected String represent(String base){
+        base += getRestriction().isEmpty() ? "" : String.format("\\{%s}", SetUtil.csvSet(getRestriction()));
+        return base;
+    }
+
     @Override
     public String represent() {
         if (ghostKey != null)
             if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_1))
-                return super.represent(String.format(
+                return represent(String.format(
                         "(%s)%s(%s)"
                         , left == null ? "" : left.represent()
                         , operator.toString()
@@ -117,18 +125,18 @@ public class SummationProcess extends ComplexProcess{
                 ));
             else if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_3)){
                 if (left.isGhost)
-                    return super.represent(String.format(
+                    return represent(String.format(
                             "%s"
                             , right == null ? "" : right.represent()
                     ));
                 else if (right.isGhost)
-                    return super.represent(String.format(
+                    return represent(String.format(
                             "%s"
                             , left == null ? "" : left.represent()
                     ));
                 }else {
                     if (left.isGhost)
-                        return super.represent(String.format(
+                        return represent(String.format(
                                 "%s{%s} %s (%s)"
                                 , ghostKey.origin()
                                 , left == null ? "" : left.represent()
@@ -136,7 +144,7 @@ public class SummationProcess extends ComplexProcess{
                                 , right == null ? "" : right.represent()
                         ));
                     else if (right.isGhost)
-                        return super.represent(String.format(
+                        return represent(String.format(
                                 "(%s) %s %s{%s}"
                                 , left == null ? "" : left.represent()
                                 , operator.toString()
@@ -145,7 +153,7 @@ public class SummationProcess extends ComplexProcess{
                         ));
                 }
 
-        return super.represent(String.format(
+        return represent(String.format(
                 "(%s)%s(%s)"
                 , left == null ? "" : left.represent()
                 , operator.toString()

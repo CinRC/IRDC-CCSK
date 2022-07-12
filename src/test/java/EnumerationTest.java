@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class EnumerationTest {
 
-    //Disabled
+    @Test
     public void testEnumerate(){
         RCCS.config.add(RCCSFlag.DISPLAY_NULL);
         RCCS.config.add(RCCSFlag.DIFFERENTIATE_LABELS);
@@ -20,6 +20,12 @@ public class EnumerationTest {
         System.out.println(p1.prettyString());
         p1.act(LabelFactory.createLabel("a", 0));
         System.out.println(p1.prettyString());
+        p1.reverseLastAction();
+        System.out.println(p1.prettyString());
+        p1.act(LabelFactory.createLabel("a",0));
+        p1.act(LabelFactory.createLabel("b",1));
+        System.out.println(p1.prettyString());
+        p1.reverseLastAction();
         p1.reverseLastAction();
         System.out.println(p1.prettyString());
 

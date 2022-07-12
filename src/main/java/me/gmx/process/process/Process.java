@@ -67,7 +67,7 @@ public abstract class Process extends ProgramNode {
         this.key = key;
     }
 
-    protected abstract Process clone();
+    public abstract Process clone();
 
     /**
      * Set past life of this process to the given process

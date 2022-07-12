@@ -1,10 +1,12 @@
 package me.gmx.process.process;
 
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.util.SetUtil;
 
-import java.util.Collection;
+import java.util.*;
 
 public class ConcurrentProcess extends ComplexProcess{
     /**
@@ -15,15 +17,62 @@ public class ConcurrentProcess extends ComplexProcess{
         super(left,right, CCSGrammar.OP_CONCURRENT);
     }
 
+    private LabelKey recentlyActedKey;
     //Note: Concurrent processes will never need to hold a key, because data is not destroyed at
     //the complex-process level in this situation.
     @Override
     public Process actOn(Label label) {
-        if (left.canAct(label))
+        if (left.canAct(label)) {
             left = left.act(label);
-        if (right.canAct(label))
+            recentlyActedKey = left.getKey();
+        }
+        if (right.canAct(label)) {
             right = right.act(label);
+            recentlyActedKey = right.getKey();
+        }
         return this;
+    }
+
+    @Override
+    public Process act(Label label){
+        if (!(label instanceof LabelKey))
+            return actOn(label);
+        //we only want to override reverse handlng
+        if (recentlyActedKey == null)
+            throw new CCSTransitionException(this, label);
+        //if left side key matches, reverse left
+        if (recentlyActedKey.equals(left.getKey()))
+            left = left.act(recentlyActedKey);
+        //if right side key matches, reverse right
+        else if (recentlyActedKey.equals(right.getKey()))
+            right = right.act(recentlyActedKey);
+
+        else throw new CCSTransitionException(this, label);
+        recentlyActedKey = null;
+        recompileRecentKey();
+        return this;
+    }
+
+    private void recompileRecentKey(){
+        if (left.hasKey()) {
+            if (right.hasKey()) { //Both left & right have keys, compare
+                recentlyActedKey = left.getKey().dupe > right.getKey().dupe
+                        ? left.getKey() : right.getKey();
+            }else
+                recentlyActedKey = left.getKey();//only left has key
+        }else if (right.hasKey()){//only right has key
+            recentlyActedKey = right.getKey();
+        }
+    }
+
+    @Override
+    public boolean hasKey(){
+        return recentlyActedKey != null;
+    }
+
+    @Override
+    public LabelKey getKey(){
+        return recentlyActedKey;
     }
 
     @Override

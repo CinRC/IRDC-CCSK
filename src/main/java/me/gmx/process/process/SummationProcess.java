@@ -26,6 +26,7 @@ public class SummationProcess extends ComplexProcess{
     public Process actOn(Label label) {
         if (ghostKey == null)//Only need to remember once, theoretically
             setPastLife(clone());
+
         if (left.canAct(label)) {
             left = left.act(label);
             right.isGhost = true;

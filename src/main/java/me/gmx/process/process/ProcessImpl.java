@@ -12,7 +12,7 @@ public class ProcessImpl extends Process implements ActionableProcess{
     }
 
     @Override
-    protected Process clone() {
+    public Process clone() {
         return new ProcessImpl(origin);
     }
 

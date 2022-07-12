@@ -1,13 +1,10 @@
 import me.gmx.parser.CCSParser;
-import me.gmx.process.nodes.*;
-import me.gmx.process.process.Process;
+import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelFactory;
 import me.gmx.thread.ProcessContainer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class ActionTest {
 

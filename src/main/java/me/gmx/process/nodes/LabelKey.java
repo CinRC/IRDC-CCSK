@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class LabelKey extends Label {
 
-    private Label from;
+    public Label from;
     public LabelKey(Label node){
         super(node.dupe, node.getChannel());
         this.id = node.getId();

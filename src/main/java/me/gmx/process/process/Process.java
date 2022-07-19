@@ -167,7 +167,6 @@ public abstract class Process extends ProgramNode {
      * @return Internal string to be called and replaced
      */
     protected String represent(String base){
-
         String s = "";
         s += (hasKey() && displayKey) ? String.format("%s%s"
                 , getKey().origin()

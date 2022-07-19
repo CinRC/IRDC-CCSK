@@ -113,6 +113,12 @@ public abstract class ComplexProcess extends Process{
         return b.toString();
     }
 
+    public boolean hasKey(){
+        if (left == null || right == null) //hasnt been init yet
+            return false;
+        else return left.hasKey() || right.hasKey();
+    }
+
     public abstract ComplexProcess clone();
 
     @Override

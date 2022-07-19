@@ -4,6 +4,7 @@ import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.*;
@@ -17,61 +18,44 @@ public class ConcurrentProcess extends ComplexProcess{
         super(left,right, CCSGrammar.OP_CONCURRENT);
         displayKey = false; //Don't want concurrent processes to show keys, regardless of circumstance
     }
-    private LabelKey recentlyActedKey;
     //Note: Concurrent processes will never need to hold a key, because data is not destroyed at
     //the complex-process level in this situation.
     @Override
     public Process actOn(Label label) {
         if (left.canAct(label)) {
             left = left.act(label);
-            recentlyActedKey = left.getKey();
         }
         if (right.canAct(label)) {
             right = right.act(label);
-            recentlyActedKey = right.getKey();
         }
         return this;
     }
 
-    @Override
-    public Process act(Label label){
-        if (!(label instanceof LabelKey))
-            return super.act(label); //If not reversal, default action
-        if (!label.equals(recentlyActedKey))
-            return super.act(label); //If there has been no forward actions, error
-        //if left side key matches, reverse left
-        if (recentlyActedKey.equals(left.getKey()))
-            left = left.act(recentlyActedKey);
-        //if right side key matches, reverse right
-        else if (recentlyActedKey.equals(right.getKey()))
-            right = right.act(recentlyActedKey);
 
-        else throw new CCSTransitionException(this, label);
-        recentlyActedKey = null;
-        recompileRecentKey();
-        return this;
+    public boolean readyToSynchronize(TauLabelNode tau){
+        if (tau.equals(left.getKey()) && tau.equals(right.getKey()))
+            return true;
+
+        return false;
     }
 
-    private void recompileRecentKey(){
+    /*@Override
+    public LabelKey getKey(){
         if (left.hasKey()) {
             if (right.hasKey()) { //Both left & right have keys, compare
-                recentlyActedKey = left.getKey().dupe > right.getKey().dupe
+                return left.getKey().dupe > right.getKey().dupe
                         ? left.getKey() : right.getKey();
             }else
-                recentlyActedKey = left.getKey();//only left has key
+                return left.getKey();//only left has key
         }else if (right.hasKey()){//only right has key
-            recentlyActedKey = right.getKey();
+            return right.getKey();
+        }else{
+            return null;
         }
-    }
+    }*/
 
-    @Override
     public boolean hasKey(){
-        return recentlyActedKey != null;
-    }
-
-    @Override
-    public LabelKey getKey(){
-        return recentlyActedKey;
+        return false;
     }
 
     @Override
@@ -81,7 +65,6 @@ public class ConcurrentProcess extends ComplexProcess{
         p.setPastLife(previousLife);
         p.setKey(key);
         p.addRestrictions(restrictions);
-        p.recentlyActedKey = recentlyActedKey;
         return p;
     }
 

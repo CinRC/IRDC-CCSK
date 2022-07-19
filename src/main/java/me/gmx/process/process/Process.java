@@ -5,6 +5,7 @@ import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
 import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -27,6 +28,7 @@ public abstract class Process extends ProgramNode {
 
     Set<Label> restrictions = new HashSet<>();
 
+    public boolean displayKey = !RCCS.config.contains(RCCSFlag.HIDE_KEYS);
     public Process(){}
 
     /**
@@ -167,7 +169,7 @@ public abstract class Process extends ProgramNode {
     protected String represent(String base){
 
         String s = "";
-        s += hasKey() ? String.format("%s%s"
+        s += (hasKey() && displayKey) ? String.format("%s%s"
                 , getKey().origin()
                 , base)
                 : String.format("%s",base);

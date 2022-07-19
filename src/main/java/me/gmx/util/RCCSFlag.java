@@ -9,6 +9,8 @@ public enum RCCSFlag {
             "--uC"),
     DIFFERENTIATE_LABELS("Labels are visibly differentiated by integers",
             "--dL"),
+    HIDE_KEYS("Keys are hidden",
+            "--hide-keys"),
     KEY_MATCHING_MODE("[broken] Should a label's identity be determined by its unique ID?",
             "--kM"), //0 = true 1 = false
     SUMMATION_STYLE_1("Alternative display mode for summation processes. Reversible summations are not annotated",

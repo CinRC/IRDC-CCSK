@@ -15,8 +15,8 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     public ConcurrentProcess(Process left, Process right) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
+        displayKey = false; //Don't want concurrent processes to show keys, regardless of circumstance
     }
-
     private LabelKey recentlyActedKey;
     //Note: Concurrent processes will never need to hold a key, because data is not destroyed at
     //the complex-process level in this situation.
@@ -36,10 +36,9 @@ public class ConcurrentProcess extends ComplexProcess{
     @Override
     public Process act(Label label){
         if (!(label instanceof LabelKey))
-            return actOn(label);
-        //we only want to override reverse handlng
-        if (recentlyActedKey == null)
-            throw new CCSTransitionException(this, label);
+            return super.act(label); //If not reversal, default action
+        if (!label.equals(recentlyActedKey))
+            return super.act(label); //If there has been no forward actions, error
         //if left side key matches, reverse left
         if (recentlyActedKey.equals(left.getKey()))
             left = left.act(recentlyActedKey);
@@ -82,6 +81,7 @@ public class ConcurrentProcess extends ComplexProcess{
         p.setPastLife(previousLife);
         p.setKey(key);
         p.addRestrictions(restrictions);
+        p.recentlyActedKey = recentlyActedKey;
         return p;
     }
 

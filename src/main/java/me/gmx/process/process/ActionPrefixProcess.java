@@ -74,10 +74,11 @@ public class ActionPrefixProcess extends Process {
      */
     @Override
     public Process actOn(Label label) {
+        if (prefixes.isEmpty())
+            throw new CCSTransitionException(this, label);
+
         if (label instanceof TauLabelNode){
             TauLabelNode tau = (TauLabelNode) label;
-            if (prefixes.isEmpty())
-                throw new CCSTransitionException(this, label);
 
             if (getPrefix().equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
                 actInternal(tau);
@@ -86,6 +87,7 @@ public class ActionPrefixProcess extends Process {
                 actInternal(tau);
                 tau.consumeRight = true;
             } else throw new CCSTransitionException(this, label);
+            recalculateOrigin();
             return this;
         }
 

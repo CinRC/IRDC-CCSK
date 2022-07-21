@@ -28,31 +28,9 @@ public class ConcurrentProcess extends ComplexProcess{
         if (right.canAct(label)) {
             right = right.act(label);
         }
+
         return this;
     }
-
-
-    public boolean readyToSynchronize(TauLabelNode tau){
-        if (tau.equals(left.getKey()) && tau.equals(right.getKey()))
-            return true;
-
-        return false;
-    }
-
-    /*@Override
-    public LabelKey getKey(){
-        if (left.hasKey()) {
-            if (right.hasKey()) { //Both left & right have keys, compare
-                return left.getKey().dupe > right.getKey().dupe
-                        ? left.getKey() : right.getKey();
-            }else
-                return left.getKey();//only left has key
-        }else if (right.hasKey()){//only right has key
-            return right.getKey();
-        }else{
-            return null;
-        }
-    }*/
 
     public boolean hasKey(){
         return false;
@@ -77,14 +55,19 @@ public class ConcurrentProcess extends ComplexProcess{
     public Collection<Label> getActionableLabels(){
         Collection<Label> l = getActionableLabelsStrict();
         l.addAll(SetUtil.getTauMatches(l));
-        return withdrawRestrictions(l);
+        return SetUtil.removeUnsyncableKeys(this, withdrawRestrictions(l));
     }
 
     protected Collection<Label> getActionableLabelsStrict(){
-        Collection<Label> l = super.getActionableLabels();
-        l.addAll(left.getActionableLabels());
-        l.addAll(right.getActionableLabels());
-        return l;
+        Collection<Label> ll, l, r;
+
+        ll = super.getActionableLabels();
+        l = left.getActionableLabels();
+        r = right.getActionableLabels();
+        ll.addAll(l);
+        ll.addAll(r);
+
+        return ll;
     }
 
 }

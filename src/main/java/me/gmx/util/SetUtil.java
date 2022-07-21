@@ -1,6 +1,9 @@
 package me.gmx.util;
 
+import me.gmx.RCCS;
 import me.gmx.process.nodes.*;
+import me.gmx.process.process.ComplexProcess;
+import me.gmx.process.process.ConcurrentProcess;
 import me.gmx.process.process.Process;
 
 import java.security.KeyPair;
@@ -43,6 +46,38 @@ public class SetUtil {
             }
         }
         return tau;
+    }
 
+    public static Collection<Label> removeUnsyncableKeys(Process p, Collection<Label> labels){
+        Collection<Label> synced = new HashSet<>();
+
+        for (Label l : labels){
+            //we only care about keys and unsynced keys
+            if (!(l instanceof LabelKey))
+                continue;
+
+            LabelKey key1 = ((LabelKey)l);
+            if (key1.from instanceof TauLabelNode){
+                if (!recursiveIsSyncable(p,key1))
+                    synced.add(key1);
+            }
+        }
+        labels.removeAll(synced);
+        return labels;
+    }
+
+    public static boolean recursiveIsSyncable(Process p, LabelKey key){
+        if (!(p instanceof ComplexProcess))
+            return false;
+
+        System.out.println(String.format("Checking if %s is syncable to %s",
+                p.represent(), key.origin()));
+        ComplexProcess pr = (ComplexProcess) p;
+        if (recursiveIsSyncable(pr.left, key) && recursiveIsSyncable(pr.right,key)) {
+            System.out.println(String.format("%s is syncable to %s!",
+                    p.represent(), key.origin()));
+            return true;
+        }
+        else return false;
     }
 }

@@ -1,8 +1,11 @@
+#IRDC-CCSK
+Implementation of Reversible Distributed Calculus (CCSK)
+
 # Presentation
 
-## What is RCCS?
+## What is RCCS/CCSK?
 
-RCCS, or Reversible Calculus of Communicating Systems, is a formal language that describes the interaction of concurrent systems in a reversible paradigm.
+RCCS, or Reversible Calculus of Communicating Systems, and CCSK, or Calculus of Communicating Systems with Keys, are formal language that describes the interaction of concurrent systems in a reversible paradigm.
 
 ## What is this project?
 

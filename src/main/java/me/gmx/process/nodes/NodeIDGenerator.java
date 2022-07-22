@@ -18,4 +18,6 @@ public class NodeIDGenerator {
 
     public static synchronized int nextAvailableKey() { return k++; }
 
+    public static synchronized void decrementKey(){ k--; }
+
 }

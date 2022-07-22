@@ -5,6 +5,7 @@ import me.gmx.process.nodes.*;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.ConcurrentProcess;
 import me.gmx.process.process.Process;
+import me.gmx.process.process.SummationProcess;
 
 import java.security.KeyPair;
 import java.util.*;
@@ -40,44 +41,40 @@ public class SetUtil {
                             if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node)) {
                                 //Cool, we found a complement, let's add it to our map.
                                 TauLabelNode n = new TauLabelNode(node, innerNode); //Don't want duplicates
-                                if (!tau.contains(n))
-                                    tau.add(n);
+                                if (tau.contains(n) || nodes.contains(n))
+                                    n.destroy();
+                                else tau.add(n);
                             }
             }
         }
         return tau;
     }
 
-    public static Collection<Label> removeUnsyncableKeys(Process p, Collection<Label> labels){
-        Collection<Label> synced = new HashSet<>();
-
-        for (Label l : labels){
-            //we only care about keys and unsynced keys
-            if (!(l instanceof LabelKey))
+    public static Collection<Label> removeUnsyncableKeys(ComplexProcess p, Collection<Label> labels){
+        Iterator<Label> iter = labels.iterator();
+        while (iter.hasNext()){
+            Label l = iter.next();
+            if (!(l instanceof LabelKey))//we only care about keys
                 continue;
+            LabelKey key = (LabelKey) l;
+            if (!(key.from instanceof TauLabelNode))
+                continue; //don't care about regular keys
 
-            LabelKey key1 = ((LabelKey)l);
-            if (key1.from instanceof TauLabelNode){
-                if (!recursiveIsSyncable(p,key1))
-                    synced.add(key1);
-            }
+            if (!SetUtil.recursiveIsSyncable(p,key))//both sides need to be able to do it
+                iter.remove();
         }
-        labels.removeAll(synced);
         return labels;
     }
 
     public static boolean recursiveIsSyncable(Process p, LabelKey key){
         if (!(p instanceof ComplexProcess))
             return false;
+        ComplexProcess cp = (ComplexProcess) p;
 
-        System.out.println(String.format("Checking if %s is syncable to %s",
-                p.represent(), key.origin()));
-        ComplexProcess pr = (ComplexProcess) p;
-        if (recursiveIsSyncable(pr.left, key) && recursiveIsSyncable(pr.right,key)) {
-            System.out.println(String.format("%s is syncable to %s!",
-                    p.represent(), key.origin()));
+        if (cp.left.canAct(key) && cp.right.canAct(key))
             return true;
-        }
-        else return false;
+        else return (recursiveIsSyncable(cp.left, key)
+                || recursiveIsSyncable(cp.right, key));
     }
+
 }

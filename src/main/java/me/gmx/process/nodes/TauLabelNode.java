@@ -11,7 +11,7 @@ public class TauLabelNode extends Label {
     int saveDupe;
 
     public TauLabelNode(Label node, Label comp) {
-        super(-1, node.getChannel() + ":" + comp.getChannel());
+        super(-2, node.getChannel() + ":" + comp.getChannel());
         this.a = node;
         this.b = comp;
         consumeLeft = consumeRight = false;
@@ -43,6 +43,10 @@ public class TauLabelNode extends Label {
     @Override
     public TauLabelNode clone(){
         return new TauLabelNode((Label) getA().clone(),(Label) getB().clone());
+    }
+
+    public void destroy(){
+        NodeIDGenerator.decrementKey();
     }
 
 }

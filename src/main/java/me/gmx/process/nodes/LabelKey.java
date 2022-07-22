@@ -10,7 +10,7 @@ public class LabelKey extends Label {
     public Label from;
     public LabelKey(Label node){
         super(node.dupe, node.getChannel());
-        this.id = node.getId();
+        this.id = UUID.randomUUID();
         this.from = node;
         if (node instanceof TauLabelNode)
             this.dupe = ((TauLabelNode)node).saveDupe;
@@ -40,7 +40,8 @@ public class LabelKey extends Label {
         if (!(o instanceof LabelKey))
             return false;
         LabelKey key = (LabelKey) o;
-        return key.getId().equals(getId()); //defaults to id
+        //return key.getId().equals(getId()); //defaults to id
+        return (key.getChannel().equals(getChannel()) && key.dupe == dupe);
     }
 
 

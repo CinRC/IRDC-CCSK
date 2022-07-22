@@ -66,7 +66,6 @@ public class ConcurrentProcess extends ComplexProcess{
         r = right.getActionableLabels();
         ll.addAll(l);
         ll.addAll(r);
-
         return ll;
     }
 

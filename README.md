@@ -72,12 +72,12 @@ To upgrade JDK to the latest version on Linux:
 ```
 curl -O https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
 tar -xvf jdk-17_linux-x64_bin.tar.gz
-sudo mv jdk-17.0.2/ /opt/jdk17.0.2
-sudo update-alternatives --install "/usr/bin/java" "java" "/opt/jdk17.0.2/bin/java" 100
+sudo mv jdk-17.0.4/ /opt/jdk17.0.4
+sudo update-alternatives --install "/usr/bin/java" "java" "/opt/jdk17.0.4/bin/java" 100
 sudo update-alternatives --config java
-sudo update-alternatives --install "/usr/bin/javac" "javac" "/opt/jdk17.0.2/bin/javac" 100
+sudo update-alternatives --install "/usr/bin/javac" "javac" "/opt/jdk17.0.4/bin/javac" 100
 sudo update-alternatives --config javac
-export JAVA_HOME=/opt/jdk17.0.2/
+export JAVA_HOME=/opt/jdk17.0.4/
 ```
 
 To upgrade Maven to the latest version on Linux (courtesy of https://stackoverflow.com/a/71199477/)

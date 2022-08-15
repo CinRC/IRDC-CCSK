@@ -1,12 +1,16 @@
+# IRDC-CCSK
+
+Implementation of Reversible Distributed Calculus (CCSK)
+
 # Presentation
 
-## What is RCCS?
+## What is RCCS/CCSK?
 
-RCCS, or Reversible Calculus of Communicating Systems, is a formal language that describes the interaction of concurrent systems in a reversible paradigm.
+RCCS, or Reversible Calculus of Communicating Systems, and CCSK, or Calculus of Communicating Systems with Keys, are formal language that describes the interaction of concurrent systems in a reversible paradigm.
 
 ## What is this project?
 
-This project is a collaboration attempt between me and Dr. Clément Aubert (seen in commits) to be the first to implement a reversible formal language.
+This project is a collaboration attempt between [Peter Browning](https://peterjbrowning.com/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a reversible formal language.
 At its core, this is a parser and discovery tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
 Everything in this program was written from scratch, down to even the string utilities used internally.
 
@@ -14,6 +18,7 @@ Everything in this program was written from scratch, down to even the string uti
 ### Developer slang
 
 During the design of this program, I was by no means an expert in CCS or CCSK. Thus, my understanding was limited.
+<!-- I think you should remove this "warning" and simply explain that you named things a particular way. Also, remove all the "I", to make it more generic. -->
 Because of this, I refer to things internally slightly differently than an expert may have. I have listed some of the relevant mappings below:
 
 1. Channel names are referred to as 'Labels'
@@ -44,17 +49,35 @@ This program follows a slightly modified semantic structure based off of CCSK. I
 `Maven  >=  3.0`
 `JDK    >=  17`
 
+
+Please, use 
+
+```
+/opt/apache-maven-3.8.4/bin/mvn package
+```
+
+to build the project.
+
+<!--
+Mention  -DskipTests if we keep having tests that fail? 
+-->
+
+
+<!--
+
+This should probably either be in a different file, or a simple link, but not in the "landing" readme.
+
 To upgrade JDK to the latest version on Linux:
 
 ```
 curl -O https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
 tar -xvf jdk-17_linux-x64_bin.tar.gz
-sudo mv jdk-17.0.2/ /opt/jdk17.0.2
-sudo update-alternatives --install "/usr/bin/java" "java" "/opt/jdk17.0.2/bin/java" 100
+sudo mv jdk-17.0.4/ /opt/jdk17.0.4
+sudo update-alternatives --install "/usr/bin/java" "java" "/opt/jdk17.0.4/bin/java" 100
 sudo update-alternatives --config java
-sudo update-alternatives --install "/usr/bin/javac" "javac" "/opt/jdk17.0.2/bin/javac" 100
+sudo update-alternatives --install "/usr/bin/javac" "javac" "/opt/jdk17.0.4/bin/javac" 100
 sudo update-alternatives --config javac
-export JAVA_HOME=/opt/jdk17.0.2/
+export JAVA_HOME=/opt/jdk17.0.4/
 ```
 
 To upgrade Maven to the latest version on Linux (courtesy of https://stackoverflow.com/a/71199477/)
@@ -73,6 +96,8 @@ then use
 
 or link it.
 
+-->
+
 ### Running
 
 `JRE >= 8`
@@ -83,7 +108,12 @@ Please use e.g.
 java -jar target/RCCS-2.0-jar-with-dependencies.jar "a|b"
 ```
 
+<!--
+We should probably *not* have the version number in the .jar, since that makes this commeand 
+
 then select the possible labels to act on by their number.
+
+
 
 ## Usage
 

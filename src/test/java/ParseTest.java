@@ -7,34 +7,39 @@ import me.gmx.util.RCCSFlag;
 import org.junit.jupiter.api.Test;
 
 public class ParseTest {
-    private boolean compare(String given, String expected){
+    private boolean compare(String given, String expected) {
         System.out.println("[Test] Comparing " + given + " with expected result " + expected);
         return given.equals(expected);
     }
 
     @Test
-    public void testOriginMatching(){
+    public void testOriginMatching() {
+        RCCS.config.clear();
         String[] matchTest;
-            if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-                matchTest = new String[]{
-                        "a.b.P",
-                        "(a|b)",
-                        "(P|Q)",
-                        "(0|0)",
-                        "(a.b.P|a.b.P)",
-                        "(a.P|(a+b))"
-                };
-            }else{
-                matchTest = new String[]{
-                        "a.b.P",
-                        "a|b",
-                        "P|Q",
-                        "0|0",
-                        "a.b.P|a.b.P",
-                        "a.P|a+b"
-                };
-            }
-        //Basically, can a process be parsed and tokenized while retaining its properties
+        matchTest = new String[]{
+                "a.b.P",
+                "(a|b)",
+                "(P|Q)",
+                "(0|0)",
+                "(a.b.P|a.b.P)",
+                "(a.P|(a+b))"
+        };
+        for (String s : matchTest) {
+            String a = CCSParser.parseLine(s).export().origin();
+            assert compare(a, s);
+        }
+
+        RCCS.config.add(RCCSFlag.HIDE_PARENTHESIS);
+
+        matchTest = new String[]{
+                "a.b.P",
+                "a|b",
+                "P|Q",
+                "0|0",
+                "a.b.P|a.b.P",
+                "a.P|a+b"
+        };
+
         for (String s : matchTest) {
             String a = CCSParser.parseLine(s).export().origin();
             assert compare(a, s);
@@ -42,7 +47,9 @@ public class ParseTest {
     }
 
     @Test
-    public void testRedundantParenthesis(){
+    public void testRedundantParenthesis() {
+        RCCS.config.clear();
+
         //There's likely a better way to do this with a hashmap, but it works.
         //Mainly just want to see if the program doesnt die when trying to parse. Result should be stable
         String[] given = new String[]{
@@ -55,39 +62,40 @@ public class ParseTest {
         };
         for (int i = 0; i < expected.length; i++)
             assert (
-                    compare(CCSParser.parseLine(given[i]).export().origin(),expected[i])
-                    );
+                    compare(CCSParser.parseLine(given[i]).export().origin(), expected[i])
+            );
     }
 
     @Test
-    public void testBasicParse(){
+    public void testBasicParse() {
     }
 
     @Test
-    public void testInvalidParse(){
+    public void testInvalidParse() {
+        RCCS.config.clear();
         boolean isFailed = false;
 
         ProcessTemplate t = CCSParser.parseLine("ab");
-        try{
+        try {
             t.export();
-        }catch(Exception e){
+        } catch (Exception e) {
             isFailed = true;
         }
         assert (isFailed);
 
 
         t = CCSParser.parseLine("a+b+");
-        try{
+        try {
             t.export();
-        }catch(Exception e){
+        } catch (Exception e) {
             isFailed = true;
         }
         assert (isFailed);
 
         t = CCSParser.parseLine("a++");
-        try{
+        try {
             t.export();
-        }catch(Exception e){
+        } catch (Exception e) {
             isFailed = true;
         }
         assert (isFailed);

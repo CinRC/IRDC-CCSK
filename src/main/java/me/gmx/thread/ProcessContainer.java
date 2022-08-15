@@ -29,11 +29,11 @@ public class ProcessContainer {
     public void act(Label node){
         process = process.act(node);
     }
-
+    //TODO: Implement - Timestamps?
     public void reverseLastAction(){
-        if (process.hasKey())
+        /*if (process.hasKey())
             process = process.act(process.getKey());
-        else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
+        else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");*/
     }
 
     public LabelKey getKey(){

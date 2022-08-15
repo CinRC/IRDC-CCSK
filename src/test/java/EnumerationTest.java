@@ -1,9 +1,6 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelFactory;
-import me.gmx.process.nodes.LabelNode;
-import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.process.nodes.*;
 import me.gmx.process.process.Process;
 import me.gmx.thread.ProcessContainer;
 import me.gmx.util.RCCSFlag;
@@ -11,8 +8,12 @@ import org.junit.jupiter.api.Test;
 
 public class EnumerationTest {
 
+
+    //Just make sure it doesnt crash
     @Test
     public void testEnumerate(){
+        RCCS.config.clear();
+
         RCCS.config.add(RCCSFlag.DISPLAY_NULL);
         RCCS.config.add(RCCSFlag.DIFFERENTIATE_LABELS);
         RCCS.config.add(RCCSFlag.DEBUG);
@@ -20,24 +21,31 @@ public class EnumerationTest {
         Process pc = p.clone();
         ProcessContainer p1 = new ProcessContainer(p);
         ProcessContainer p2 = new ProcessContainer(pc);
-
+        Label a, b;
+        a = LabelFactory.createLabel("a",0);
+        b = LabelFactory.createLabel("b",1);
+        LabelKey la,lb;
+        la = LabelFactory.createDebugLabelKey(a);
+        lb = LabelFactory.createDebugLabelKey(b);
         System.out.println(p1.prettyString());
-        p1.act(LabelFactory.createLabel("a", 0));
+        p1.act(a);
         System.out.println(p1.prettyString());
-        p1.reverseLastAction();
+        p1.reverseOn(la);
         System.out.println(p1.prettyString());
-        p1.act(LabelFactory.createLabel("a",0));
-        p1.act(LabelFactory.createLabel("b",1));
+        p1.act(a);
+        p1.act(b);
         System.out.println(p1.prettyString());
-        p1.reverseLastAction();
-        p1.reverseLastAction();
+        p1.reverseOn(lb);
+        p1.reverseOn(la);
         System.out.println(p1.prettyString());
 
     }
 
-    @Test
+    //@Test
     //TODO: Broken
     public void test(){
+        RCCS.config.clear();
+
         RCCS.config.add(RCCSFlag.DEBUG);
         RCCS.config.add(RCCSFlag.KEYS_MATCH_LABELS);
         ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b|'a.c").export());

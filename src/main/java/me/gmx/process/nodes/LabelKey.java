@@ -41,7 +41,8 @@ public class LabelKey extends Label {
             return false;
         LabelKey key = (LabelKey) o;
         //return key.getId().equals(getId()); //defaults to id
-        return (key.getChannel().equals(getChannel()) && key.dupe == dupe);
+        //return (key.getChannel().equals(getChannel()) && (key.dupe == dupe ? true : key.dupe == -1));
+        return key.from.equals(from) && (key.dupe == dupe || key.dupe == -1 || dupe == -1);
     }
 
 

@@ -123,6 +123,9 @@ public class ActionPrefixProcess extends Process {
         return super.represent(origin());
     }
 
+
+    @Override
+    public String toString(){ return represent(); }
     /**
      * Gets child processes
      * @return ActionPrefixProcess will always return only a single child process

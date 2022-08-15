@@ -1,3 +1,4 @@
+import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
@@ -10,6 +11,8 @@ public class RestrictionTest {
 
     @Test
     public void testRestriction(){
+        RCCS.config.clear();
+
         //Create debug labels
         Label a,oa, b;
         a = LabelFactory.createDebugLabel("a");

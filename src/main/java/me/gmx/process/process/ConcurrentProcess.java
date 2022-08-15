@@ -69,4 +69,7 @@ public class ConcurrentProcess extends ComplexProcess{
         return ll;
     }
 
+
+    @Override
+    public String toString(){ return represent(); }
 }

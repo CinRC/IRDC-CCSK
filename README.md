@@ -17,9 +17,7 @@ Everything in this program was written from scratch, down to even the string uti
 
 ### Developer slang
 
-During the design of this program, I was by no means an expert in CCS or CCSK. Thus, my understanding was limited.
-<!-- I think you should remove this "warning" and simply explain that you named things a particular way. Also, remove all the "I", to make it more generic. -->
-Because of this, I refer to things internally slightly differently than an expert may have. I have listed some of the relevant mappings below:
+Some parts of this program are named different from the convention. Some of the notable ones are are listed below:
 
 1. Channel names are referred to as 'Labels'
 2. Parallel operators (`|`) are referred to as 'Concurrent Processes'
@@ -29,7 +27,7 @@ Because of this, I refer to things internally slightly differently than an exper
 
 ### Syntax and Precedence of Operators
 
-This program follows a slightly modified semantic structure based off of CCSK. I've included some notes below.
+This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.
 - By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable in the main config
 - Channel labels are limited to lowercase english letters [a-z]
 - Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc
@@ -49,87 +47,19 @@ This program follows a slightly modified semantic structure based off of CCSK. I
 `Maven  >=  3.0`
 `JDK    >=  17`
 
-
-Please, use 
-
-```
-/opt/apache-maven-3.8.4/bin/mvn package
-```
-
-to build the project.
-
-<!--
-Mention  -DskipTests if we keep having tests that fail? 
--->
-
-
-<!--
-
-This should probably either be in a different file, or a simple link, but not in the "landing" readme.
-
-To upgrade JDK to the latest version on Linux:
-
-```
-curl -O https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
-tar -xvf jdk-17_linux-x64_bin.tar.gz
-sudo mv jdk-17.0.4/ /opt/jdk17.0.4
-sudo update-alternatives --install "/usr/bin/java" "java" "/opt/jdk17.0.4/bin/java" 100
-sudo update-alternatives --config java
-sudo update-alternatives --install "/usr/bin/javac" "javac" "/opt/jdk17.0.4/bin/javac" 100
-sudo update-alternatives --config javac
-export JAVA_HOME=/opt/jdk17.0.4/
-```
-
-To upgrade Maven to the latest version on Linux (courtesy of https://stackoverflow.com/a/71199477/)
-
-```
-wget https://apache.org/dist/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz -P /tmp
-sudo tar xf /tmp/apache-maven-*.tar.gz -C /opt
-rm /tmp/apache-maven-*-bin.tar.gz
-```
-
-then use
-
-```
-/opt/apache-maven-3.8.5/bin/mvn
-```
-
-or link it.
-
--->
+Building from source can be done with the `mvn package` goal.
 
 ### Running
 
 `JRE >= 8`
 
-Please use e.g. 
+To run with a GUI, use the `--gui` flag. Else, a CLI will open instead.
 
 ```
-java -jar target/RCCS-2.0-jar-with-dependencies.jar "a|b"
+java -jar target/<JAR FILE>.jar <FLAGS> "PROCESS"
 ```
-
-<!--
-We should probably *not* have the version number in the .jar, since that makes this commeand 
-
-then select the possible labels to act on by their number.
-
-
-
-## Usage
-
-### Build
-
-To build this project, execute `mvn package` in the project root dir. This will create an executable jar file
-in `target/`.
 
 ### Testing
 
 To run unit tests, execute `mvn test` in the project root dir. It will run through a set of pre-written unit tests that are designed to represent difficult examples or niche scenarios.
-
-### Running
-
-Running this is fairly simple. One approach is to load the program into an IDE and run through its compiler.
-The main class is `me.gmx.RCCS`. 
-
-Alternatively, you can run the jar file created from the **building** section above with the command `java -jar target/RCCS-<version>.jar`.
 

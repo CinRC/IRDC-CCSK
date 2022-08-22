@@ -1,6 +1,9 @@
 package me.gmx;
 
+import javafx.application.Application;
+import me.gmx.UI.RCCS_FX;
 import me.gmx.parser.CCSParser;
+import me.gmx.thread.GUIThread;
 import me.gmx.thread.ProcessContainer;
 import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
@@ -15,12 +18,7 @@ public class RCCS {
         if (args.length == 0){
             System.out.println(helpMessage());
             System.exit(1);
-        }else if (args.length == 1) {
-            if (args[0].equals(RCCSFlag.HELP_MSG.getFlag())){
-                System.out.println(helpMessage());
-                System.exit(0);
-            }
-        }else{
+        }else if (args.length > 1){
             for (int i = 0; i < args.length-1; i++){
                 RCCSFlag f = getFlagMatchOrNull(args[i]);
                 if (f == null){
@@ -30,8 +28,17 @@ public class RCCS {
                     config.add(f);
             }
         }
+        if (config.contains(RCCSFlag.HELP_MSG)){
+            System.out.println(helpMessage());
+            System.exit(0);
+        }else if (config.contains(RCCSFlag.GUI)){
+            GUIThread t = new GUIThread("GUI");
+            t.start();
+        }
+
         String formula = args[args.length-1];
         CCSParser c = new CCSParser();
+
         try {
             ProcessTemplate template = c.parseLine(formula);
             log(String.format("Formula before complex init and minimization: %s", template.prettyString()));
@@ -44,6 +51,10 @@ public class RCCS {
         }
     }
 
+
+    private static void startGUI(){
+        Application.launch(RCCS_FX.class);
+    }
     public static void log(String s){
         if (RCCS.config.contains(RCCSFlag.DEBUG))
             System.out.println("[debug] " + s);

@@ -28,7 +28,9 @@ public enum RCCSFlag {
     IGNORE_UNRECOGNIZED("Unrecognized characters in process are ignored",
             "--iU"),
     KEYS_MATCH_LABELS("Keys will be visibly similar to the label they represent",
-            "--kL");
+            "--kL"),
+    GUI("Start program with GUI",
+            "--gui");
 
 
     private String description;

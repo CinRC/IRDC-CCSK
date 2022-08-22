@@ -93,7 +93,7 @@
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>
-                            -WD
+                            jar-with-dependencies
                         </descriptorRef>
                     </descriptorRefs>
                     <archive>

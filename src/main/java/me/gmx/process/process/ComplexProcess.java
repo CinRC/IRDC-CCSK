@@ -123,7 +123,7 @@ public abstract class ComplexProcess extends Process{
 
     @Override
     public boolean canAct(Label label){
-        RCCS.log(String.format("Checking if %s can act on %s",represent(),label.origin()));
+        RCCS.log(String.format("Checking if %s can act on %s",represent(),label));
         Collection<Label> l = getActionableLabels();
         if (!(label instanceof TauLabelNode))
             return l.contains(label);

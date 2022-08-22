@@ -10,14 +10,13 @@ public class LabelNode extends Label {
     public CCSGrammar grammar;
     public LabelNode(String s) {
         super(NodeIDGenerator.nextAvailable(), s);
-        origin = s;
+        isComplement = false;
         grammar = CCSGrammar.LABEL;
         this.id = UUID.randomUUID();
     }
 
     public LabelNode(LabelNode node){
         super(node.dupe, node.getChannel());
-        origin = node.origin();
         grammar = CCSGrammar.LABEL;
         id = node.getId();
     }

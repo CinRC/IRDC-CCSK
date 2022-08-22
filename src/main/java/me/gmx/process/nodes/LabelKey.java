@@ -11,6 +11,7 @@ public class LabelKey extends Label {
     public LabelKey(Label node){
         super(node.dupe, node.getChannel());
         this.id = UUID.randomUUID();
+        isComplement = false;
         this.from = node;
         if (node instanceof TauLabelNode)
             this.dupe = ((TauLabelNode)node).saveDupe;
@@ -26,13 +27,7 @@ public class LabelKey extends Label {
         super(key.dupe, key.getChannel());
         id = key.getId();
         from = key.from.clone();
-        origin = key.origin();
         this.dupe = key.dupe;
-    }
-
-    @Override
-    public String toString(){
-        return origin();
     }
 
     @Override
@@ -47,9 +42,9 @@ public class LabelKey extends Label {
 
 
     @Override
-    public String origin() {
+    public String toString() {
         if (RCCS.config.contains(RCCSFlag.KEYS_MATCH_LABELS))
-            return String.format("[%s]",from.origin());
+            return String.format("[%s]",from);
         else return String.format("[k%s]", dupe);
     }
 

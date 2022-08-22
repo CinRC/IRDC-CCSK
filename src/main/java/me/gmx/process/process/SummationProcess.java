@@ -147,7 +147,7 @@ public class SummationProcess extends ComplexProcess{
                     if (left.isGhost)
                         return represent(String.format(
                                 "%s{%s} %s (%s)"
-                                , ghostKey.origin()
+                                , ghostKey
                                 , left == null ? "" : left.represent()
                                 , operator.toString()
                                 , right == null ? "" : right.represent()
@@ -157,7 +157,7 @@ public class SummationProcess extends ComplexProcess{
                                 "(%s) %s %s{%s}"
                                 , left == null ? "" : left.represent()
                                 , operator.toString()
-                                , ghostKey.origin()
+                                , ghostKey
                                 , right == null ? "" : right.represent()
                         ));
                 }

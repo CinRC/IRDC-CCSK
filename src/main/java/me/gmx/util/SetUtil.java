@@ -18,7 +18,7 @@ public class SetUtil {
             return "";
         StringBuilder sb = new StringBuilder();
         for (Label o : set){
-            sb.append(o.origin());
+            sb.append(o);
             sb.append(",");
         }
         sb.deleteCharAt(sb.length()-1);

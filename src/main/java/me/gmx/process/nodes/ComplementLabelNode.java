@@ -13,19 +13,14 @@ public class ComplementLabelNode extends Label{
         //Remove the ' when applying channel
         super(NodeIDGenerator.nextAvailable(), s.replaceFirst("'",""));
         grammar = CCSGrammar.OUT_LABEL;
+        isComplement = true;
         this.id = UUID.randomUUID();
-        origin = s;
     }
 
     private ComplementLabelNode(ComplementLabelNode node){
         super(node.dupe, node.getChannel());
         grammar = CCSGrammar.OUT_LABEL;
         id = node.getId();
-        origin = node.origin();
-    }
-
-    public String toString(){
-        return this.origin();
     }
 
     @Override
@@ -33,8 +28,5 @@ public class ComplementLabelNode extends Label{
         return new ComplementLabelNode(this);
     }
 
-    public String origin(){
-        return String.format("%s%s", CCSGrammar.COMPLEMENT_SIG,super.origin());
-    }
 
 }

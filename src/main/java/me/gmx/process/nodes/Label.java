@@ -15,6 +15,7 @@ public abstract class Label extends ProgramNode{
     protected Collection<Label> synchronizeLock;
     public int dupe;
     private String channel;
+    protected boolean isComplement;
 
     public Label(int dupeId, String channel){
         dupe = dupeId;
@@ -49,7 +50,16 @@ public abstract class Label extends ProgramNode{
     }
 
     public String toString(){
-        return origin();
+        String s = "";
+        s += isComplement() ? CCSGrammar.COMPLEMENT_SIG.pString : "";
+        s += getChannel();
+        s += RCCS.config.contains(RCCSFlag.DIFFERENTIATE_LABELS)
+                ? String.valueOf(dupe) : "";
+        return s;
+    }
+
+    public boolean isComplement(){
+        return isComplement;
     }
 
     @Override
@@ -60,6 +70,8 @@ public abstract class Label extends ProgramNode{
         if (RCCS.config.contains(RCCSFlag.UNIQUE_CHANNELS))
             return label.getId().equals(getId());
         else {
+            if (isComplement() != label.isComplement())
+                return false;
 
             String t = getChannel() + dupe;
             String n = label.getChannel() + label.dupe;
@@ -85,23 +97,18 @@ public abstract class Label extends ProgramNode{
      * @return true if the given node is 'synchronizable'
      */
     public boolean isComplementOf(Label node){
-        if (this instanceof LabelNode) {
+        /*if (this instanceof LabelNode) {
             if (node instanceof LabelNode)
                 return false;
         }else if (this instanceof ComplementLabelNode) {
             if (node instanceof ComplementLabelNode)
                 return false;
-        }
-        return node.getChannel().equals(getChannel());
+        }*/
+        return node.getChannel().equals(getChannel())
+                && node.isComplement() != isComplement();
     }
 
     public abstract Label clone();
-
-    @Override
-    public String origin(){
-        String s = RCCS.config.contains(RCCSFlag.DIFFERENTIATE_LABELS) ? String.valueOf(dupe) : "";
-        return getChannel()+s;
-    }
 
 
 }

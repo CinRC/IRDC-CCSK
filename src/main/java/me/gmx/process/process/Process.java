@@ -42,9 +42,8 @@ public abstract class Process extends ProgramNode {
         while (iter.hasNext()){
             Label l = iter.next();
             for (Label r : getRestriction()){
-                if (r.getClass().equals(l.getClass())) //Make sure 'a\{a} works
-                    if (r.getChannel().equals(l.getChannel()))
-                        iter.remove();
+                if (r.getChannel().equals(l.getChannel()))
+                    iter.remove();
             }
         }
         return labels;
@@ -94,7 +93,7 @@ public abstract class Process extends ProgramNode {
      * @return True if given label is able to be acted on, false otherwise
      */
     public boolean canAct(Label label){
-        RCCS.log(String.format("Checking if %s can act on %s",represent(),label.origin()));
+        RCCS.log(String.format("Checking if %s can act on %s",represent(),label));
         return getActionableLabels().contains(label);
     }
 
@@ -169,7 +168,7 @@ public abstract class Process extends ProgramNode {
     protected String represent(String base){
         String s = "";
         s += (hasKey() && displayKey) ? String.format("%s%s"
-                , getKey().origin()
+                , getKey()
                 , base)
                 : String.format("%s",base);
         s+= getRestriction().isEmpty() ? "" : String.format("\\{%s}",SetUtil.csvSet(getRestriction()));

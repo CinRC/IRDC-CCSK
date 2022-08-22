@@ -26,7 +26,7 @@ public class CCSInteractionHandler {
             //Print out labels
             int i = 0;
             for (Label na : actionable)
-                System.out.printf("[%d] %s%n",i++,na.origin());
+                System.out.printf("[%d] %s%n",i++,na);
             System.out.println("------------");
             System.out.println(String.format("%s", container.prettyString()));
             System.out.println("Please input the index of the label you'd like to act on:");
@@ -49,7 +49,7 @@ public class CCSInteractionHandler {
                 if (RCCS.config.contains(RCCSFlag.DEBUG)) e.printStackTrace();
             }
             System.out.println(String.format("%s -%s-> %s",
-                    past,n.origin(),container.prettyString()));
+                    past,n,container.prettyString()));
         }
 
         return true;

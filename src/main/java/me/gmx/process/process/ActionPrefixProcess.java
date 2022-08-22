@@ -54,7 +54,7 @@ public class ActionPrefixProcess extends Process {
 
     @Override
     public boolean canAct(Label label){
-        RCCS.log(String.format("Checking if %s can act on %s",represent(),label.origin()));
+        RCCS.log(String.format("Checking if %s can act on %s",represent(),label));
         Collection<Label> labels = getActionableLabels();
         if (label instanceof TauLabelNode) {
             TauLabelNode tau = (TauLabelNode) label;
@@ -107,7 +107,7 @@ public class ActionPrefixProcess extends Process {
     private void recalculateOrigin(){
         String s = "";
         for (Label label : prefixes)
-            s += String.format("%s.",label.origin());
+            s += String.format("%s.",label);
         //If we don't want to see null processes, then remove last . and dont represent
         if (!RCCS.config.contains(RCCSFlag.DISPLAY_NULL) && getProcess() instanceof NullProcess
                 && !prefixes.isEmpty()) {

@@ -29,8 +29,8 @@ public class TauLabelNode extends Label {
     }
 
     @Override
-    public String origin(){
-        return String.format("Tau{%s, %s}",a.origin(),b.origin());
+    public String toString(){
+        return String.format("Tau{%s, %s}",a,b);
     }
 
     public Label getA(){

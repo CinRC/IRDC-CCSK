@@ -16,6 +16,7 @@ public abstract class Label extends ProgramNode{
     public int dupe;
     private String channel;
     protected boolean isComplement;
+    protected boolean isRestricted = false;
 
     public Label(int dupeId, String channel){
         dupe = dupeId;
@@ -28,6 +29,14 @@ public abstract class Label extends ProgramNode{
 
     public UUID getId(){
         return id;
+    }
+
+    public void setRestricted(boolean b){
+        isRestricted = b;
+    }
+
+    public boolean isRestricted(){
+        return isRestricted;
     }
 
     /**

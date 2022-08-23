@@ -55,7 +55,8 @@ public class ConcurrentProcess extends ComplexProcess{
     public Collection<Label> getActionableLabels(){
         Collection<Label> l = getActionableLabelsStrict();
         l.addAll(SetUtil.getTauMatches(l));
-        return SetUtil.removeUnsyncableKeys(this, withdrawRestrictions(l));
+        l = withdrawRestrictions(l);
+        return SetUtil.removeUnsyncableKeys(this, l);
     }
 
     protected Collection<Label> getActionableLabelsStrict(){

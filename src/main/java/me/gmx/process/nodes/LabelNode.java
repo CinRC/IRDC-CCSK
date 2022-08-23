@@ -19,6 +19,8 @@ public class LabelNode extends Label {
         super(node.dupe, node.getChannel());
         grammar = CCSGrammar.LABEL;
         id = node.getId();
+        setRestricted(node.isRestricted);
+
     }
 
     //Basically, check if given node is '[this] or [this] is '[given node]

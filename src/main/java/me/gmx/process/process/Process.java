@@ -42,14 +42,17 @@ public abstract class Process extends ProgramNode {
         while (iter.hasNext()){
             Label l = iter.next();
             for (Label r : getRestriction()){
-                if (r.getChannel().equals(l.getChannel()))
-                    iter.remove();
+                //if (r.isComplement() == l.isComplement())
+                    if (r.getChannel().equals(l.getChannel()))
+                        //iter.remove();
+                        l.setRestricted(true);
             }
         }
         return labels;
     }
 
-    //Very annoying that java cannot process collections as ... streams :(
+
+
     public void addRestrictions(Collection<Label> labels){
         restrictions.addAll(labels);
     }
@@ -67,6 +70,7 @@ public abstract class Process extends ProgramNode {
         this.previousLife = previousLife;
         this.key = key;
     }
+
 
     public abstract Process clone();
 
@@ -87,14 +91,14 @@ public abstract class Process extends ProgramNode {
     protected void setKey(LabelKey key){
         this.key = key;
     }
+
     /**
      * Determines whether process can act on given label, without actually acting on it.
      * @param label label to act on
      * @return True if given label is able to be acted on, false otherwise
      */
     public boolean canAct(Label label){
-        RCCS.log(String.format("Checking if %s can act on %s",represent(),label));
-        return getActionableLabels().contains(label);
+        return getActionableLabels().contains(label) && !label.isRestricted();
     }
 
     /**

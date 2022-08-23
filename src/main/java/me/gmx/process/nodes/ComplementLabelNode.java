@@ -21,6 +21,7 @@ public class ComplementLabelNode extends Label{
         super(node.dupe, node.getChannel());
         grammar = CCSGrammar.OUT_LABEL;
         id = node.getId();
+        setRestricted(node.isRestricted);
     }
 
     @Override

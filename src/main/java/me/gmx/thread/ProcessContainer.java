@@ -7,6 +7,7 @@ import me.gmx.process.process.Process;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class ProcessContainer {
@@ -19,7 +20,15 @@ public class ProcessContainer {
         return process.represent();
     }
     public Collection<Label> getActionableLabels(){
-        return process.getActionableLabels();
+        Collection<Label> labels = process.getActionableLabels();
+        Iterator<Label> iter = labels.iterator();
+        while(iter.hasNext()) {
+            Label l = iter.next();
+            if (l.isRestricted())
+                iter.remove();
+        }
+
+        return labels;
     }
 
     public boolean canAct(Label node){

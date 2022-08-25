@@ -6,7 +6,7 @@
 
     <groupId>me.gmx</groupId>
     <artifactId>RCCS</artifactId>
-    <version>2.77</version>
+    <version>2.79</version>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -15,10 +15,9 @@
 
     <repositories>
         <repository>
-            <id>charm-glisten</id>
-            <name>charm-glisten Repository</name>
+            <id>gluon</id>
+            <name>Gluon repo</name>
             <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
         </repository>
     </repositories>
 

@@ -4,34 +4,26 @@ import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
 import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.process.process.Process;
 import me.gmx.thread.ProcessContainer;
 import org.junit.jupiter.api.Test;
 
 public class RestrictionTest {
 
     @Test
-    public void testRestriction(){
+    public void testRestrictionSync(){
         RCCS.config.clear();
-
-        //Create debug labels
-        Label a,oa, b;
+        Label a,oa,ta;
         a = LabelFactory.createDebugLabel("a");
         oa = LabelFactory.createDebugLabel("'a");
-        b = LabelFactory.createDebugLabel("b");
+        ta = new TauLabelNode(a,oa);
+        Process p = CCSParser.parseLine("(a|'a)\\{a}").export();
 
-        ProcessContainer c = new ProcessContainer(CCSParser.parseLine("a\\{a}").export());
-        assert !c.canAct(a);
+        ProcessContainer pc = new ProcessContainer(p);
 
-        c = new ProcessContainer(CCSParser.parseLine("(a|'a)\\{a}").export());
-        //Make sure process isn't wack
-        assert !c.canAct(new TauLabelNode(a,b));
-        assert !c.canAct(b);
-        //Make sure restrictions work
-        assert !c.canAct(a);
-        //Make sure restrictions don't overstep
-        assert c.canAct(oa);
-        assert c.canAct(new TauLabelNode(a,oa));
-
+        assert(!pc.canAct(a));
+        assert(!pc.canAct(oa));
+        assert(pc.canAct(ta));
     }
 
 }

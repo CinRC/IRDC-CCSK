@@ -10,9 +10,9 @@ RCCS, or Reversible Calculus of Communicating Systems, and CCSK, or Calculus of 
 
 ## What is this project?
 
-This project is a collaboration attempt between [Peter Browning](https://peterjbrowning.com/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a reversible formal language.
-At its core, this is a parser and discovery tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
-Everything in this program was written from scratch, down to even the string utilities used internally.
+This project is a collaboration attempt between [Peter Browning](https://peterjbrowning.com/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
+At its core, this is a parser and evaluation tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
+Everything in this program is original, including string traversal libraries and GUI.
 
 
 ### Developer slang
@@ -56,10 +56,10 @@ Building from source can be done with the `mvn package` goal.
 To run with a GUI, use the `--gui` flag. Else, a CLI will open instead.
 
 ```
-java -jar target/<JAR FILE>.jar <FLAGS> "PROCESS"
+java -jar target/[Jar file].jar <FLAGS> "[Process]"
 ```
 
 ### Testing
 
-To run unit tests, execute `mvn test` in the project root dir. It will run through a set of pre-written unit tests that are designed to represent difficult examples or niche scenarios.
+To run unit tests, execute `mvn test` in the project root dir. It will run through a set of pre-written unit tests that are designed to represent difficult a diverse range of different scenarios.
 

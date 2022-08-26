@@ -1,12 +1,12 @@
 package me.gmx.process.process;
 
+import javafx.util.Pair;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
-import me.gmx.util.SetUtil;
 
 import java.util.*;
 
@@ -17,6 +17,7 @@ public class ActionPrefixProcess extends Process {
 
     public ActionPrefixProcess(Process p, List<Label> labels){
         this.process = p;
+        displayKey = false;
         this.prefixes = new LinkedList<Label>();
         this.prefixes.addAll(labels);
         recalculateOrigin();
@@ -120,8 +121,14 @@ public class ActionPrefixProcess extends Process {
 
     @Override
     public String represent() {
-        return super.represent(origin());
+        String s = super.represent(origin());
+        for(Pair<Label,LabelKey> pair : getLabelKeyPairs()){
+            s = pair.getKey().toString()
+                    + pair.getValue().toString() + "." + s;
+        }
+        return s;
     }
+
 
 
     @Override

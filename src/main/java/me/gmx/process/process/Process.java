@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import javafx.util.Pair;
 import me.gmx.RCCS;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
@@ -8,10 +9,7 @@ import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Process extends ProgramNode {
 
@@ -191,6 +189,16 @@ public abstract class Process extends ProgramNode {
         if (hasKey())
             l.add(getKey());
 
+        return l;
+    }
+
+    public List<Pair<Label, LabelKey>> getLabelKeyPairs(){
+        List<Pair<Label, LabelKey>> l = new ArrayList<Pair<Label, LabelKey>>();
+        if (hasKey()) {
+            l.add(new Pair<Label, LabelKey>(getKey().from, getKey()));
+            if (previousLife.hasKey())
+                l.addAll(previousLife.getLabelKeyPairs());
+        }
         return l;
     }
 

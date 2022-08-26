@@ -2,7 +2,6 @@
 
 Implementation of Reversible Distributed Calculus (CCSK)
 
-# Presentation
 
 ## What is RCCS/CCSK?
 

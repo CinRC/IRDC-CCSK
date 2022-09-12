@@ -13,6 +13,12 @@ public class ParseTest {
     }
 
     @Test
+    public void testPrecedence(){
+
+    }
+
+
+    @Test
     public void testOriginMatching() {
         RCCS.config.clear();
         String[] matchTest;

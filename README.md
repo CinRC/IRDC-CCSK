@@ -40,6 +40,27 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 - Of course, parenthesis take precedence over all operators.
   - Redundant parenthesis are permitted `(((a)|(b)))`
 
+## Command arguments (flags)
+
+This program can be configured by using command-line arguments, or flags. The flags are as follows:
+
+| **Flag**    	 | **Description**                                                                                            	 |
+|---------------|--------------------------------------------------------------------------------------------------------------|
+| --debug     	 | Enables debug mode. Will print info to stdout                                                              	 |
+| --help      	 | Prints help message documenting flags                                                                      	 |
+| --uC        	 | (Currently broken, do not use)                                                                             	 |
+| --dL        	 | Labels are visibly differentiated by integers                                                              	 |
+| --hide-keys 	 | CCSK keys are hidden                                                                                       	 |
+| --kM        	 | (Currently broken, do not use)                                                                             	 |
+| --sA        	 | Alternative display mode for summation processes. Reversible summations are not annotated                  	 |
+| --sC        	 | Alternative display mode for summation processes. Reversible summations are hidden after execution         	 |
+| --eN        	 | Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached 	 |
+| --hP        	 | Parenthesis surrounding complex processes will be omitted                                                  	 |
+| --dN        	 | Null processes will be displayed explicitly                                                                	 |
+| --iU        	 | Parser will ignore unrecognized characters in the process formula                                          	 |
+| --kL        	 | Keys will be visibly similar to the label they represent                                                   	 |
+| --gui       	 | Program will start with a UI instead of CLI                                                                	 |
+
 
 ## Requirements
 

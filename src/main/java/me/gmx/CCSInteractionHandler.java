@@ -48,8 +48,9 @@ public class CCSInteractionHandler {
                 System.out.println("Could not act on label!");
                 if (RCCS.config.contains(RCCSFlag.DEBUG)) e.printStackTrace();
             }
-            System.out.println(String.format("%s -%s-> %s",
-                    past,n,container.prettyString()));
+            String c = n instanceof LabelKey ? "~" : "-";
+            System.out.println(String.format("%s %s%s%s> %s",
+                    past,c,n,c,container.prettyString()));
         }
 
         return true;

@@ -59,4 +59,8 @@ public class ProcessContainer {
                 process = process.act(key);
             else throw new CCSTransitionException(process, key);
     }
+
+    public Process getProcess(){
+        return process;
+    }
 }

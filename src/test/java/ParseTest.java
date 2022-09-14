@@ -2,6 +2,11 @@ import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.CCSParserException;
 import me.gmx.parser.CCSTransitionException;
+import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelFactory;
+import me.gmx.process.process.Process;
+import me.gmx.process.process.SummationProcess;
+import me.gmx.thread.ProcessContainer;
 import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 import org.junit.jupiter.api.Test;
@@ -14,6 +19,21 @@ public class ParseTest {
 
     @Test
     public void testPrecedence(){
+        RCCS.config.clear();
+        Label a = LabelFactory.createDebugLabel("a");
+        Label b = LabelFactory.createDebugLabel("b");
+        Label c = LabelFactory.createDebugLabel("c");
+        //Make sure a + b | c is parsed as (a+(b|c))
+        Process p = CCSParser.parseLine("a+b|c").export();
+        ProcessContainer pc = new ProcessContainer(p);
+        assert(pc.getProcess() instanceof SummationProcess);
+
+        //Make sure a+b|c is parsed as (a+(b|c\abc))
+        p = CCSParser.parseLine("a+b|c\\{a,b,c}").export();
+        pc = new ProcessContainer(p);
+        assert(!pc.canAct(c));
+        assert(pc.canAct(a));
+        assert(pc.canAct(b));
 
     }
 

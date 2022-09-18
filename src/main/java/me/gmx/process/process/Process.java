@@ -24,8 +24,7 @@ public abstract class Process extends ProgramNode {
 
     protected boolean isGhost = false;
 
-    protected LinkedList<Label> prefixes = new LinkedList<>();
-
+    protected Stack<Label> prefixes = new Stack<>();
     Set<Label> restrictions = new HashSet<>();
 
     public boolean displayKey = !RCCS.config.contains(RCCSFlag.HIDE_KEYS);
@@ -143,10 +142,10 @@ public abstract class Process extends ProgramNode {
 
 
     public void addPrefix(Label label){
-        prefixes.addLast(label);
+        prefixes.push(label);
     }
 
-    public LinkedList<Label> getPrefixes(){
+    public Stack<Label> getPrefixes(){
         return prefixes;
     }
 
@@ -180,7 +179,14 @@ public abstract class Process extends ProgramNode {
      * should be called to print to screen unless you will be comparing processes
      * @return String to be displayed to user that represents this process
      */
-    public abstract String represent();
+    public String represent(){
+        String s = represent(origin());
+        for(Pair<Label,LabelKey> pair : getLabelKeyPairs()){
+            s = pair.getKey().toString()
+                    + pair.getValue().toString() + "." + s;
+        }
+        return s;
+    }
 
     /**
      * Internal represent method to be called by subclasses. This sets the 'format' for
@@ -207,6 +213,8 @@ public abstract class Process extends ProgramNode {
      */
     public Collection<Label> getActionableLabels(){
         Set<Label> l = new HashSet<>();
+        if (!prefixes.isEmpty())
+            l.add(prefixes.peek());
         if (hasKey())
             l.add(getKey());
 

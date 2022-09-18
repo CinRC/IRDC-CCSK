@@ -100,6 +100,13 @@ public class SummationProcess extends ComplexProcess{
      */
     private Collection<Label> getActionableLabelsStrictInternal(boolean lock){
         Collection<Label> s = super.getActionableLabels();
+
+        if (!prefixes.isEmpty()){
+            s.add(prefixes.peek());
+            return s;
+        }
+
+
         Collection<Label> l = left.isGhost ? Collections.emptySet()
                 : left.getActionableLabels();
         Collection<Label> r = right.isGhost ? Collections.emptySet()

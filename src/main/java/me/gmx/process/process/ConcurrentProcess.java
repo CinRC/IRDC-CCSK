@@ -18,7 +18,7 @@ public class ConcurrentProcess extends ComplexProcess{
         super(left,right, CCSGrammar.OP_CONCURRENT);
     }
 
-    public ConcurrentProcess(Process left, Process right, LinkedList<Label> pfix) {
+    public ConcurrentProcess(Process left, Process right, Stack<Label> pfix) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
         prefixes = pfix;
     }
@@ -57,21 +57,26 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     @Override
     public Collection<Label> getActionableLabels(){
-        Collection<Label> l = getActionableLabelsStrict();
+        Collection l = super.getActionableLabels();
+        if (!prefixes.isEmpty()){
+            l.add(prefixes.peek());
+            return withdrawRestrictions(l);
+        }
+
+        l.addAll(getActionableLabelsStrict());
         l.addAll(SetUtil.getTauMatches(l));
         l = withdrawRestrictions(l);
         return SetUtil.removeUnsyncableKeys(this, l);
     }
 
     protected Collection<Label> getActionableLabelsStrict(){
-        Collection<Label> ll, l, r;
+        Collection<Label> l, r;
 
-        ll = super.getActionableLabels();
         l = left.getActionableLabels();
         r = right.getActionableLabels();
-        ll.addAll(l);
-        ll.addAll(r);
-        return ll;
+        l.addAll(l);
+        l.addAll(r);
+        return l;
     }
 
 

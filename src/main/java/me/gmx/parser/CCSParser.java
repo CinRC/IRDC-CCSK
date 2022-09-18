@@ -1,6 +1,7 @@
 package me.gmx.parser;
 
 import me.gmx.RCCS;
+import me.gmx.process.process.Process;
 import me.gmx.thread.ProcessTemplate;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
@@ -16,8 +17,6 @@ public class CCSParser {
 
     public CCSParser(){
     }
-
-
 
     public static ProcessTemplate parseLine(String line){
         RCCS.log("Starting parsing of " + line);
@@ -45,21 +44,30 @@ public class CCSParser {
                 if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
                     counter--;
                     if (counter == 0) {
-                        template.add(parseLine(walker.readMemory()//sub to remove paren
-                                .substring(1,walker.readMemory().length()-1)).export()); //while in parenthesis, everything gets auto-packed.
+                        if (prefixes.isEmpty())
+                            template.add(parseLine(walker.readMemory()//sub to remove paren
+                                    .substring(1,walker.readMemory().length()-1)).export());
+                        else{
+                            Process zz = parseLine(walker.readMemory()//sub to remove paren
+                                    .substring(1,walker.readMemory().length()-1)).export();
+                            ActionPrefixProcess zzp = new ActionPrefixProcess(zz,prefixes);
+                            template.add(zzp); //while in parenthesis, everything gets auto-packed.
+                        }
+
                         inParenthesis = false;
                         walker.clearMemory();
                     }
                 }
-            }
-                if (!inParenthesis)
-                for (CCSGrammar g : CCSGrammar.values()) {
+            }else for (CCSGrammar g : CCSGrammar.values()) {
                 if (!g.canBeParsed())
                     continue;
+
+
                 Matcher m = g.match(walker.readMemory());
                 if (m.find()){
                     RCCS.log("Found match: " + m.group() + " Grammar: " + g.name());
-                    //If
+
+                    //Unrecognized char
                     if (!RCCS.config.contains(RCCSFlag.IGNORE_UNRECOGNIZED))
                         if (!g.match(walker.readMemory()).matches()) {
                             String tempString = walker.readMemory().replace(m.group(),"");
@@ -80,6 +88,7 @@ public class CCSParser {
                         walker.clearMemory();
                         continue;
                     }
+
                     if (g == CCSGrammar.LABEL_COMBINED) { //a , 'b , c
                         RCCS.log("Adding prefix: " + m.group());
                         prefixes.add(LabelFactory.parseNode(m.group()));

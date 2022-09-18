@@ -16,7 +16,11 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     public ConcurrentProcess(Process left, Process right) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
-        displayKey = false; //Don't want concurrent processes to show keys, regardless of circumstance
+    }
+
+    public ConcurrentProcess(Process left, Process right, LinkedList<Label> pfix) {
+        super(left,right, CCSGrammar.OP_CONCURRENT);
+        prefixes = pfix;
     }
     //Note: Concurrent processes will never need to hold a key, because data is not destroyed at
     //the complex-process level in this situation.

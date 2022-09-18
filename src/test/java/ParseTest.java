@@ -27,14 +27,12 @@ public class ParseTest {
         Process p = CCSParser.parseLine("a+b|c").export();
         ProcessContainer pc = new ProcessContainer(p);
         assert(pc.getProcess() instanceof SummationProcess);
-
         //Make sure a+b|c is parsed as (a+(b|c\abc))
         p = CCSParser.parseLine("a+b|c\\{a,b,c}").export();
         pc = new ProcessContainer(p);
         assert(!pc.canAct(c));
         assert(pc.canAct(a));
         assert(pc.canAct(b));
-
     }
 
 
@@ -91,7 +89,6 @@ public class ParseTest {
                     compare(CCSParser.parseLine(given[i]).export().origin(), expected[i])
             );
     }
-
     @Test
     public void testBasicParse() {
     }

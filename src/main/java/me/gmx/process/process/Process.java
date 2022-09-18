@@ -24,10 +24,13 @@ public abstract class Process extends ProgramNode {
 
     protected boolean isGhost = false;
 
+    protected LinkedList<Label> prefixes = new LinkedList<>();
+
     Set<Label> restrictions = new HashSet<>();
 
     public boolean displayKey = !RCCS.config.contains(RCCSFlag.HIDE_KEYS);
-    public Process(){}
+
+    public Process() {}
 
     /**
      * Removes restrictions from given process. Because of the way label equality
@@ -63,6 +66,7 @@ public abstract class Process extends ProgramNode {
         this.restrictions.addAll(restrictions);
     }
 
+    @Deprecated
     public Process(Collection<Label> restrictions, Process previousLife, LabelKey key){
         this.restrictions.addAll(restrictions);
         this.previousLife = previousLife;
@@ -137,6 +141,23 @@ public abstract class Process extends ProgramNode {
         return this.actOn(label);
     }
 
+
+    public void addPrefix(Label label){
+        prefixes.addLast(label);
+    }
+
+    public LinkedList<Label> getPrefixes(){
+        return prefixes;
+    }
+
+    public boolean removePrefix(int index){
+        try{
+            getPrefixes().remove(index);
+            return true;
+        }catch(IndexOutOfBoundsException e){
+            return false;
+        }
+    }
 
     /**
      * Returns if this process has a CCSK key assigned to it

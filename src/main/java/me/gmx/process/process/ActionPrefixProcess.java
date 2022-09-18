@@ -78,31 +78,39 @@ public class ActionPrefixProcess extends Process {
         if (prefixes.isEmpty())
             throw new CCSTransitionException(this, label);
 
+        Process p;
         if (label instanceof TauLabelNode){
             TauLabelNode tau = (TauLabelNode) label;
 
             if (getPrefix().equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
-                actInternal(tau);
                 tau.consumeLeft = true;
+                return actInternal(tau);
             }else if (getPrefix().equals(tau.getB()) && !tau.consumeRight){
-                actInternal(tau);
                 tau.consumeRight = true;
+                return actInternal(tau);
             } else throw new CCSTransitionException(this, label);
-            recalculateOrigin();
-            return this;
         }
 
         if (getPrefix().equals(label)) {
-            actInternal(label);
+            return actInternal(label);
         }else throw new CCSTransitionException(this, label);
-        recalculateOrigin();
-        return this;
+
     }
 
-    private void actInternal(Label label){ //to save some lines of code. does not check label equality
-        setPastLife(clone());
-        setKey(new LabelKey(label));
+    private Process actInternal(Label label){ //to save some lines of code. does not check label equality
+        Process p;
+        if (prefixes.size() < 2){
+            p = getProcess();
+            p.setPastLife(clone());
+            p.setKey(new LabelKey(label));
+        }else{
+            setPastLife(clone());
+            setKey(new LabelKey(label));
+            p = this;
+        }
         prefixes.removeFirst();
+        recalculateOrigin();
+        return p;
     }
 
     private void recalculateOrigin(){

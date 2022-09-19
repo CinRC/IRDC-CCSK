@@ -2,12 +2,11 @@ package me.gmx.process.process;
 
 import javafx.util.Pair;
 import me.gmx.RCCS;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.ProgramNode;
-import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.parser.CCSTransitionException;
+import me.gmx.process.nodes.*;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
+import me.gmx.util.StringUtil;
 
 import java.util.*;
 
@@ -24,7 +23,7 @@ public abstract class Process extends ProgramNode {
 
     protected boolean isGhost = false;
 
-    protected Stack<Label> prefixes = new Stack<>();
+    protected LinkedList<Label> prefixes = new LinkedList<>();
     Set<Label> restrictions = new HashSet<>();
 
     public boolean displayKey = !RCCS.config.contains(RCCSFlag.HIDE_KEYS);
@@ -43,9 +42,9 @@ public abstract class Process extends ProgramNode {
             Label l = iter.next();
             for (Label r : getRestriction()){
                 //if (r.isComplement() == l.isComplement())
-                    if (r.getChannel().equals(l.getChannel()))
-                        //iter.remove();
-                        l.setRestricted(true);
+                if (r.getChannel().equals(l.getChannel()))
+                    //iter.remove();
+                    l.setRestricted(true);
             }
         }
         return labels;
@@ -122,6 +121,9 @@ public abstract class Process extends ProgramNode {
      * @return will return this, after having acted on the given label
      */
     public Process act(Label label){
+        Label l = null;
+        if (!prefixes.isEmpty())
+            l = prefixes.getFirst();
         if (label instanceof LabelKey) {
             if (ghostKey == null && hasKey()) //Just a regular process? Is it reversible?
                 if (getKey().equals(label)) //Make sure keys match
@@ -135,17 +137,41 @@ public abstract class Process extends ProgramNode {
             }
 
         }else if (label instanceof TauLabelNode){
-            //TODO: ?
+            TauLabelNode tau = (TauLabelNode) label;
+
+            if (l.equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
+                tau.consumeLeft = true;
+                return actInternal(tau);
+            }else if (l.equals(tau.getB()) && !tau.consumeRight){
+                tau.consumeRight = true;
+                return actInternal(tau);
+            } else throw new CCSTransitionException(this, label);
+        }else if (label instanceof LabelNode || label instanceof ComplementLabelNode){
+            if (label.equals(prefixes.getFirst()))
+                actInternal(label);
+            return this;
         }
         return this.actOn(label);
     }
 
-
-    public void addPrefix(Label label){
-        prefixes.push(label);
+    public Process actInternal(Label l){
+            getPrefixes().removeFirst();
+            setPastLife(clone());
+            setKey(new LabelKey(l));
+            return this;
     }
 
-    public Stack<Label> getPrefixes(){
+
+    /**
+     *
+     * @param labels An ordered list of prefixes, where labels[0] is the leftmost label
+     */
+    public void addPrefixes(List<Label> labels){
+        for (Label l : labels)
+            prefixes.addLast(l);
+    }
+
+    public LinkedList<Label> getPrefixes(){
         return prefixes;
     }
 
@@ -196,10 +222,11 @@ public abstract class Process extends ProgramNode {
      */
     protected String represent(String base){
         String s = "";
-        s += (hasKey() && displayKey) ? String.format("%s%s"
-                , getKey()
-                , base)
-                : String.format("%s",base);
+        //[key]prefix.prefix.base
+        s += (hasKey() && displayKey) ? getKey() : "";
+        s += String.format("%s%s"
+                , StringUtil.representPrefixes(getPrefixes())
+                , base);
         s+= getRestriction().isEmpty() ? "" : String.format("\\{%s}",SetUtil.csvSet(getRestriction()));
 
         return s;
@@ -214,7 +241,7 @@ public abstract class Process extends ProgramNode {
     public Collection<Label> getActionableLabels(){
         Set<Label> l = new HashSet<>();
         if (!prefixes.isEmpty())
-            l.add(prefixes.peek());
+            l.add(prefixes.getFirst());
         if (hasKey())
             l.add(getKey());
 

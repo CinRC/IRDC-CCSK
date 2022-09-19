@@ -4,11 +4,19 @@ import me.gmx.process.nodes.Label;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class ProcessImpl extends Process implements ActionableProcess{
 
     public ProcessImpl(String s) {
+        super();
         this.origin = s;
+    }
+
+    public ProcessImpl(String s, List<Label> prefixes){
+        super();
+        this.origin = s;
+        this.prefixes.addAll(prefixes);
     }
 
     @Override

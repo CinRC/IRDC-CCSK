@@ -3,11 +3,17 @@ package me.gmx.process.process;
 import me.gmx.process.nodes.Label;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class NullProcess extends Process{
 
     public NullProcess() {
         super();
+    }
+
+    public NullProcess(List<Label> prefixes){
+        super();
+        this.prefixes.addAll(prefixes);
     }
 
     @Override
@@ -27,7 +33,7 @@ public class NullProcess extends Process{
 
     @Override
     public String represent() {
-        return "0";
+        return super.represent("0");
     }
 
     @Override

@@ -18,7 +18,7 @@ public class ConcurrentProcess extends ComplexProcess{
         super(left,right, CCSGrammar.OP_CONCURRENT);
     }
 
-    public ConcurrentProcess(Process left, Process right, Stack<Label> pfix) {
+    public ConcurrentProcess(Process left, Process right, LinkedList<Label> pfix) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
         prefixes = pfix;
     }

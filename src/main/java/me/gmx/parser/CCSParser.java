@@ -44,7 +44,11 @@ public class CCSParser {
                 if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
                     counter--;
                     if (counter == 0) {
-                        if (prefixes.isEmpty())
+
+                        Process dp = parseLine(walker.readMemory().substring(1,walker.readMemory().length()-1)).export();
+                        dp.addPrefixes(prefixes);
+                        template.add(dp);
+           /*             if (prefixes.isEmpty())
                             template.add(parseLine(walker.readMemory()//sub to remove paren
                                     .substring(1,walker.readMemory().length()-1)).export());
                         else{
@@ -52,7 +56,7 @@ public class CCSParser {
                                     .substring(1,walker.readMemory().length()-1)).export();
                             ActionPrefixProcess zzp = new ActionPrefixProcess(zz,prefixes);
                             template.add(zzp); //while in parenthesis, everything gets auto-packed.
-                        }
+                        }*/
 
                         inParenthesis = false;
                         walker.clearMemory();
@@ -93,14 +97,14 @@ public class CCSParser {
                         RCCS.log("Adding prefix: " + m.group());
                         prefixes.add(LabelFactory.parseNode(m.group()));
                         if (!walker.canWalk()){
-                            template.add(new ActionPrefixProcess(new NullProcess(), prefixes));
+                            template.add(new NullProcess(prefixes));
                             prefixes.clear();
                         }else if (walker.peek().equals(CCSGrammar.OP_SEQUENTIAL.toString())) { //If there is a . after label, then skip over it and continue.
                             walker.walk(false);
                         //If there is no ., then treat it as an implicit "0" process
                         }else {
                             if (!RCCS.config.contains(RCCSFlag.EXPLICIT_NULL)){
-                                template.add(new ActionPrefixProcess(new NullProcess(), prefixes));
+                                template.add(new NullProcess(prefixes));
                                 prefixes.clear();
                             }else
                                 throw new CCSParserException("Could not find process for prefixes: " + SetUtil.csvSet(prefixes));
@@ -109,14 +113,14 @@ public class CCSParser {
                         if (prefixes.isEmpty())
                             template.add(new ProcessImpl(walker.readMemory()));
                         else {
-                            template.add(new ActionPrefixProcess(new ProcessImpl(walker.readMemory()), prefixes));
+                            template.add(new ProcessImpl(walker.readMemory(), prefixes));
                             prefixes.clear();
                         }
                     }else if (g == CCSGrammar.NULL_PROCESS){
                         if (prefixes.isEmpty())
                             template.add(new NullProcess());
                         else {
-                            template.add(new ActionPrefixProcess(new NullProcess(), prefixes));
+                            template.add(new NullProcess(prefixes));
                             prefixes.clear();
                         }
                     }else if (g == CCSGrammar.OP_CONCURRENT){

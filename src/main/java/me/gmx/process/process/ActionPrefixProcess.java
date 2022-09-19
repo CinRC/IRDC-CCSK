@@ -97,7 +97,7 @@ public class ActionPrefixProcess extends Process {
 
     }
 
-    private Process actInternal(Label label){ //to save some lines of code. does not check label equality
+     public Process actInternal(Label label){ //to save some lines of code. does not check label equality
         Process p;
         if (prefixes.size() < 2){
             p = getProcess();

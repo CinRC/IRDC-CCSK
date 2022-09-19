@@ -9,7 +9,7 @@ import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
 
 import java.util.*;
-
+@Deprecated
 public class ActionPrefixProcess extends Process {
 
     private LinkedList<Label> prefixes;

@@ -21,12 +21,7 @@ public class ProcessContainer {
     }
     public Collection<Label> getActionableLabels(){
         Collection<Label> labels = process.getActionableLabels();
-        Iterator<Label> iter = labels.iterator();
-        while(iter.hasNext()) {
-            Label l = iter.next();
-            if (l.isRestricted())
-                iter.remove();
-        }
+        labels.removeIf(Label::isRestricted);
 
         return labels;
     }

@@ -33,8 +33,8 @@ public enum RCCSFlag {
             "--gui");
 
 
-    private String description;
-    private String flagFlag;
+    private final String description;
+    private final String flagFlag;
 
     RCCSFlag(String desc, String flag){
         description = desc;

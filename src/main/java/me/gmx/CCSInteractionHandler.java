@@ -1,7 +1,6 @@
 package me.gmx;
 
 import me.gmx.thread.ProcessContainer;
-import me.gmx.thread.ProcessTemplate;
 import me.gmx.process.nodes.*;
 import me.gmx.util.RCCSFlag;
 
@@ -28,11 +27,11 @@ public class CCSInteractionHandler {
             for (Label na : actionable)
                 System.out.printf("[%d] %s%n",i++,na);
             System.out.println("------------");
-            System.out.println(String.format("%s", container.prettyString()));
+            System.out.printf("%s%n", container.prettyString());
             System.out.println("Please input the index of the label you'd like to act on:");
             String st = scan.next();
             Label n;
-            if (st == "") continue;
+            if (st.equals("")) continue;
             try{
                 int in = Integer.parseInt(st);
                 n = (Label) actionable.get(in);
@@ -49,8 +48,8 @@ public class CCSInteractionHandler {
                 if (RCCS.config.contains(RCCSFlag.DEBUG)) e.printStackTrace();
             }
             String c = n instanceof LabelKey ? "~" : "-";
-            System.out.println(String.format("%s %s%s%s> %s",
-                    past,c,n,c,container.prettyString()));
+            System.out.printf("%s %s%s%s> %s%n",
+                    past,c,n,c,container.prettyString());
         }
 
         return true;

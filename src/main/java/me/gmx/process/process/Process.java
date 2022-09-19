@@ -2,8 +2,10 @@ package me.gmx.process.process;
 
 import javafx.util.Pair;
 import me.gmx.RCCS;
-import me.gmx.parser.CCSTransitionException;
-import me.gmx.process.nodes.*;
+import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.ProgramNode;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 import me.gmx.util.StringUtil;
@@ -37,10 +39,8 @@ public abstract class Process extends ProgramNode {
      * @return Collection of labels with restrictions removed
      */
     protected Collection<Label> withdrawRestrictions(Collection<Label> labels){
-        Iterator<Label> iter = labels.iterator();
-        while (iter.hasNext()){
-            Label l = iter.next();
-            for (Label r : getRestriction()){
+        for (Label l : labels) {
+            for (Label r : getRestriction()) {
                 //if (r.isComplement() == l.isComplement())
                 if (r.getChannel().equals(l.getChannel()))
                     //iter.remove();
@@ -148,9 +148,8 @@ public abstract class Process extends ProgramNode {
             return this;
         }
         //Check if tau can eliminate prefixes. if not, continue to pass down
-         if (label instanceof TauLabelNode){
-            TauLabelNode tau = (TauLabelNode) label;
-            if (l.equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
+         if (label instanceof TauLabelNode tau){
+             if (l.equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
                 tau.consumeLeft = true;
                 return actInternal(tau);
             }else if (l.equals(tau.getB()) && !tau.consumeRight){
@@ -214,12 +213,12 @@ public abstract class Process extends ProgramNode {
      * @return String to be displayed to user that represents this process
      */
     public String represent(){
-        String s = represent(origin());
+        StringBuilder s = new StringBuilder(represent(origin()));
         for(Pair<Label,LabelKey> pair : getLabelKeyPairs()){
-            s = pair.getKey().toString()
-                    + pair.getValue().toString() + "." + s;
+            s.insert(0, pair.getKey().toString()
+                    + pair.getValue().toString() + ".");
         }
-        return s;
+        return s.toString();
     }
 
     /**
@@ -229,19 +228,19 @@ public abstract class Process extends ProgramNode {
      * @return Internal string to be called and replaced
      */
     protected String represent(String base){
-        String s = "";
+        StringBuilder s = new StringBuilder();
         //[key]prefix.prefix.base
 
         for(Pair<Label,LabelKey> pair : getLabelKeyPairs()){
-            s = pair.getKey().toString()
-                    + pair.getValue().toString() + "." + s;
+            s.insert(0, pair.getKey().toString()
+                    + pair.getValue().toString() + ".");
         }
-        s += String.format("%s%s"
+        s.append(String.format("%s%s"
                 , StringUtil.representPrefixes(getPrefixes())
-                , base);
-        s+= getRestriction().isEmpty() ? "" : String.format("\\{%s}",SetUtil.csvSet(getRestriction()));
+                , base));
+        s.append(getRestriction().isEmpty() ? "" : String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
 
-        return s;
+        return s.toString();
     }
 
     public abstract Collection<Process> getChildren();
@@ -266,8 +265,7 @@ public abstract class Process extends ProgramNode {
     }
 
     public Collection<Process> recurseChildren(){
-        Set<Process> s = new HashSet<>();
-        s.addAll(getChildren());
+        Set<Process> s = new HashSet<>(getChildren());
         for (Process p : getChildren())
             s.addAll(p.recurseChildren());
         return s;

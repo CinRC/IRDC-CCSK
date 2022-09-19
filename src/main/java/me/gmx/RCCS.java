@@ -65,7 +65,7 @@ public class RCCS {
         sb.append("Incorrect arguments! Please use the form `java -jar RCCS.jar <flags> \"a.b|c.a\"");
         sb.append("\n");
         for (RCCSFlag flag : RCCSFlag.values()){
-            sb.append(flag.getFlag() + "  -  " + flag.getDescription() + "\n");
+            sb.append(flag.getFlag()).append("  -  ").append(flag.getDescription()).append("\n");
         }
         return sb.toString();
     }

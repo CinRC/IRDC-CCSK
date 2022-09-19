@@ -54,9 +54,8 @@ public class SetUtil {
         Iterator<Label> iter = labels.iterator();
         while (iter.hasNext()){
             Label l = iter.next();
-            if (!(l instanceof LabelKey))//we only care about keys
+            if (!(l instanceof LabelKey key))//we only care about keys
                 continue;
-            LabelKey key = (LabelKey) l;
             if (!(key.from instanceof TauLabelNode))
                 continue; //don't care about regular keys
 

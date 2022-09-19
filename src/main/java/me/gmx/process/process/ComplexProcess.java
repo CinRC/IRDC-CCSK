@@ -117,9 +117,8 @@ public abstract class ComplexProcess extends Process{
     public boolean canAct(Label label){
         RCCS.log(String.format("Checking if %s can act on %s",represent(),label));
         Collection<Label> l = getActionableLabels();
-        if (!(label instanceof TauLabelNode))
+        if (!(label instanceof TauLabelNode t))
             return l.contains(label);
-        TauLabelNode t = (TauLabelNode) label;
         return l.contains(t.getA()) || l.contains(t.getB());
 
     }

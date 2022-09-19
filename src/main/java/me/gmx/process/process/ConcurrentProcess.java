@@ -1,13 +1,11 @@
 package me.gmx.process.process;
 
 import me.gmx.parser.CCSGrammar;
-import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class ConcurrentProcess extends ComplexProcess{
     /**
@@ -76,7 +74,6 @@ public class ConcurrentProcess extends ComplexProcess{
 
         l = left.getActionableLabels();
         r = right.getActionableLabels();
-        l.addAll(l);
         l.addAll(r);
         return l;
     }

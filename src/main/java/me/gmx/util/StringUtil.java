@@ -10,17 +10,17 @@ public class StringUtil {
     public static final String BAR = "\u0304";
 
     public static String addBar(String s){
-        String ns = "";
+        StringBuilder ns = new StringBuilder();
         for (char c : s.toCharArray()){
-            ns+= c+BAR;
+            ns.append(c).append(BAR);
         }
-        return ns;
+        return ns.toString();
     }
 
     public static String representPrefixes(LinkedList<Label> prefixes){
         StringBuilder sb = new StringBuilder();
         for (Label l : prefixes)
-            sb.append(l+".");
+            sb.append(l).append(".");
         return sb.toString();
 
 

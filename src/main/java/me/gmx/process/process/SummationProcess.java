@@ -66,6 +66,7 @@ public class SummationProcess extends ComplexProcess{
         p.setKey(key);
         p.ghostKey = ghostKey;
         p.addRestrictions(restrictions);
+        p.addPrefixes(getPrefixes());
         return p;
     }
 

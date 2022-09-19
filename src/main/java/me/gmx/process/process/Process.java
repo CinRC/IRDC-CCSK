@@ -121,9 +121,8 @@ public abstract class Process extends ProgramNode {
      * @return will return this, after having acted on the given label
      */
     public Process act(Label label){
-        Label l = null;
-        if (!prefixes.isEmpty())
-            l = prefixes.getFirst();
+
+        //Key handling
         if (label instanceof LabelKey) {
             if (ghostKey == null && hasKey()) //Just a regular process? Is it reversible?
                 if (getKey().equals(label)) //Make sure keys match
@@ -136,29 +135,38 @@ public abstract class Process extends ProgramNode {
                 return this.actOn(label); //Key incorrect? passthru!
             }
 
-        }else if (label instanceof TauLabelNode){
-            TauLabelNode tau = (TauLabelNode) label;
+        }
 
+        Label l = null;
+        if (prefixes.isEmpty())
+            return this.actOn(label);
+        else l = prefixes.getFirst();
+
+        //Simply check if label == prefix
+        if (label.equals(prefixes.getFirst())) {
+            actInternal(label);
+            return this;
+        }
+        //Check if tau can eliminate prefixes. if not, continue to pass down
+         if (label instanceof TauLabelNode){
+            TauLabelNode tau = (TauLabelNode) label;
             if (l.equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
                 tau.consumeLeft = true;
                 return actInternal(tau);
             }else if (l.equals(tau.getB()) && !tau.consumeRight){
                 tau.consumeRight = true;
                 return actInternal(tau);
-            } else throw new CCSTransitionException(this, label);
-        }else if (label instanceof LabelNode || label instanceof ComplementLabelNode){
-            if (label.equals(prefixes.getFirst()))
-                actInternal(label);
-            return this;
+            }
         }
+
         return this.actOn(label);
     }
 
     public Process actInternal(Label l){
-            getPrefixes().removeFirst();
-            setPastLife(clone());
-            setKey(new LabelKey(l));
-            return this;
+        setPastLife(clone());
+        getPrefixes().removeFirst();
+        setKey(new LabelKey(l));
+        return this;
     }
 
 
@@ -223,7 +231,11 @@ public abstract class Process extends ProgramNode {
     protected String represent(String base){
         String s = "";
         //[key]prefix.prefix.base
-        s += (hasKey() && displayKey) ? getKey() : "";
+
+        for(Pair<Label,LabelKey> pair : getLabelKeyPairs()){
+            s = pair.getKey().toString()
+                    + pair.getValue().toString() + "." + s;
+        }
         s += String.format("%s%s"
                 , StringUtil.representPrefixes(getPrefixes())
                 , base);
@@ -245,8 +257,22 @@ public abstract class Process extends ProgramNode {
         if (hasKey())
             l.add(getKey());
 
+        for (Process p : recurseChildren())
+            if (p.hasKey()) {
+                l.remove(getKey());
+                break;
+            }
         return l;
     }
+
+    public Collection<Process> recurseChildren(){
+        Set<Process> s = new HashSet<>();
+        s.addAll(getChildren());
+        for (Process p : getChildren())
+            s.addAll(p.recurseChildren());
+        return s;
+    }
+
 
     public List<Pair<Label, LabelKey>> getLabelKeyPairs(){
         List<Pair<Label, LabelKey>> l = new ArrayList<Pair<Label, LabelKey>>();

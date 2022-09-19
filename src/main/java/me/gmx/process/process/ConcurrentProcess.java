@@ -37,12 +37,13 @@ public class ConcurrentProcess extends ComplexProcess{
     }
 
     public boolean hasKey(){
-        return false;
+        return key != null;
     }
 
     @Override
     public ConcurrentProcess clone() {
         ConcurrentProcess p = new ConcurrentProcess(left.clone(), right.clone());
+        p.addPrefixes(getPrefixes());
         p.isGhost = isGhost;
         p.setPastLife(previousLife);
         p.setKey(key);
@@ -57,6 +58,7 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     @Override
     public Collection<Label> getActionableLabels(){
+
         Collection l = super.getActionableLabels();
         if (!prefixes.isEmpty()){
             l.add(prefixes.peek());

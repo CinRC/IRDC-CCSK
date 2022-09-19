@@ -39,15 +39,7 @@ public abstract class ComplexProcess extends Process{
      * on all children
      * @return
      */
-    public Collection<Process> recurseChildren(){
-        Set<Process> s = new HashSet<>();
-        s.addAll(getChildren());
-        if (left instanceof ComplexProcess)
-            s.addAll(((ComplexProcess)left).recurseChildren());
-        if (right instanceof ComplexProcess)
-            s.addAll(((ComplexProcess)right).recurseChildren());
-            return s;
-    }
+
 
 
     /**

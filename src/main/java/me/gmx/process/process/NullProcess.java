@@ -18,12 +18,11 @@ public class NullProcess extends Process{
 
     @Override
     public Process clone(){
-        return new NullProcess();
-    }
-
-    @Override
-    public boolean canAct(Label label) {
-        return false;
+        NullProcess p = new NullProcess();
+        p.setPastLife(previousLife);
+        p.addRestrictions(getRestriction());
+        p.addPrefixes(getPrefixes());
+        return p;
     }
 
     @Override
@@ -39,13 +38,6 @@ public class NullProcess extends Process{
     @Override
     public Collection<Process> getChildren() {
         return Collections.emptySet();
-    }
-
-    //Not needed?
-    @Override
-    public Collection<Label> getActionableLabels() {
-        Collection<Label> l = getActionableLabelsStrict();
-        return withdrawRestrictions(l);
     }
 
     @Override

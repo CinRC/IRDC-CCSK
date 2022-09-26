@@ -89,7 +89,6 @@ public class SummationProcess extends ComplexProcess{
     @Override
     public String toString(){ return represent(); }
 
-    @Override
     protected Collection<Label> getActionableLabelsStrict() {
         return getActionableLabelsStrictInternal(true);
     }

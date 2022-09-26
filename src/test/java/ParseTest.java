@@ -49,7 +49,8 @@ public class ParseTest {
                 "(a.P|(a+b))"
         };
         for (String s : matchTest) {
-            String a = CCSParser.parseLine(s).export().origin();
+            Process p = CCSParser.parseLine(s).export();
+            String a = p.represent();
             assert compare(a, s);
         }
 
@@ -65,7 +66,8 @@ public class ParseTest {
         };
 
         for (String s : matchTest) {
-            String a = CCSParser.parseLine(s).export().origin();
+            Process p = CCSParser.parseLine(s).export();
+            String a = p.represent();
             assert compare(a, s);
         }
     }

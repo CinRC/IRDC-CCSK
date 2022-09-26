@@ -1,6 +1,9 @@
 package me.gmx.process.process;
 
+import me.gmx.RCCS;
 import me.gmx.process.nodes.Label;
+import me.gmx.util.RCCSFlag;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +35,7 @@ public class NullProcess extends Process{
 
     @Override
     public String represent() {
-        return super.represent("0");
+        return super.represent(RCCS.config.contains(RCCSFlag.DISPLAY_NULL) ? "0" : "");
     }
 
     @Override
@@ -40,7 +43,6 @@ public class NullProcess extends Process{
         return Collections.emptySet();
     }
 
-    @Override
     protected Collection<Label> getActionableLabelsStrict() {
         return super.getActionableLabels();
     }

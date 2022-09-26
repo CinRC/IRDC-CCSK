@@ -35,7 +35,10 @@ public class NullProcess extends Process{
 
     @Override
     public String represent() {
-        return super.represent(RCCS.config.contains(RCCSFlag.DISPLAY_NULL) ? "0" : "");
+        if (RCCS.config.contains(RCCSFlag.DISPLAY_NULL) || prefixes.isEmpty())
+            return super.represent("0");
+
+        return super.represent("");
     }
 
     @Override

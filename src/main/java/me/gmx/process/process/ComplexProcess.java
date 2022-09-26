@@ -79,11 +79,20 @@ public abstract class ComplexProcess extends Process{
 
     @Override
     public String represent(){
-        return super.represent(String.format(
-                "(%s)%s(%s)"
+        return RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS) ?
+                super.represent(String.format(
+                        "%s%s%s"
+                        , left == null ? "" : left.represent()
+                        , operator.toString()
+                        , right == null ? "" : right.represent()
+                )) :
+        super.represent(String.format(
+                "%s%s%s%s%s"
+                , CCSGrammar.OPEN_PARENTHESIS
                 , left == null ? "" : left.represent()
                 , operator.toString()
                 , right == null ? "" : right.represent()
+                , CCSGrammar.CLOSE_PARENTHESIS
         ));
     }
 

@@ -238,6 +238,9 @@ public abstract class Process extends ProgramNode {
         s.append(String.format("%s%s"
                 , StringUtil.representPrefixes(getPrefixes())
                 , base));
+        //If sent a null string, remove last dot
+        if (base.equals(""))
+            s.deleteCharAt(s.length()-1);
         s.append(getRestriction().isEmpty() ? "" : String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
 
         return s.toString();

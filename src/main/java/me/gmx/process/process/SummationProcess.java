@@ -134,10 +134,12 @@ public class SummationProcess extends ComplexProcess{
         if (ghostKey != null)
             if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_1))
                 return represent(String.format(
-                        "(%s)%s(%s)"
+                        "%s%s%s%s%s"
+                        , CCSGrammar.OPEN_PARENTHESIS
                         , left == null ? "" : left.represent()
                         , operator.toString()
                         , right == null ? "" : right.represent()
+                        , CCSGrammar.CLOSE_PARENTHESIS
                 ));
             else if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_3)){
                 if (left.isGhost)
@@ -153,16 +155,20 @@ public class SummationProcess extends ComplexProcess{
                 }else {
                     if (left.isGhost)
                         return represent(String.format(
-                                "%s{%s} %s (%s)"
+                                "%s{%s} %s %s%s%s"
                                 , ghostKey
                                 , left == null ? "" : left.represent()
                                 , operator.toString()
+                                , CCSGrammar.OPEN_PARENTHESIS
                                 , right == null ? "" : right.represent()
+                                , CCSGrammar.CLOSE_PARENTHESIS
                         ));
                     else if (right.isGhost)
                         return represent(String.format(
-                                "(%s) %s %s{%s}"
+                                "%s%s%s %s %s{%s}"
+                                , CCSGrammar.OPEN_PARENTHESIS
                                 , left == null ? "" : left.represent()
+                                , CCSGrammar.CLOSE_PARENTHESIS
                                 , operator.toString()
                                 , ghostKey
                                 , right == null ? "" : right.represent()
@@ -170,10 +176,12 @@ public class SummationProcess extends ComplexProcess{
                 }
 
         return represent(String.format(
-                "(%s)%s(%s)"
+                "%s%s%s%s%s"
+                , CCSGrammar.OPEN_PARENTHESIS
                 , left == null ? "" : left.represent()
                 , operator.toString()
                 , right == null ? "" : right.represent()
+                , CCSGrammar.CLOSE_PARENTHESIS
         ));
     }
 

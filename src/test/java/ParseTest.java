@@ -86,10 +86,13 @@ public class ParseTest {
                 "a",
                 "(a.b.'c.P|('c.b.'a.P+'a.b.Q))"
         };
-        for (int i = 0; i < expected.length; i++)
+        for (int i = 0; i < expected.length; i++) {
+            Process p = CCSParser.parseLine(given[i]).export();
             assert (
-                    compare(CCSParser.parseLine(given[i]).export().origin(), expected[i])
+                    compare(p.represent(), expected[i])
             );
+
+        }
     }
     @Test
     public void testBasicParse() {

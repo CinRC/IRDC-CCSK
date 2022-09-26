@@ -46,10 +46,6 @@ public class NullProcess extends Process{
         return Collections.emptySet();
     }
 
-    protected Collection<Label> getActionableLabelsStrict() {
-        return super.getActionableLabels();
-    }
-
     @Override
     public String origin(){
         return "0";

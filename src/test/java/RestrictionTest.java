@@ -21,8 +21,11 @@ public class RestrictionTest {
 
         ProcessContainer pc = new ProcessContainer(p);
 
+        System.out.printf("Asserting that %s cannot act on %s...\n", pc.prettyString(), a);
         assert(!pc.canAct(a));
+        System.out.printf("Asserting that %s cannot act on %s...\n", pc.prettyString(), oa);
         assert(!pc.canAct(oa));
+        System.out.printf("Asserting that %s can act on %s...\n", pc.prettyString(), ta);
         assert(pc.canAct(ta));
     }
 

@@ -252,7 +252,8 @@ public abstract class Process extends ProgramNode {
     public Collection<Label> getActionableLabels(){
         Set<Label> l = new HashSet<>();
         if (!prefixes.isEmpty())
-            l.add(prefixes.getFirst());
+            if (!prefixes.getFirst().isRestricted())
+                l.add(prefixes.getFirst());
         if (hasKey())
             l.add(getKey());
 
@@ -261,7 +262,7 @@ public abstract class Process extends ProgramNode {
                 l.remove(getKey());
                 break;
             }
-        return l;
+        return withdrawRestrictions(l);
     }
 
     public Collection<Process> recurseChildren(){

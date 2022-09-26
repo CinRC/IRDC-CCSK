@@ -79,14 +79,52 @@ public abstract class ComplexProcess extends Process{
 
     @Override
     public String represent(){
-        return RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS) ?
-                super.represent(String.format(
-                        "%s%s%s"
+        String s = "";
+        if (ghostKey != null) {
+            if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_1))
+                s = represent(String.format(
+                        "%s%s%s%s%s"
+                        , CCSGrammar.OPEN_PARENTHESIS
                         , left == null ? "" : left.represent()
                         , operator.toString()
                         , right == null ? "" : right.represent()
-                )) :
-        super.represent(String.format(
+                        , CCSGrammar.CLOSE_PARENTHESIS
+                ));
+            else if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_3)) {
+                if (left.isGhost)
+                    s = represent(String.format(
+                            "%s"
+                            , right == null ? "" : right.represent()
+                    ));
+                else if (right.isGhost)
+                    s = represent(String.format(
+                            "%s"
+                            , left == null ? "" : left.represent()
+                    ));
+            } else { //default style
+                if (left.isGhost)
+                    s = represent(String.format(
+                            "%s{%s} %s %s%s%s"
+                            , ghostKey
+                            , left == null ? "" : left.represent()
+                            , operator.toString()
+                            , CCSGrammar.OPEN_PARENTHESIS
+                            , right == null ? "" : right.represent()
+                            , CCSGrammar.CLOSE_PARENTHESIS
+                    ));
+                else/* if (right.isGhost)*/
+                    s = represent(String.format(
+                            "%s%s%s %s %s{%s}"
+                            , CCSGrammar.OPEN_PARENTHESIS
+                            , left == null ? "" : left.represent()
+                            , CCSGrammar.CLOSE_PARENTHESIS
+                            , operator.toString()
+                            , ghostKey
+                            , right == null ? "" : right.represent()
+                    ));
+            }
+        }
+             s = super.represent(String.format(
                 "%s%s%s%s%s"
                 , CCSGrammar.OPEN_PARENTHESIS
                 , left == null ? "" : left.represent()
@@ -94,6 +132,14 @@ public abstract class ComplexProcess extends Process{
                 , right == null ? "" : right.represent()
                 , CCSGrammar.CLOSE_PARENTHESIS
         ));
+
+        if (RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
+            return s.replaceAll(String.format("\\%s",CCSGrammar.OPEN_PARENTHESIS), "")
+                    .replaceAll(String.format("\\%s",CCSGrammar.CLOSE_PARENTHESIS), "");
+
+        }else
+            return s;
+
     }
 
     /**

@@ -37,6 +37,12 @@ public enum CCSGrammar {
     private Class classObject;
     private boolean canParse;
 
+    public static Pattern parenthesisRegex;
+
+    static{
+        parenthesisRegex = Pattern.compile(String.format("([\\%s\\%s])", OPEN_PARENTHESIS,CLOSE_PARENTHESIS));
+    }
+
     /**
      *
      * @param s Regex to match against

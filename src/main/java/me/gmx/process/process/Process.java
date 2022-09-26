@@ -2,6 +2,7 @@ package me.gmx.process.process;
 
 import javafx.util.Pair;
 import me.gmx.RCCS;
+import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
@@ -11,6 +12,7 @@ import me.gmx.util.SetUtil;
 import me.gmx.util.StringUtil;
 
 import java.util.*;
+import java.util.regex.Matcher;
 
 public abstract class Process extends ProgramNode {
 
@@ -242,7 +244,11 @@ public abstract class Process extends ProgramNode {
         if (base.equals(""))
             s.deleteCharAt(s.length()-1);
         s.append(getRestriction().isEmpty() ? "" : String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
+        if (RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
+            return s.toString().replaceAll(String.format("\\%s",CCSGrammar.OPEN_PARENTHESIS), "")
+                    .replaceAll(String.format("\\%s",CCSGrammar.CLOSE_PARENTHESIS), "");
 
+        }else
         return s.toString();
     }
 

@@ -54,6 +54,10 @@ public class ProcessImpl extends Process implements ActionableProcess{
     }
 
 
+    @Override
+    public Collection<Label> getActionableLabels(){
+        return withdrawRestrictions(super.getActionableLabels());
+    }
 
     @Override
     public String origin(){

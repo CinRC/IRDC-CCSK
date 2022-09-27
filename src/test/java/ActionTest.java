@@ -51,7 +51,6 @@ public class ActionTest {
         Collection<Label> act = p.getActionableLabels();
         act.remove(p.getKey());
         assert act.isEmpty();
-
         p.reverseOn(lb);
         p.reverseOn(la);
 

@@ -141,6 +141,7 @@ public abstract class Process extends ProgramNode {
 
         Label l = null;
         if (prefixes.isEmpty())
+            //TODO: Throw error?
             return this.actOn(label);
         else l = prefixes.getFirst();
 
@@ -283,11 +284,15 @@ public abstract class Process extends ProgramNode {
 
     public List<Pair<Label, LabelKey>> getLabelKeyPairs(){
         List<Pair<Label, LabelKey>> l = new ArrayList<Pair<Label, LabelKey>>();
-        if (hasKey()) {
+        if (hasKey() && ghostKey == null) {
             l.add(new Pair<Label, LabelKey>(getKey().from, getKey()));
             if (previousLife.hasKey())
                 l.addAll(previousLife.getLabelKeyPairs());
-        }
+        }/*else if (ghostKey != null){
+            l.add(new Pair<Label,LabelKey>(ghostKey.from,ghostKey));
+*//*            if (previousLife.hasKey())
+                l.addAll(previousLife.getLabelKeyPairs());*//*
+        }*/
         return l;
     }
 

@@ -23,6 +23,7 @@ public class NullProcess extends Process{
     public Process clone(){
         NullProcess p = new NullProcess();
         p.setPastLife(previousLife);
+        p.setKey(getKey());
         p.addRestrictions(getRestriction());
         p.addPrefixes(getPrefixes());
         return p;

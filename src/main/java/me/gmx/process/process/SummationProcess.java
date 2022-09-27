@@ -121,6 +121,6 @@ public class SummationProcess extends ComplexProcess{
         s.addAll(r);
         return s;
     }
-    
+
 
 }

@@ -8,6 +8,11 @@ import me.gmx.thread.ProcessContainer;
 import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class RCCS {
@@ -31,9 +36,30 @@ public class RCCS {
         if (config.contains(RCCSFlag.HELP_MSG)){
             System.out.println(helpMessage());
             System.exit(0);
-        }else if (config.contains(RCCSFlag.GUI)){
+        }
+        if (config.contains(RCCSFlag.GUI)){
             GUIThread t = new GUIThread("GUI");
             t.start();
+        }
+        if (config.contains(RCCSFlag.VALIDATE)) {
+            Path path = null;
+            try {
+                String s;
+                path = Paths.get(args[config.indexOf(RCCSFlag.VALIDATE) + 1]);
+                List<String> allLines = Files.readAllLines(path);
+                for (String line : allLines) {
+                    try {
+                        ProcessTemplate pt = CCSParser.parseLine(line);
+                        System.out.printf("%s is properly formatted. Parsed as %s\n",line, pt.prettyString());
+                    }catch (Exception e){
+                        System.out.printf("%s is improperly formatted\n",line);
+                    }
+                }
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println("An error occurred while trying to read file: " + path);
+            }
+
         }
 
         String formula = args[args.length-1];

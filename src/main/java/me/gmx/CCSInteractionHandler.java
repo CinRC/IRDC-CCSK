@@ -32,6 +32,9 @@ public class CCSInteractionHandler {
             String st = scan.next();
             Label n;
             if (st.equals("")) continue;
+            else if (st.equalsIgnoreCase("q")){
+                return false;
+            }
             try{
                 int in = Integer.parseInt(st);
                 n = (Label) actionable.get(in);

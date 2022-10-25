@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import javafx.util.Pair;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.LTTNode;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
@@ -25,6 +26,7 @@ public abstract class Process extends ProgramNode {
     //Passthru key for summation processes
     protected LabelKey ghostKey = null;
 
+    protected boolean canActOnKey = true;
     protected boolean isGhost = false;
 
     protected LinkedList<Label> prefixes = new LinkedList<>();
@@ -51,7 +53,6 @@ public abstract class Process extends ProgramNode {
         }
         return labels;
     }
-
 
 
     public void addRestrictions(Collection<Label> labels){
@@ -126,7 +127,7 @@ public abstract class Process extends ProgramNode {
 
         //Key handling
         if (label instanceof LabelKey) {
-            if (ghostKey == null && hasKey()) //Just a regular process? Is it reversible?
+            if (ghostKey == null && hasKey() && canActOnKey) //Just a regular process? Is it reversible?
                 if (getKey().equals(label)) //Make sure keys match
                     return previousLife; //Rewind!
             //Ghost key present?

@@ -3,11 +3,15 @@ package me.gmx.process.nodes;
 import me.gmx.RCCS;
 import me.gmx.util.RCCSFlag;
 
+import java.security.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 public class LabelKey extends Label {
 
     public Label from;
+
+    public Instant time;
     public LabelKey(Label node){
         super(node.dupe, node.getChannel());
         this.id = UUID.randomUUID();
@@ -17,6 +21,8 @@ public class LabelKey extends Label {
             this.dupe = ((TauLabelNode)node).saveDupe;
         else
             this.dupe = NodeIDGenerator.nextAvailableKey();
+        time = Instant.now();
+
     }
 
     /**

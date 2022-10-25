@@ -1,5 +1,6 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
+import me.gmx.parser.LTTNode;
 import me.gmx.process.nodes.*;
 import me.gmx.process.process.Process;
 import me.gmx.thread.ProcessContainer;
@@ -67,6 +68,17 @@ public class EnumerationTest {
         System.out.println(p.prettyString());
         p.reverseLastAction();
         System.out.println(p.prettyString());
+
+    }
+
+    @Test
+    public void testTree(){
+        Process p = CCSParser.parseLine("a.b|c.d").export();
+
+        LTTNode node = new LTTNode(p);
+        node.enumerate();
+        System.out.println(node.p.represent());
+
 
     }
 }

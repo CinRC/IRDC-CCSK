@@ -5,6 +5,7 @@ import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.process.Process;
 
+import java.sql.Time;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,14 +31,23 @@ public class ProcessContainer {
         return getActionableLabels().contains(node);
     }
 
+    public boolean canActInto(Process p){
+        for (Label l : getActionableLabels()){
+            Process p2 = getProcess().clone();
+            if (p2.act(l).equals(getProcess()))
+                return true;
+        }
+        return false;
+    }
+
     public void act(Label node){
         process = process.act(node);
     }
     //TODO: Implement - Timestamps?
     public void reverseLastAction(){
-        /*if (process.hasKey())
+        if (process.hasKey())
             process = process.act(process.getKey());
-        else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");*/
+        else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
     }
 
     public LabelKey getKey(){

@@ -40,7 +40,9 @@ public class ConcurrentProcess extends ComplexProcess{
     }
 
     public boolean hasKey(){
-        return left.hasKey() || right.hasKey();
+        if (isPacked())
+            return left.hasKey() || right.hasKey();
+        else return false;
     }
 
     public LabelKey getKey(){

@@ -44,7 +44,9 @@ public class NullProcess extends Process{
 
     @Override
     public Collection<Label> getActionableLabels(){
-        return withdrawRestrictions(super.getActionableLabels());
+        Collection<Label> l;
+        l = withdrawRestrictions(super.getActionableLabels());
+        return l;
     }
     @Override
     public Collection<Process> getChildren() {

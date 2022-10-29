@@ -3,13 +3,12 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class ConcurrentProcess extends ComplexProcess{
     /**
@@ -19,11 +18,13 @@ public class ConcurrentProcess extends ComplexProcess{
 
     public ConcurrentProcess(Process left, Process right) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
+        canActOnKey = false;
     }
 
     public ConcurrentProcess(Process left, Process right, LinkedList<Label> pfix) {
         super(left,right, CCSGrammar.OP_CONCURRENT);
         prefixes = pfix;
+        canActOnKey = false;
     }
     //Note: Concurrent processes will never need to hold a key, because data is not destroyed at
     //the complex-process level in this situation.
@@ -57,6 +58,14 @@ public class ConcurrentProcess extends ComplexProcess{
                 key = (LabelKey) label;
 
         return key;
+    }
+
+    private void refactorRecentKey(){
+        Collection<Label> l = getActionableLabelsStrict();
+        l.removeIf(x -> !(x instanceof LabelKey));//remove all non-labelkeys
+        for(Label label : l)//otherwise, lets find which one happened last
+            if (key == null || ((LabelKey)label).time.isAfter(key.time))
+                key = (LabelKey) label;
     }
 
     @Override

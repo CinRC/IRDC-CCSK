@@ -76,4 +76,10 @@ public class SetUtil {
                 || recursiveIsSyncable(cp.right, key));
     }
 
+    public static boolean containsOrTau(Collection<Label> labels, Label l){
+        if (l instanceof TauLabelNode tau)
+            return labels.contains(tau.getA()) || labels.contains(tau.getB());
+        else return labels.contains(l);
+    }
+
 }

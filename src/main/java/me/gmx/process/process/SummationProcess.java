@@ -26,20 +26,23 @@ public class SummationProcess extends ComplexProcess{
     public Process actOn(Label label) {
         if (ghostKey == null)//Only need to remember once, theoretically
             setPastLife(clone());
-
-        if (left.canAct(label)) {
-            left = left.act(label);
-            right.isGhost = true;
-            if (ghostKey == null) {
-                ghostKey = left.getKey();
-            }
-        }else if (right.canAct(label)){
-            right = right.act(label);
-            left.isGhost = true;
-            if (ghostKey == null) {
-                ghostKey = right.getKey();
-            }
-        }else throw new CCSTransitionException(this,label);
+        try {
+            if (left.canAct(label)) {
+                left = left.act(label);
+                right.isGhost = true;
+                if (ghostKey == null) {
+                    ghostKey = left.getKey();
+                }
+            } else if (right.canAct(label)) {
+                right = right.act(label);
+                left.isGhost = true;
+                if (ghostKey == null) {
+                    ghostKey = right.getKey();
+                }
+            } else throw new CCSTransitionException(this, label);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return this;
     }
 

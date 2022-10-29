@@ -3,7 +3,6 @@ package me.gmx.process.process;
 import javafx.util.Pair;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
-import me.gmx.parser.LTTNode;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
@@ -26,7 +25,6 @@ public abstract class Process extends ProgramNode {
     //Passthru key for summation processes
     protected LabelKey ghostKey = null;
 
-    protected boolean canActOnKey = true;
     protected boolean isGhost = false;
 
     protected LinkedList<Label> prefixes = new LinkedList<>();
@@ -34,6 +32,7 @@ public abstract class Process extends ProgramNode {
 
     public boolean displayKey = !RCCS.config.contains(RCCSFlag.HIDE_KEYS);
 
+    protected boolean canActOnKey = true;
     public Process() {}
 
     /**
@@ -55,6 +54,7 @@ public abstract class Process extends ProgramNode {
     }
 
 
+
     public void addRestrictions(Collection<Label> labels){
         restrictions.addAll(labels);
     }
@@ -73,7 +73,6 @@ public abstract class Process extends ProgramNode {
         this.previousLife = previousLife;
         this.key = key;
     }
-
 
     public abstract Process clone();
 
@@ -101,7 +100,8 @@ public abstract class Process extends ProgramNode {
      * @return True if given label is able to be acted on, false otherwise
      */
     public boolean canAct(Label label){
-        return getActionableLabels().contains(label) && !label.isRestricted();
+        Collection<Label> c = getActionableLabels();
+        return SetUtil.containsOrTau(c,label) && !label.isRestricted();
     }
 
     /**
@@ -267,11 +267,12 @@ public abstract class Process extends ProgramNode {
         if (hasKey())
             l.add(getKey());
 
-        for (Process p : recurseChildren())
+        //TODO: why did i write this
+        /*for (Process p : recurseChildren())
             if (p.hasKey()) {
                 l.remove(getKey());
                 break;
-            }
+            }*/
         return l;
     }
 
@@ -285,7 +286,7 @@ public abstract class Process extends ProgramNode {
 
     public List<Pair<Label, LabelKey>> getLabelKeyPairs(){
         List<Pair<Label, LabelKey>> l = new ArrayList<Pair<Label, LabelKey>>();
-        if (hasKey() && ghostKey == null) {
+        if (hasKey() && ghostKey == null && canActOnKey) {
             l.add(new Pair<Label, LabelKey>(getKey().from, getKey()));
             if (previousLife.hasKey())
                 l.addAll(previousLife.getLabelKeyPairs());

@@ -179,4 +179,28 @@ public abstract class ComplexProcess extends Process{
 
     }
 
+   /* @Override
+    public Process act(Label label) {
+        Collection<Label> l,r;
+        l = left.getActionableLabels();
+        r = right.getActionableLabels();
+        if (label instanceof TauLabelNode tau){
+            try {
+                if (r.contains(tau.getA()) || r.contains(tau.getB())) {
+                    right = right.act(tau);
+                }
+                if (l.contains(tau.getA()) || l.contains(tau.getB())){
+                    left = left.act(tau);
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return this;
+        }else{
+            return actOn(label);
+
+        }
+    }*/
+
 }

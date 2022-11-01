@@ -1,7 +1,10 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.LTTNode;
-import me.gmx.process.nodes.*;
+import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelFactory;
+import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.Process;
 import me.gmx.thread.ProcessContainer;
 import me.gmx.util.RCCSFlag;
@@ -78,7 +81,7 @@ public class EnumerationTest {
         LTTNode node = new LTTNode(p);
         node.enumerate();
         System.out.println(node.p.represent());
-
+        System.out.println(node.toString());
 
     }
 }

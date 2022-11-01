@@ -3,17 +3,19 @@ package me.gmx;
 import javafx.application.Application;
 import me.gmx.UI.RCCS_FX;
 import me.gmx.parser.CCSParser;
+import me.gmx.parser.LTTNode;
 import me.gmx.thread.GUIThread;
 import me.gmx.thread.ProcessContainer;
 import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class RCCS {
     static Scanner scan;
@@ -26,18 +28,17 @@ public class RCCS {
         }else if (args.length > 1){
             for (int i = 0; i < args.length-1; i++){
                 RCCSFlag f = getFlagMatchOrNull(args[i]);
-                if (f == null){
+                if (f == null) {
                     System.out.println("Unrecognized config flag: " + args[i]);
                     System.exit(0);
-                }else
+                } else
                     config.add(f);
             }
         }
-        if (config.contains(RCCSFlag.HELP_MSG)){
+        if (config.contains(RCCSFlag.HELP_MSG)) {
             System.out.println(helpMessage());
             System.exit(0);
-        }
-        if (config.contains(RCCSFlag.GUI)){
+        } else if (config.contains(RCCSFlag.GUI)) {
             GUIThread t = new GUIThread("GUI");
             t.start();
         }
@@ -50,9 +51,9 @@ public class RCCS {
                 for (String line : allLines) {
                     try {
                         ProcessTemplate pt = CCSParser.parseLine(line);
-                        System.out.printf("%s is properly formatted. Parsed as %s\n",line, pt.prettyString());
-                    }catch (Exception e){
-                        System.out.printf("%s is improperly formatted\n",line);
+                        System.out.printf("%s is properly formatted. Parsed as %s\n", line, pt.prettyString());
+                    } catch (Exception e) {
+                        System.out.printf("%s is improperly formatted\n", line);
                     }
                 }
                 System.exit(0);
@@ -60,6 +61,10 @@ public class RCCS {
                 System.out.println("An error occurred while trying to read file: " + path);
             }
 
+        } else if (config.contains(RCCSFlag.ENUMERATE)) {
+            me.gmx.process.process.Process p = CCSParser.parseLine(args[config.indexOf(RCCSFlag.ENUMERATE) + 1]).export();
+            LTTNode node = new LTTNode(p);
+            System.out.println(node);
         }
 
         String formula = args[args.length-1];

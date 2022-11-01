@@ -3,9 +3,11 @@ package me.gmx.util;
 public enum RCCSFlag {
     DEBUG("Prints debug info",
             "--debug"),
+    ENUMERATE("Prints enumeration tree of given process",
+            "--enumerate"),
     HELP_MSG("Print this help message",
             "--help"),
-    VALIDATE("Validate all given processes inside the file inputted after this flag","--validate"),
+    VALIDATE("Validate all given processes inside the file inputted after this flag", "--validate"),
     UNIQUE_CHANNELS("[broken] Should each channel's identity be dictated by it's unique ID",
             "--uC"),
     DIFFERENTIATE_LABELS("Labels are visibly differentiated by integers",

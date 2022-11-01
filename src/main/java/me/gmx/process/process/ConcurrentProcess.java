@@ -3,7 +3,6 @@ package me.gmx.process.process;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.SetUtil;
 
 import java.util.Collection;
@@ -88,15 +87,18 @@ public class ConcurrentProcess extends ComplexProcess{
     public Collection<Label> getActionableLabels(){
 
         Collection l = super.getActionableLabels();
-        if (!prefixes.isEmpty()){
+        if (!prefixes.isEmpty()) {
             l.add(prefixes.peek());
             return withdrawRestrictions(l);
         }
 
+
+        //For debugging purposes, modify l to allow breakpoints
         l.addAll(getActionableLabelsStrict());
         l.addAll(SetUtil.getTauMatches(l));
         l = withdrawRestrictions(l);
-        return SetUtil.removeUnsyncableKeys(this, l);
+        //l = SetUtil.removeUnsyncableKeys(this,l);
+        return l;
     }
 
     protected Collection<Label> getActionableLabelsStrict(){

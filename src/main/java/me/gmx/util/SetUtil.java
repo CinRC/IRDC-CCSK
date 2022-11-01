@@ -1,14 +1,16 @@
 package me.gmx.util;
 
-import me.gmx.RCCS;
-import me.gmx.process.nodes.*;
+import me.gmx.process.nodes.ComplementLabelNode;
+import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.ComplexProcess;
-import me.gmx.process.process.ConcurrentProcess;
 import me.gmx.process.process.Process;
-import me.gmx.process.process.SummationProcess;
 
-import java.security.KeyPair;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class SetUtil {
 
@@ -50,17 +52,22 @@ public class SetUtil {
         return tau;
     }
 
-    public static Collection<Label> removeUnsyncableKeys(ComplexProcess p, Collection<Label> labels){
+    //Not sure why, but this no longer is feasible.
+    @Deprecated
+    public static Collection<Label> removeUnsyncableKeys(ComplexProcess p, Collection<Label> labels) {
         Iterator<Label> iter = labels.iterator();
-        while (iter.hasNext()){
+        while (iter.hasNext()) {
             Label l = iter.next();
             if (!(l instanceof LabelKey key))//we only care about keys
                 continue;
             if (!(key.from instanceof TauLabelNode))
                 continue; //don't care about regular keys
-
-            if (!SetUtil.recursiveIsSyncable(p,key))//both sides need to be able to do it
-                iter.remove();
+            try {
+                if (!SetUtil.recursiveIsSyncable(p, key))//both sides need to be able to do it
+                    iter.remove();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return labels;
     }

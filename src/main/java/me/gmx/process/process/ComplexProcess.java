@@ -3,10 +3,12 @@ package me.gmx.process.process;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
+import me.gmx.util.SetUtil;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Complex process class is a process that is represented by two processes
@@ -173,9 +175,7 @@ public abstract class ComplexProcess extends Process{
     public boolean canAct(Label label){
         RCCS.log(String.format("Checking if %s can act on %s",represent(),label));
         Collection<Label> l = getActionableLabels();
-        if (!(label instanceof TauLabelNode t))
-            return l.contains(label);
-        return l.contains(t.getA()) || l.contains(t.getB());
+        return SetUtil.containsOrTau(l, label);
 
     }
 

@@ -65,6 +65,7 @@ public class RCCS {
             me.gmx.process.process.Process p = CCSParser.parseLine(args[config.indexOf(RCCSFlag.ENUMERATE) + 1]).export();
             LTTNode node = new LTTNode(p);
             System.out.println(node);
+            return;
         }
 
         String formula = args[args.length-1];

@@ -1,12 +1,9 @@
 package me.gmx.process.process;
 
-import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
-import me.gmx.util.RCCSFlag;
-import me.gmx.util.SetUtil;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -65,7 +62,8 @@ public class SummationProcess extends ComplexProcess{
     @Override
     public SummationProcess clone() {
         SummationProcess p = new SummationProcess(left.clone(), right.clone());
-        p.setPastLife(previousLife);
+        if (previousLife != null)
+            p.setPastLife(previousLife.clone());
         p.setKey(key);
         p.ghostKey = ghostKey;
         p.addRestrictions(restrictions);

@@ -21,8 +21,11 @@ public class ProcessImpl extends Process implements ActionableProcess{
 
     @Override
     public Process clone() {
-        ProcessImpl p = new ProcessImpl(origin);
-        p.setPastLife(previousLife);
+        ProcessImpl p = new ProcessImpl(origin());
+        if (previousLife != null)
+            p.setPastLife(previousLife.clone());
+        p.setKey(getKey());
+        p.isGhost = isGhost;
         p.addRestrictions(getRestriction());
         p.addPrefixes(getPrefixes());
         return p;

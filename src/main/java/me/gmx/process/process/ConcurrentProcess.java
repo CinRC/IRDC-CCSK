@@ -72,7 +72,8 @@ public class ConcurrentProcess extends ComplexProcess{
         ConcurrentProcess p = new ConcurrentProcess(left.clone(), right.clone());
         p.addPrefixes(getPrefixes());
         p.isGhost = isGhost;
-        p.setPastLife(previousLife);
+        if (previousLife != null)
+            p.setPastLife(previousLife.clone());
         p.setKey(key);
         p.addRestrictions(restrictions);
         return p;

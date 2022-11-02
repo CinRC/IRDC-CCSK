@@ -22,8 +22,10 @@ public class NullProcess extends Process{
     @Override
     public Process clone(){
         NullProcess p = new NullProcess();
-        p.setPastLife(previousLife);
+        if (previousLife != null)
+            p.setPastLife(previousLife.clone());
         p.setKey(getKey());
+        p.isGhost = isGhost;
         p.addRestrictions(getRestriction());
         p.addPrefixes(getPrefixes());
         return p;

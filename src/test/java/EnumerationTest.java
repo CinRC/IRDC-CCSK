@@ -76,12 +76,11 @@ public class EnumerationTest {
 
     @Test
     public void testTree(){
-        Process p = CCSParser.parseLine("a.b|c.d").export();
+        Process p = CCSParser.parseLine("(a|b)|('a+'b)").export();
 
         LTTNode node = new LTTNode(p);
         node.enumerate();
-        System.out.println(node.p.represent());
-        System.out.println(node.toString());
+        System.out.println(node);
 
     }
 }

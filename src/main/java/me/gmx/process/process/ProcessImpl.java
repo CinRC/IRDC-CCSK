@@ -1,6 +1,7 @@
 package me.gmx.process.process;
 
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,10 +14,14 @@ public class ProcessImpl extends Process implements ActionableProcess{
         this.origin = s;
     }
 
-    public ProcessImpl(String s, List<Label> prefixes){
+    public ProcessImpl(String s, List<Label> prefixes) {
         super();
         this.origin = s;
         this.prefixes.addAll(prefixes);
+    }
+
+    public Process attemptRewind(LabelKey key) {
+        return previousLife;
     }
 
     @Override
@@ -24,7 +29,8 @@ public class ProcessImpl extends Process implements ActionableProcess{
         ProcessImpl p = new ProcessImpl(origin());
         if (previousLife != null)
             p.setPastLife(previousLife.clone());
-        p.setKey(getKey());
+        if (hasKey())
+            p.setKey(getKey());
         p.isGhost = isGhost;
         p.addRestrictions(getRestriction());
         p.addPrefixes(getPrefixes());

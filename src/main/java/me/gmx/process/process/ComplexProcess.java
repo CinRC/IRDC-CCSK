@@ -25,7 +25,8 @@ public abstract class ComplexProcess extends Process{
         this.right = right;
         this.operator = operator;
         this.origin = origin();
-        canActOnKey = false;
+        //canActOnKey = false;
+        this.displayKey = true;
     }
 
     /**
@@ -69,7 +70,7 @@ public abstract class ComplexProcess extends Process{
                 }
                 if (right == null) {
                     RCCS.log(String.format("Using %s to init right ", template.get(i + 1).origin()));
-                    if (template.size() > i+1)
+                    if (template.size() > i + 1)
                         right = template.remove(i + 1);
 
                 }
@@ -80,8 +81,33 @@ public abstract class ComplexProcess extends Process{
         return template;
     }
 
+    /*    */
+
+    /**
+     * Returns a collection of:
+     * if prefix is present, just prefix.
+     * otherwise, calls getActionableLabelsStrict, and returns
+     *
+     * @return
+     *//*
+    public Collection<Label> getActionableLabels(){
+        Collection l = super.getActionableLabels();
+        if (!prefixes.isEmpty()) {
+            l.add(prefixes.peek());
+            return withdrawRestrictions(l);
+        }
+
+        Collection z = getActionableLabelsStrict();
+*//*        if (z.stream().anyMatch(LabelKey.class::isInstance))
+            l.remove(key);*//*
+        //For debugging purposes, modify l to allow breakpoints
+        l.addAll(z);
+        return l;
+    }*/
+    protected abstract Collection getActionableLabelsStrict();
+
     @Override
-    public String represent(){
+    public String represent() {
         String s = "";
         if (ghostKey != null) {
             if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_1))
@@ -172,11 +198,17 @@ public abstract class ComplexProcess extends Process{
     public abstract ComplexProcess clone();
 
     @Override
-    public boolean canAct(Label label){
-        RCCS.log(String.format("Checking if %s can act on %s",represent(),label));
+    public boolean canAct(Label label) {
+        RCCS.log(String.format("Checking if %s can act on %s", represent(), label));
         Collection<Label> l = getActionableLabels();
         return SetUtil.containsOrTau(l, label);
 
+    }
+
+    protected Collection<Label> getLeftRightLabels() {
+        Collection<Label> l = left.getActionableLabels();
+        l.addAll(right.getActionableLabels());
+        return l;
     }
 
    /* @Override

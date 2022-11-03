@@ -3,6 +3,7 @@ package me.gmx.process.process;
 import javafx.util.Pair;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
@@ -12,7 +13,6 @@ import me.gmx.util.SetUtil;
 import me.gmx.util.StringUtil;
 
 import java.util.*;
-import java.util.regex.Matcher;
 
 public abstract class Process extends ProgramNode {
 
@@ -120,21 +120,21 @@ public abstract class Process extends ProgramNode {
     /**
      * Act on a given label. This is the only method that should be called outside
      * of subclasses.
+     *
      * @param label label to act on
      * @return will return this, after having acted on the given label
      */
-    public Process act(Label label){
+    public Process act(Label label) {
 
         //Key handling
-        if (label instanceof LabelKey) {
-            if (ghostKey == null && hasKey() && canActOnKey) //Just a regular process? Is it reversible?
-                if (getKey().equals(label)) //Make sure keys match
-                    return previousLife; //Rewind!
+        if (label instanceof LabelKey labelkey) {
+            if (ghostKey == null && hasKey()) //Just a regular process? Is it reversible?
+                if (getKey().equals(label) && canActOnKey) //Make sure keys match
+                    return attemptRewind(labelkey); //Rewind!
             //Ghost key present?
             if (label.equals(ghostKey)) { //Is the key correct?
-                ghostKey = null;
-                return previousLife; //Okay, rewind!
-            }else{
+                return attemptRewind(labelkey); //Okay, rewind!
+            } else {
                 return this.actOn(label); //Key incorrect? passthru!
             }
 
@@ -205,20 +205,29 @@ public abstract class Process extends ProgramNode {
 
     /**
      * Returns the assigned key
+     *
      * @return this process's key, can be null
      */
-    public LabelKey getKey(){
+    public LabelKey getKey() {
+        if (key == null) {
+
+            throw new CCSTransitionException(this, "Null key");
+        }
         return this.key;
     }
+
+    public abstract Process attemptRewind(LabelKey l);
+
 
     /**
      * A formatted version of this process to be printed. This is the only method that
      * should be called to print to screen unless you will be comparing processes
+     *
      * @return String to be displayed to user that represents this process
      */
-    public String represent(){
+    public String represent() {
         StringBuilder s = new StringBuilder(represent(origin()));
-        for(Pair<Label,LabelKey> pair : getLabelKeyPairs()){
+        for (Pair<Label, LabelKey> pair : getLabelKeyPairs()) {
             s.insert(0, pair.getKey().toString()
                     + pair.getValue().toString() + ".");
         }
@@ -264,7 +273,7 @@ public abstract class Process extends ProgramNode {
         Set<Label> l = new HashSet<>();
         if (!prefixes.isEmpty())
             l.add(prefixes.getFirst());
-        if (hasKey())
+        if (hasKey())//TODO: Fix for concurrent processes whos key points to left or right, duplicating it when added
             l.add(getKey());
 
         //TODO: why did i write this
@@ -284,11 +293,12 @@ public abstract class Process extends ProgramNode {
     }
 
 
-    public List<Pair<Label, LabelKey>> getLabelKeyPairs(){
+    public List<Pair<Label, LabelKey>> getLabelKeyPairs() {
         List<Pair<Label, LabelKey>> l = new ArrayList<Pair<Label, LabelKey>>();
-        if (hasKey() && ghostKey == null && canActOnKey) {
-            l.add(new Pair<Label, LabelKey>(getKey().from, getKey()));
-            if (previousLife.hasKey())
+        if (hasPrefixKey()) {
+            l.add(new Pair<Label, LabelKey>(getPrefixKey().from, getPrefixKey()));
+            //It's necessary to check that previous life key doesnt match current key, because summation processes can have both a ghostkey and a normal key
+            if (previousLife.hasPrefixKey() && !previousLife.getPrefixKey().equals(getPrefixKey()))
                 l.addAll(previousLife.getLabelKeyPairs());
         }/*else if (ghostKey != null){
             l.add(new Pair<Label,LabelKey>(ghostKey.from,ghostKey));
@@ -298,6 +308,13 @@ public abstract class Process extends ProgramNode {
         return l;
     }
 
+    public boolean hasPrefixKey() {
+        return key != null;
+    }
+
+    public LabelKey getPrefixKey() {
+        return key;
+    }
 
     public abstract String origin();
 

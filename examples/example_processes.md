@@ -4,7 +4,7 @@ a|b\{a}
 a.b.c.d | 'a.'b.'c.'d  
 a + ('a | 'b) + b  
 a + b + c + d  
-<!-- The following three processes should be "stuck" -->
+<!-- The following three p rocesses should be "stuck" -->
 (a)\{a}  
 (a)\{'a}  
 (a.b | 'b.'a)\{a, b}  

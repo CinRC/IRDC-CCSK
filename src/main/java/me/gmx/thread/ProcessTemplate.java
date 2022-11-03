@@ -2,28 +2,36 @@ package me.gmx.thread;
 
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;
-import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
 
-import java.util.*;
-
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 
 public class ProcessTemplate {
     private final LinkedList<Process> tList;
-    public ProcessTemplate(){
+
+    public ProcessTemplate() {
         tList = new LinkedList<>();
     }
+
     public boolean isInit = false;
 
 
-    public void add(Process node){
+    public void add(Process node) {
         tList.add(node);
     }
 
-    public void initComplex(){
+    /**
+     * Initialize the template into a working process. This method will cycle through all complex
+     * processes, consuming simple processes to make up each part. Complex processes
+     * are processed through this pipeline in the order in CCSGrammar
+     */
+    public void initComplex() {
         //Collect complex processes
         Set<ComplexProcess> complex = new HashSet<>();
         for (Process process : tList)
@@ -31,15 +39,16 @@ public class ProcessTemplate {
                 complex.add((ComplexProcess) process);
 
 
-        for (CCSGrammar g : CCSGrammar.values()){
-            for (ComplexProcess p : complex){
-                if (p.getClass() == g.getClassObject()){
+        //We rely on descending binding order in the CCSGrammar class
+        for (CCSGrammar g : CCSGrammar.values()) {
+            for (ComplexProcess p : complex) {
+                if (p.getClass() == g.getClassObject()) {
                     if (p.left == null)
-                        //Subsume object to the left
-                        p.left = tList.remove(tList.indexOf(p)-1);
+                        //Consume object to the left
+                        p.left = tList.remove(tList.indexOf(p) - 1);
                     if (p.right == null)
-                        //Subsume object to the right
-                        p.right = tList.remove(tList.indexOf(p)+1);
+                        //Consume object to the right
+                        p.right = tList.remove(tList.indexOf(p) + 1);
                 }
             }
         }
@@ -49,10 +58,11 @@ public class ProcessTemplate {
     /**
      * Exports ProcessTemplate as a process. ProcessTemplate should always init down to
      * a single 'parent' process.
+     *
      * @return Parent process
      * @throws CCSParserException If for some reason there are more than 1 parent processes
      */
-    public Process export(){
+    public Process export() {
         if (!isInit)
             initComplex();
         if (tList.size() != 1)
@@ -60,11 +70,16 @@ public class ProcessTemplate {
         else return tList.get(0);
     }
 
-    public void addRestrictionToLastProcess(Collection<Label> restrictions){
+    /**
+     * Adds restrictions along given labels to the last item in the template array
+     *
+     * @param restrictions Array of labels to restrict along
+     */
+    public void addRestrictionToLastProcess(Collection<Label> restrictions) {
         this.tList.getLast().addRestrictions(restrictions);
     }
 
-    public String prettyString(){
+    public String prettyString() {
         StringBuilder sb = new StringBuilder();
         for (Process p : tList)
             sb.append(p.represent());

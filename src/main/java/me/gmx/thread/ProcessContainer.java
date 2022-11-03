@@ -5,11 +5,7 @@ import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.process.Process;
 
-import java.sql.Time;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 public class ProcessContainer {
 
@@ -28,9 +24,11 @@ public class ProcessContainer {
     }
 
     public boolean canAct(Label node){
-        return getActionableLabels().contains(node);
+        Collection<Label> l = getActionableLabels();
+        return l.contains(node);
     }
 
+    //TODO
     public boolean canActInto(Process p){
         for (Label l : getActionableLabels()){
             Process p2 = getProcess().clone();
@@ -40,21 +38,30 @@ public class ProcessContainer {
         return false;
     }
 
-    public void act(Label node){
+    public void act(Label node) {
         process = process.act(node);
     }
-    //TODO: Implement - Timestamps?
-    public void reverseLastAction(){
-        if (process.hasKey())
-            process = process.act(process.getKey());
-        else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
+
+    /**
+     * Reverses the last action performed. Simply checks if the process has a key, and if so
+     * reverses along that key.
+     */
+    public void reverseLastAction() {
+        try {
+            if (process.hasKey())
+                process = process.act(process.getKey());
+            else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
-    public LabelKey getKey(){
+    public LabelKey getKey() {
         return process.getKey();
     }
 
-    public boolean canReverse(){
+    public boolean canReverse() {
         return process.hasKey();
     }
 

@@ -2,6 +2,7 @@ package me.gmx.process.process;
 
 import me.gmx.RCCS;
 import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.util.RCCSFlag;
 
 import java.util.Collection;
@@ -20,15 +21,20 @@ public class NullProcess extends Process{
     }
 
     @Override
-    public Process clone(){
+    public Process clone() {
         NullProcess p = new NullProcess();
         if (previousLife != null)
             p.setPastLife(previousLife.clone());
-        p.setKey(getKey());
+        if (hasKey())
+            p.setKey(getKey());
         p.isGhost = isGhost;
         p.addRestrictions(getRestriction());
         p.addPrefixes(getPrefixes());
         return p;
+    }
+
+    public Process attemptRewind(LabelKey key) {
+        return previousLife;
     }
 
     @Override

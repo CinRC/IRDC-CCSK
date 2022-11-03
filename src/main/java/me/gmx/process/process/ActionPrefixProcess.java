@@ -8,7 +8,10 @@ import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.util.RCCSFlag;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 @Deprecated
 public class ActionPrefixProcess extends Process {
 
@@ -130,7 +133,7 @@ public class ActionPrefixProcess extends Process {
     @Override
     public String represent() {
         String s = super.represent(origin());
-        for(Pair<Label,LabelKey> pair : getLabelKeyPairs()){
+        for (Pair<Label, LabelKey> pair : getLabelKeyPairs()) {
             s = pair.getKey().toString()
                     + pair.getValue().toString() + "." + s;
         }
@@ -138,11 +141,18 @@ public class ActionPrefixProcess extends Process {
     }
 
 
+    public Process attemptRewind(LabelKey key) {
+        return null;
+    }
 
     @Override
-    public String toString(){ return represent(); }
+    public String toString() {
+        return represent();
+    }
+
     /**
      * Gets child processes
+     *
      * @return ActionPrefixProcess will always return only a single child process
      */
     @Override

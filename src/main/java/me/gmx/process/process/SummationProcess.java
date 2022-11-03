@@ -1,6 +1,7 @@
 package me.gmx.process.process;
 
 import me.gmx.parser.CCSGrammar;
+import me.gmx.parser.CCSParserException;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
@@ -24,13 +25,13 @@ public class SummationProcess extends ComplexProcess{
         if (ghostKey == null)//Only need to remember once, theoretically
             setPastLife(clone());
         try {
-            if (left.canAct(label)) {
+            if (left.canAct(label) && !left.isGhost) {
                 left = left.act(label);
                 right.isGhost = true;
                 if (ghostKey == null) {
                     ghostKey = left.getKey();
                 }
-            } else if (right.canAct(label)) {
+            } else if (right.canAct(label) && !right.isGhost) {
                 right = right.act(label);
                 left.isGhost = true;
                 if (ghostKey == null) {
@@ -45,11 +46,15 @@ public class SummationProcess extends ComplexProcess{
 
     //Because summation should never hold a key on its own
     @Override
-    public boolean hasKey(){
-        return ghostKey != null;
+    public boolean hasKey() {
+        if (key != null)
+            return true;
+        if (isPacked())
+            return left.hasKey() || right.hasKey();
+        else return false;
     }
 
-    @Override
+ /*   @Override
     public LabelKey getKey(){
         //return ghostKey;
         if (left.isGhost)
@@ -57,7 +62,29 @@ public class SummationProcess extends ComplexProcess{
         else if (right.isGhost)
             return left.getKey();
         else throw new CCSTransitionException(this, "Attempted to get key when no key exists");
+    }*/
+
+    public LabelKey getKey() {
+        LabelKey k = null;
+        Collection<Label> l = getLeftRightLabels();
+        l.removeIf(x -> !(x instanceof LabelKey));//remove all non-labelkeys
+        if (l.size() == 0)
+            if (key != null)
+                return key;//prefix key
+            else
+                throw new CCSParserException("Attempted to get key from concurrent process " + represent() + " but could not find one!");
+
+        else if (l.size() == 1)//if theres only one key, and it matches ghost key
+            //If only one key, then this is the key
+            return (LabelKey) l.toArray()[0];
+            //If more than one key,
+        else if (l.size() > 1)
+            for (Label label : l)//otherwise, lets find which one happened last
+                if (k == null || ((LabelKey) label).time.isAfter(k.time))
+                    k = (LabelKey) label;
+        return k;
     }
+
 
     @Override
     public SummationProcess clone() {
@@ -65,13 +92,32 @@ public class SummationProcess extends ComplexProcess{
         if (previousLife != null)
             p.setPastLife(previousLife.clone());
         p.setKey(key);
+        p.isGhost = isGhost;
         p.ghostKey = ghostKey;
         p.addRestrictions(restrictions);
         p.addPrefixes(getPrefixes());
         return p;
     }
 
+    public Process attemptRewind(LabelKey key) {
+        if (!getLeftRightLabels().stream().anyMatch(LabelKey.class::isInstance) || key.equals(ghostKey))//no keys left/right?
+            //if (key.equals(getPrefixKey()))
+            return previousLife;//return previous life
+            /*else
+                throw new CCSTransitionException(this, "Could not rewind on " + key + " because it does not match the prefix!");*/
 
+
+        //Okay, there are some keys left/right
+
+        if (left.isGhost)
+            right = right.act(key);
+        else if (right.isGhost)
+            left = left.act(key);
+        else
+            throw new CCSTransitionException(this, "Could not rewind on " + key + " because neither side of this process is ghosted.");
+
+        return this;
+    }
 
     @Override
     public Collection<Label> getActionableLabels(){
@@ -80,7 +126,7 @@ public class SummationProcess extends ComplexProcess{
         if (ghostKey != null) { //If we have a ghost key
             if (s.contains(ghostKey)) //If ghost key is on the table
                 s.remove(ghostKey);   //Remove ghost key (temporarily)
-            if (s.stream().noneMatch(LabelKey.class::isInstance)) //Any more keys in list?
+            if (s.stream().noneMatch(l -> (l instanceof LabelKey && !l.equals(getPrefixKey())))) //Any more keys in list? (not counting prefix)
                 s.add(ghostKey); //No? ok we can do ghost key
             //Otherwise nope
         }

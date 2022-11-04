@@ -59,6 +59,7 @@ This program can be configured by using command-line arguments, or flags. The fl
 | --iU        	 | Parser will ignore unrecognized characters in the process formula                                          	 |
 | --kL        	 | Keys will be visibly similar to the label they represent                                                   	 |
 | --gui       	 | Program will start with a UI instead of CLI                                                                	 |
+| --enumerate  	 | Print enumeration tree of given process                                                                    	 |
 
 
 ## Requirements

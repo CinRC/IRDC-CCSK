@@ -73,9 +73,8 @@ public class SetUtil {
     }
 
     public static boolean recursiveIsSyncable(Process p, LabelKey key){
-        if (!(p instanceof ComplexProcess))
+        if (!(p instanceof ComplexProcess cp))
             return false;
-        ComplexProcess cp = (ComplexProcess) p;
 
         if (cp.left.canAct(key) && cp.right.canAct(key))
             return true;

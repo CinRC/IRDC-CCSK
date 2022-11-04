@@ -257,11 +257,9 @@ public abstract class Process extends ProgramNode {
             s.deleteCharAt(s.length()-1);
         s.append(getRestriction().isEmpty() ? "" : String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
         if (RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-            return s.toString().replaceAll(String.format("\\%s",CCSGrammar.OPEN_PARENTHESIS), "")
-                    .replaceAll(String.format("\\%s",CCSGrammar.CLOSE_PARENTHESIS), "");
-
-        }else
-        return s.toString();
+            return s.toString().replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
+                    .replaceAll(String.format("\\%s", CCSGrammar.CLOSE_PARENTHESIS), "");
+        } else return s.toString();
     }
 
     public abstract Collection<Process> getChildren();

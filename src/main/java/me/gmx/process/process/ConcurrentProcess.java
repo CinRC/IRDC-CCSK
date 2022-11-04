@@ -95,7 +95,7 @@ public class ConcurrentProcess extends ComplexProcess{
      */
     @Override
     public Collection<Label> getActionableLabels(){
-        Collection l = super.getActionableLabels();
+        Collection<Label> l = super.getActionableLabels();
         if (!prefixes.isEmpty()) {
             l.add(prefixes.peek());
             return withdrawRestrictions(l);
@@ -107,7 +107,7 @@ public class ConcurrentProcess extends ComplexProcess{
     }
 
     public Process attemptRewind(LabelKey key) {
-        if (!getLeftRightLabels().stream().anyMatch(LabelKey.class::isInstance))//no keys left/right?
+        if (getLeftRightLabels().stream().noneMatch(LabelKey.class::isInstance))//no keys left/right?
             if (key.equals(getPrefixKey()))
                 return previousLife;//return previous life
             else

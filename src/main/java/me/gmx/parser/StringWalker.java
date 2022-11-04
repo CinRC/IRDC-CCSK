@@ -246,7 +246,7 @@ public class StringWalker implements Iterable<Character>, CharSequence{
     public enum Direction{
         FORWARDS(1),
         BACKWARDS(-1);
-        public int inc;
+        public final int inc;
         Direction(int inc){ this.inc = inc; }
         Direction reverse(){
             return this == FORWARDS ? BACKWARDS : FORWARDS;

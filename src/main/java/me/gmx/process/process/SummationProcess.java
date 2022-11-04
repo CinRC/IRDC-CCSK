@@ -90,7 +90,7 @@ public class SummationProcess extends ComplexProcess{
     }
 
     public Process attemptRewind(LabelKey key) {
-        if (!getLeftRightLabels().stream().anyMatch(LabelKey.class::isInstance) || key.equals(ghostKey))//no keys left/right?
+        if (getLeftRightLabels().stream().noneMatch(LabelKey.class::isInstance) || key.equals(ghostKey))//no keys left/right?
             return previousLife;
 
         if (left.isGhost)
@@ -126,8 +126,9 @@ public class SummationProcess extends ComplexProcess{
 
     /**
      * Returns list of actionable labels before any restrictions are applied
+     *
      * @param lock whether or not to apply sync lock to internal labels
-     * @return
+     * @return List of labels before considering summation Order of Op and restrictions
      */
     private Collection<Label> getActionableLabelsStrictInternal(boolean lock){
         Collection<Label> s = super.getActionableLabels();

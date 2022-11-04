@@ -30,24 +30,15 @@ public abstract class ComplexProcess extends Process{
 
     /**
      * Returns a non-recursive sub-process
-     * @return
      */
     @Override
     public Collection<Process> getChildren(){
         return Set.of(left, right);
     }
 
-    /**
-     * Returns a recursive set of sub-processes by calling the same function
-     * on all children
-     * @return
-     */
-
-
 
     /**
      * Checks if the process has been packed
-     * @return
      */
     public boolean isPacked(){
         return !(left == null || right == null);
@@ -79,7 +70,7 @@ public abstract class ComplexProcess extends Process{
         return template;
     }
 
-    protected abstract Collection getActionableLabelsStrict();
+    protected abstract Collection<Label> getActionableLabelsStrict();
 
     @Override
     public String represent() {
@@ -148,7 +139,8 @@ public abstract class ComplexProcess extends Process{
 
     /**
      * Returns the 'debug' form of human readable representation
-     * @return
+     *
+     * @return Internal human readable format of what the process should look like
      */
     @Override
     public String origin(){

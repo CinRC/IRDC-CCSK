@@ -15,11 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class RCCS {
-    static Scanner scan;
-
     public static List<RCCSFlag> config = new ArrayList<>();
     public static void main(String[] args){
         if (args.length == 0){
@@ -45,7 +42,6 @@ public class RCCS {
         if (config.contains(RCCSFlag.VALIDATE)) {
             Path path = null;
             try {
-                String s;
                 path = Paths.get(args[config.indexOf(RCCSFlag.VALIDATE) + 1]);
                 List<String> allLines = Files.readAllLines(path);
                 for (String line : allLines) {
@@ -73,7 +69,7 @@ public class RCCS {
         CCSParser c = new CCSParser();
 
         try {
-            ProcessTemplate template = c.parseLine(formula);
+            ProcessTemplate template = CCSParser.parseLine(formula);
             log(String.format("Formula before complex init and minimization: %s", template.prettyString()));
             log("\nMinimizing and initializing function...");
             template.initComplex();

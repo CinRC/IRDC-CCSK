@@ -21,9 +21,8 @@ public class TauLabelNode extends Label {
 
     @Override
     public boolean equals(Object o){
-        if (!(o instanceof TauLabelNode))
+        if (!(o instanceof TauLabelNode node))
             return false;
-        TauLabelNode node = (TauLabelNode) o;
         return (node.getA().equals(getA()) && node.getB().equals(getB()))
                 || (node.getB().equals(getA()) && node.getA().equals(getB()));
     }

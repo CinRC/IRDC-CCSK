@@ -1,11 +1,12 @@
 package me.gmx.parser;
 
 import me.gmx.RCCS;
-import me.gmx.process.process.Process;
-import me.gmx.thread.ProcessTemplate;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
+import me.gmx.process.process.Process;
+import me.gmx.process.process.ProcessImpl;
 import me.gmx.process.process.*;
+import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
@@ -48,15 +49,6 @@ public class CCSParser {
                         Process dp = parseLine(walker.readMemory().substring(1,walker.readMemory().length()-1)).export();
                         dp.addPrefixes(prefixes);
                         template.add(dp);
-           /*             if (prefixes.isEmpty())
-                            template.add(parseLine(walker.readMemory()//sub to remove paren
-                                    .substring(1,walker.readMemory().length()-1)).export());
-                        else{
-                            Process zz = parseLine(walker.readMemory()//sub to remove paren
-                                    .substring(1,walker.readMemory().length()-1)).export();
-                            ActionPrefixProcess zzp = new ActionPrefixProcess(zz,prefixes);
-                            template.add(zzp); //while in parenthesis, everything gets auto-packed.
-                        }*/
 
                         inParenthesis = false;
                         walker.clearMemory();

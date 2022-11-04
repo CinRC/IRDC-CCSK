@@ -25,7 +25,6 @@ public abstract class ComplexProcess extends Process{
         this.right = right;
         this.operator = operator;
         this.origin = origin();
-        //canActOnKey = false;
         this.displayKey = true;
     }
 
@@ -77,33 +76,9 @@ public abstract class ComplexProcess extends Process{
             }
         }
 
-        //dont think is necessary
         return template;
     }
 
-    /*    */
-
-    /**
-     * Returns a collection of:
-     * if prefix is present, just prefix.
-     * otherwise, calls getActionableLabelsStrict, and returns
-     *
-     * @return
-     *//*
-    public Collection<Label> getActionableLabels(){
-        Collection l = super.getActionableLabels();
-        if (!prefixes.isEmpty()) {
-            l.add(prefixes.peek());
-            return withdrawRestrictions(l);
-        }
-
-        Collection z = getActionableLabelsStrict();
-*//*        if (z.stream().anyMatch(LabelKey.class::isInstance))
-            l.remove(key);*//*
-        //For debugging purposes, modify l to allow breakpoints
-        l.addAll(z);
-        return l;
-    }*/
     protected abstract Collection getActionableLabelsStrict();
 
     @Override
@@ -190,7 +165,7 @@ public abstract class ComplexProcess extends Process{
     }
 
     public boolean hasKey(){
-        if (left == null || right == null) //hasnt been init yet
+        if (left == null || right == null)
             return false;
         else return left.hasKey() || right.hasKey();
     }
@@ -211,28 +186,5 @@ public abstract class ComplexProcess extends Process{
         return l;
     }
 
-   /* @Override
-    public Process act(Label label) {
-        Collection<Label> l,r;
-        l = left.getActionableLabels();
-        r = right.getActionableLabels();
-        if (label instanceof TauLabelNode tau){
-            try {
-                if (r.contains(tau.getA()) || r.contains(tau.getB())) {
-                    right = right.act(tau);
-                }
-                if (l.contains(tau.getA()) || l.contains(tau.getB())){
-                    left = left.act(tau);
-                }
-
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return this;
-        }else{
-            return actOn(label);
-
-        }
-    }*/
 
 }

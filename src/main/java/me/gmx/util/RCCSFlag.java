@@ -18,8 +18,6 @@ public enum RCCSFlag {
             "--kM"), //0 = true 1 = false
     SUMMATION_STYLE_1("Alternative display mode for summation processes. Reversible summations are not annotated",
             "--sA"),
-/*    SUMMATION_STYLE_2("Alternative display mode for summation processes. Reversible summations are annotated",
-            "--sB", true),*/
     SUMMATION_STYLE_3("Alternative display mode for summation processes. Reversible summations are hidden after execution",
             "--sC"),
     EXPLICIT_NULL("Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached.",

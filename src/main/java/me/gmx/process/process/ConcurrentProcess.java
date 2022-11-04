@@ -103,7 +103,6 @@ public class ConcurrentProcess extends ComplexProcess{
         l.addAll(getActionableLabelsStrict());
         l.addAll(SetUtil.getTauMatches(l));
         l = withdrawRestrictions(l);
-        //l = SetUtil.removeUnsyncableKeys(this,l);
         return l;
     }
 
@@ -130,8 +129,6 @@ public class ConcurrentProcess extends ComplexProcess{
         l = left.getActionableLabels();
         r = right.getActionableLabels();
         l.addAll(r);
-/*        if (!l.stream().anyMatch(LabelKey.class::isInstance))//Only allow
-            l.add(key);*/
         return l;
     }
 

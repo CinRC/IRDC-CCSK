@@ -25,6 +25,7 @@ public abstract class Process extends ProgramNode {
     //Passthru key for summation processes
     protected LabelKey ghostKey = null;
 
+
     protected boolean isGhost = false;
 
     protected LinkedList<Label> prefixes = new LinkedList<>();
@@ -276,12 +277,6 @@ public abstract class Process extends ProgramNode {
         if (hasKey())//TODO: Fix for concurrent processes whos key points to left or right, duplicating it when added
             l.add(getKey());
 
-        //TODO: why did i write this
-        /*for (Process p : recurseChildren())
-            if (p.hasKey()) {
-                l.remove(getKey());
-                break;
-            }*/
         return l;
     }
 
@@ -300,11 +295,7 @@ public abstract class Process extends ProgramNode {
             //It's necessary to check that previous life key doesnt match current key, because summation processes can have both a ghostkey and a normal key
             if (previousLife.hasPrefixKey() && !previousLife.getPrefixKey().equals(getPrefixKey()))
                 l.addAll(previousLife.getLabelKeyPairs());
-        }/*else if (ghostKey != null){
-            l.add(new Pair<Label,LabelKey>(ghostKey.from,ghostKey));
-*//*            if (previousLife.hasKey())
-                l.addAll(previousLife.getLabelKeyPairs());*//*
-        }*/
+        }
         return l;
     }
 

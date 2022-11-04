@@ -54,16 +54,6 @@ public class SummationProcess extends ComplexProcess{
         else return false;
     }
 
- /*   @Override
-    public LabelKey getKey(){
-        //return ghostKey;
-        if (left.isGhost)
-            return right.getKey();
-        else if (right.isGhost)
-            return left.getKey();
-        else throw new CCSTransitionException(this, "Attempted to get key when no key exists");
-    }*/
-
     public LabelKey getKey() {
         LabelKey k = null;
         Collection<Label> l = getLeftRightLabels();
@@ -101,13 +91,7 @@ public class SummationProcess extends ComplexProcess{
 
     public Process attemptRewind(LabelKey key) {
         if (!getLeftRightLabels().stream().anyMatch(LabelKey.class::isInstance) || key.equals(ghostKey))//no keys left/right?
-            //if (key.equals(getPrefixKey()))
-            return previousLife;//return previous life
-            /*else
-                throw new CCSTransitionException(this, "Could not rewind on " + key + " because it does not match the prefix!");*/
-
-
-        //Okay, there are some keys left/right
+            return previousLife;
 
         if (left.isGhost)
             right = right.act(key);

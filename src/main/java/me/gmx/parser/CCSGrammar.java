@@ -3,6 +3,7 @@ package me.gmx.parser;
 import me.gmx.process.nodes.ComplementLabelNode;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelNode;
+import me.gmx.process.process.ProcessImpl;
 import me.gmx.process.process.*;
 
 import java.util.regex.Matcher;
@@ -29,8 +30,7 @@ public enum CCSGrammar {
     OP_SUMMATION("\\+", SummationProcess.class, "+", true),
     OPEN_RESTRICTION("\\\\\\{", null, null, true), //6 backslashes, LOL. \\{
     CLOSE_RESTRICTION("\\}", null, null, true);
-//    RESTRICTION(String.format("\\{(%s,?)*}",LABEL.pString), null, null),
-//    RESTRICTED_PROCESS(String.format("(%s)%s",PROCESS.pString,RESTRICTION.pString), RestrictedProcessImpl.class, null);
+
 
     public String pString, rep;
     private Pattern pattern;

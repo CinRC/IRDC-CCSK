@@ -58,7 +58,16 @@ jobs:
         with:
           name: ${{github.ref_name}}
           path: staging
-
+      - name: Set versions
+        run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: Release ${{ env.RELEASE_VERSION }}
+          draft: false
+          prerelease: false
 
   release-job:
     runs-on: ubuntu-latest
@@ -70,16 +79,7 @@ jobs:
         run: cat pom.xml
       - name: debug
         run: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-      - name: Set versions
-        run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-      - uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          release_name: Release ${{ env.RELEASE_VERSION }}
-          draft: false
-          prerelease: false
+
 
   upload-artifact-job:
     runs-on: ubuntu-latest

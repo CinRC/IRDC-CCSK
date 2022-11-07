@@ -64,6 +64,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ publish-job ]
     steps:
+      - name: list files
+        run: ls
+      - name: cat pom
+        run: cat pom.xml
       - name: debug
         run: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
       - name: Set versions

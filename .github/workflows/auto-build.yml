@@ -61,10 +61,12 @@ jobs:
 
 
   release-job:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: [ publish-job ]
     steps:
-      - run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - name: Set versions
+        shell: cmd
+        run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

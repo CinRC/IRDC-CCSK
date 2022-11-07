@@ -71,6 +71,7 @@
     </dependencies>
 
     <build>
+        <defaultGoal>deploy</defaultGoal>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

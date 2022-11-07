@@ -85,4 +85,4 @@ jobs:
         asset_path: staging/*.jar
         asset_name: Release ${{ env.RELEASE_VERSION }}
         asset_content_type: application/jar
-          
+         

@@ -111,7 +111,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>com.gluonhq</groupId>
                 <artifactId>gluonfx-maven-plugin</artifactId>
@@ -120,7 +119,25 @@
                     <mainClass>me.gmx.RCCS</mainClass>
                 </configuration>
             </plugin>
-
+            <plugin>
+            <!--- Since we don't provide our own configuration file, apparently (cf. https://maven.apache.org/plugins-archives/maven-checkstyle-plugin-LATEST/examples/custom-checker-config.html) checkstyle uses the Sun Microsystems Definition by default. -->
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-checkstyle-plugin</artifactId>
+               <version>3.2.0</version>
+               <configuration>
+                  <failOnViolation>false</failOnViolation>
+                  <encoding>UTF-8</encoding>
+               </configuration>
+               <executions>
+                  <execution>
+                     <id>validate</id>
+                     <phase>validate</phase>
+                     <goals>
+                        <goal>check</goal>
+                     </goals>
+                  </execution>
+               </executions>
+            </plugin>
         </plugins>
 
     </build>

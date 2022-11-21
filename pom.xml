@@ -6,7 +6,7 @@
 
     <groupId>me.gmx</groupId>
     <artifactId>RCCS</artifactId>
-    <version>2.97</version>
+    <version>2.98</version>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

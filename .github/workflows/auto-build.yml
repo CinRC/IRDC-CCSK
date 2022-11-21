@@ -6,7 +6,6 @@ on:
     tags:
       - 'release-tag'
 
-
   pull_request:
     branches: [ master ]
 

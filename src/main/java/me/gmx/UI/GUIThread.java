@@ -2,13 +2,13 @@ package me.gmx.UI;
 
 import javafx.application.Application;
 
-public class GUIThread extends Thread{
+public class GUIThread extends Thread {
 
-    public GUIThread(String s){
+    public GUIThread(String s) {
         super(s);
     }
 
-    public void run(){
+    public void run() {
         Application.launch(RCCS_FX.class);
     }
 

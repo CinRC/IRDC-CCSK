@@ -1,5 +1,11 @@
 package me.gmx;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import me.gmx.UI.GUIThread;
 import me.gmx.UI.RCCS_FX;
@@ -9,27 +15,22 @@ import me.gmx.process.ProcessContainer;
 import me.gmx.process.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
 public class RCCS {
     public static List<RCCSFlag> config = new ArrayList<>();
-    public static void main(String[] args){
-        if (args.length == 0){
+
+    public static void main(String[] args) {
+        if (args.length == 0) {
             System.out.println(helpMessage());
             System.exit(1);
-        }else if (args.length > 1){
-            for (int i = 0; i < args.length-1; i++){
+        } else if (args.length > 1) {
+            for (int i = 0; i < args.length - 1; i++) {
                 RCCSFlag f = getFlagMatchOrNull(args[i]);
                 if (f == null) {
                     System.out.println("Unrecognized config flag: " + args[i]);
                     System.exit(0);
-                } else
+                } else {
                     config.add(f);
+                }
             }
         }
         if (config.contains(RCCSFlag.HELP_MSG)) {
@@ -47,7 +48,8 @@ public class RCCS {
                 for (String line : allLines) {
                     try {
                         ProcessTemplate pt = CCSParser.parseLine(line);
-                        System.out.printf("%s is properly formatted. Parsed as %s\n", line, pt.prettyString());
+                        System.out.printf("%s is properly formatted. Parsed as %s\n", line,
+                                pt.prettyString());
                     } catch (Exception e) {
                         System.out.printf("%s is improperly formatted\n", line);
                     }
@@ -58,53 +60,61 @@ public class RCCS {
             }
 
         } else if (config.contains(RCCSFlag.ENUMERATE)) {
-            me.gmx.process.process.Process p = CCSParser.parseLine(args[config.indexOf(RCCSFlag.ENUMERATE) + 1]).export();
+            me.gmx.process.process.Process p =
+                    CCSParser.parseLine(args[config.indexOf(RCCSFlag.ENUMERATE) + 1]).export();
             LTTNode node = new LTTNode(p);
             node.enumerate();
             System.out.println(node);
             System.exit(0);
         }
 
-        String formula = args[args.length-1];
+        String formula = args[args.length - 1];
         CCSParser c = new CCSParser();
 
         try {
             ProcessTemplate template = CCSParser.parseLine(formula);
-            log(String.format("Formula before complex init and minimization: %s", template.prettyString()));
+            log(String.format("Formula before complex init and minimization: %s",
+                    template.prettyString()));
             log("\nMinimizing and initializing function...");
             template.initComplex();
-            log(String.format("Formula after complex init and minimization: %s", template.prettyString()));
+            log(String.format("Formula after complex init and minimization: %s",
+                    template.prettyString()));
             new CCSInteractionHandler(new ProcessContainer(template.export())).startInteraction();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    private static void startGUI(){
+    private static void startGUI() {
         Application.launch(RCCS_FX.class);
     }
-    public static void log(String s){
-        if (RCCS.config.contains(RCCSFlag.DEBUG))
+
+    public static void log(String s) {
+        if (RCCS.config.contains(RCCSFlag.DEBUG)) {
             System.out.println("[debug] " + s);
+        }
     }
 
-    public static String helpMessage(){
+    public static String helpMessage() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Incorrect arguments! Please use the form `java -jar RCCS.jar <flags> \"a.b|c.a\"");
+        sb.append(
+                "Incorrect arguments! Please use the form `java -jar RCCS.jar <flags> \"a.b|c.a\"");
         sb.append("\n");
-        for (RCCSFlag flag : RCCSFlag.values()){
+        for (RCCSFlag flag : RCCSFlag.values()) {
             sb.append(flag.getFlag()).append("  -  ").append(flag.getDescription()).append("\n");
         }
         return sb.toString();
     }
 
-    public static RCCSFlag getFlagMatchOrNull(String s){
-        for (RCCSFlag flag : RCCSFlag.values())
-            if (flag.doesMatch(s))
+    public static RCCSFlag getFlagMatchOrNull(String s) {
+        for (RCCSFlag flag : RCCSFlag.values()) {
+            if (flag.doesMatch(s)) {
                 return flag;
+            }
+        }
 
         return null;
     }
-    
+
 }

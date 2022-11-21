@@ -1,26 +1,23 @@
 package me.gmx.process;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-
 
 public class ProcessTemplate {
     private final LinkedList<Process> tList;
+    public boolean isInit = false;
 
     public ProcessTemplate() {
         tList = new LinkedList<>();
     }
-
-    public boolean isInit = false;
-
 
     public void add(Process node) {
         tList.add(node);
@@ -34,9 +31,11 @@ public class ProcessTemplate {
     public void initComplex() {
         //Collect complex processes
         Set<ComplexProcess> complex = new HashSet<>();
-        for (Process process : tList)
-            if (process instanceof ComplexProcess)
+        for (Process process : tList) {
+            if (process instanceof ComplexProcess) {
                 complex.add((ComplexProcess) process);
+            }
+        }
 
 
         //We rely on descending binding order in the CCSGrammar class
@@ -44,11 +43,15 @@ public class ProcessTemplate {
             for (ComplexProcess p : complex) {
                 if (p.getClass() == g.getClassObject()) {
                     if (p.left == null)
-                        //Consume object to the left
+                    //Consume object to the left
+                    {
                         p.left = tList.remove(tList.indexOf(p) - 1);
+                    }
                     if (p.right == null)
-                        //Consume object to the right
+                    //Consume object to the right
+                    {
                         p.right = tList.remove(tList.indexOf(p) + 1);
+                    }
                 }
             }
         }
@@ -63,11 +66,14 @@ public class ProcessTemplate {
      * @throws CCSParserException If for some reason there are more than 1 parent processes
      */
     public Process export() {
-        if (!isInit)
+        if (!isInit) {
             initComplex();
-        if (tList.size() != 1)
+        }
+        if (tList.size() != 1) {
             throw new CCSParserException("Could not export process template into process!");
-        else return tList.get(0);
+        } else {
+            return tList.get(0);
+        }
     }
 
     /**
@@ -81,20 +87,21 @@ public class ProcessTemplate {
 
     public String prettyString() {
         StringBuilder sb = new StringBuilder();
-        for (Process p : tList)
+        for (Process p : tList) {
             sb.append(p.represent());
+        }
         return sb.toString();
     }
 
-    public LinkedList<Process> getProcesses(){
+    public LinkedList<Process> getProcesses() {
         return this.tList;
     }
 
-    public void prependTemplate(ProcessTemplate t){
+    public void prependTemplate(ProcessTemplate t) {
         t.getProcesses().addAll(tList);
     }
 
-    public void appendTemplate(ProcessTemplate t){
+    public void appendTemplate(ProcessTemplate t) {
         tList.addAll(t.getProcesses());
     }
 

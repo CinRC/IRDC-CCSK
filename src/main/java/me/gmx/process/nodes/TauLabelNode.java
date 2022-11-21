@@ -6,7 +6,8 @@ import java.util.UUID;
 //TODO: NYI
 public class TauLabelNode extends Label {
 
-    private Label a, b;
+    private final Label a;
+    private final Label b;
     public boolean consumeLeft, consumeRight;
     int saveDupe;
 
@@ -20,31 +21,33 @@ public class TauLabelNode extends Label {
     }
 
     @Override
-    public boolean equals(Object o){
-        if (!(o instanceof TauLabelNode node))
+    public boolean equals(Object o) {
+        if (!(o instanceof TauLabelNode node)) {
             return false;
+        }
         return (node.getA().equals(getA()) && node.getB().equals(getB()))
-                || (node.getB().equals(getA()) && node.getA().equals(getB()));
+            || (node.getB().equals(getA()) && node.getA().equals(getB()));
     }
 
     @Override
-    public String toString(){
-        return String.format("Tau{%s, %s}",a,b);
+    public String toString() {
+        return String.format("Tau{%s, %s}", a, b);
     }
 
-    public Label getA(){
+    public Label getA() {
         return a;
     }
-    public Label getB(){
+
+    public Label getB() {
         return b;
     }
 
     @Override
-    public TauLabelNode clone(){
-        return new TauLabelNode((Label) getA().clone(),(Label) getB().clone());
+    public TauLabelNode clone() {
+        return new TauLabelNode(getA().clone(), getB().clone());
     }
 
-    public void destroy(){
+    public void destroy() {
         NodeIDGenerator.decrementKey();
     }
 

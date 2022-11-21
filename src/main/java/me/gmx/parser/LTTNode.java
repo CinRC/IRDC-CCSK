@@ -1,13 +1,12 @@
 package me.gmx.parser;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.process.Process;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class LTTNode {
 
@@ -53,10 +52,12 @@ public class LTTNode {
      * @param depth
      */
     protected void echoDepth(int depth) {
-        if (depth > maxDepth)
+        if (depth > maxDepth) {
             maxDepth = depth;
-        if (parent != null)
+        }
+        if (parent != null) {
             parent.echoDepth(++depth);
+        }
     }
 
     public int getMaxDepth() {
@@ -72,15 +73,17 @@ public class LTTNode {
         ProcessContainer pc = new ProcessContainer(p.clone());
         //For every actionable label in current node,
         for (Label l : pc.getActionableLabels()) {
-            if (l instanceof LabelKey)
+            if (l instanceof LabelKey) {
                 continue;
+            }
             pc.act(l); //Act on that label and make a new node with that child process (clone)
             Process z = pc.getProcess().clone();
             addChild(l, z);
             pc.reverseLastAction();//Then reverse and next label.
         }
-        for (LTTNode child : children.values())
+        for (LTTNode child : children.values()) {
             child.enumerate();
+        }
     }
 
     public boolean isLeafNode() {
@@ -98,7 +101,8 @@ public class LTTNode {
         buffer.append(prefix);
         buffer.append(p.represent());
         buffer.append('\n');
-        for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator(); it.hasNext(); ) {
+        for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator();
+             it.hasNext(); ) {
             Map.Entry<Label, LTTNode> entry = it.next();
             LTTNode next = entry.getValue();
             Label l = entry.getKey();

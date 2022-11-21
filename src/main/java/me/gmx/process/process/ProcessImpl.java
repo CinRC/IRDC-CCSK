@@ -1,76 +1,77 @@
 package me.gmx.process.process;
 
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelKey;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 
-public class ProcessImpl extends Process implements ActionableProcess{
+public class ProcessImpl extends Process implements ActionableProcess {
 
-    public ProcessImpl(String s) {
-        super();
-        this.origin = s;
+  public ProcessImpl(String s) {
+    super();
+    this.origin = s;
+  }
+
+  public ProcessImpl(String s, List<Label> prefixes) {
+    super();
+    this.origin = s;
+    this.prefixes.addAll(prefixes);
+  }
+
+  public Process attemptRewind(LabelKey key) {
+    return previousLife;
+  }
+
+  @Override
+  public Process clone() {
+    ProcessImpl p = new ProcessImpl(origin());
+    if (previousLife != null) {
+      p.setPastLife(previousLife.clone());
     }
-
-    public ProcessImpl(String s, List<Label> prefixes) {
-        super();
-        this.origin = s;
-        this.prefixes.addAll(prefixes);
+    if (hasKey()) {
+      p.setKey(getKey());
     }
+    p.isGhost = isGhost;
+    p.addRestrictions(getRestriction());
+    p.addPrefixes(getPrefixes());
+    return p;
+  }
 
-    public Process attemptRewind(LabelKey key) {
-        return previousLife;
-    }
+  //TODO: implement
+  @Override
+  public void execute() {
 
-    @Override
-    public Process clone() {
-        ProcessImpl p = new ProcessImpl(origin());
-        if (previousLife != null)
-            p.setPastLife(previousLife.clone());
-        if (hasKey())
-            p.setKey(getKey());
-        p.isGhost = isGhost;
-        p.addRestrictions(getRestriction());
-        p.addPrefixes(getPrefixes());
-        return p;
-    }
+  }
 
-    //TODO: implement
-    @Override
-    public void execute(){
+  @Override
+  public boolean canAct(Label label) {
+    return false;
+  }
 
-    }
+  @Override
+  public Process actOn(Label label) {
+    return new NullProcess();
+  }
 
-    @Override
-    public boolean canAct(Label label) {
-        return false;
-    }
+  public String represent() {
+    return super.represent(origin());
+  }
 
-    @Override
-    public Process actOn(Label label) {
-        return new NullProcess();
-    }
-
-    public String represent() {
-        return super.represent(origin());
-    }
-
-    @Override
-    public Collection<Process> getChildren() {
-        return Collections.emptySet();
-    }
+  @Override
+  public Collection<Process> getChildren() {
+    return Collections.emptySet();
+  }
 
 
-    @Override
-    public Collection<Label> getActionableLabels(){
-        return withdrawRestrictions(super.getActionableLabels());
-    }
+  @Override
+  public Collection<Label> getActionableLabels() {
+    return withdrawRestrictions(super.getActionableLabels());
+  }
 
-    @Override
-    public String origin(){
-        return origin;
-    }
+  @Override
+  public String origin() {
+    return origin;
+  }
 
 }

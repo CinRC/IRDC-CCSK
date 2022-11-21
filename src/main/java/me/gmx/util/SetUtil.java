@@ -1,5 +1,9 @@
 package me.gmx.util;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import me.gmx.process.nodes.ComplementLabelNode;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
@@ -7,85 +11,97 @@ import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 public class SetUtil {
 
 
-    public static String csvSet(Collection<Label> set){
-        if (set.isEmpty())
-            return "";
-        StringBuilder sb = new StringBuilder();
-        for (Label o : set){
-            sb.append(o);
-            sb.append(",");
-        }
-        sb.deleteCharAt(sb.length()-1);
-        return sb.toString();
+  public static String csvSet(Collection<Label> set) {
+    if (set.isEmpty()) {
+      return "";
     }
+    StringBuilder sb = new StringBuilder();
+    for (Label o : set) {
+      sb.append(o);
+      sb.append(",");
+    }
+    sb.deleteCharAt(sb.length() - 1);
+    return sb.toString();
+  }
 
-    /**
-     * Returns a hashset of TauLabelNodes representing matching complements of labels provided in the given collection
-     * @param nodes Collection of Labels to find tau matches from
-     * @return Set of TauLabelNode that apply to the given collection
-     */
-    public static Collection<TauLabelNode> getTauMatches(Collection<Label> nodes){
-        Set<TauLabelNode> tau = new HashSet<>();
-        for (Label node : nodes){
-            if (node instanceof ComplementLabelNode){
-                //Cool, there is a complement in the set. Let's see if any matches
-                for (Label innerNode : nodes)
-                    if (innerNode != node && !(innerNode instanceof LabelKey))
-                        if (node.isComplementOf(innerNode))
-                            if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node)) {
-                                //Cool, we found a complement, let's add it to our map.
-                                TauLabelNode n = new TauLabelNode(node, innerNode); //Don't want duplicates
-                                if (tau.contains(n) || nodes.contains(n))
-                                    n.destroy();
-                                else tau.add(n);
-                            }
+  /**
+   * Returns a hashset of TauLabelNodes representing matching complements of labels provided in the given collection
+   *
+   * @param nodes Collection of Labels to find tau matches from
+   * @return Set of TauLabelNode that apply to the given collection
+   */
+  public static Collection<TauLabelNode> getTauMatches(Collection<Label> nodes) {
+    Set<TauLabelNode> tau = new HashSet<>();
+    for (Label node : nodes) {
+      if (node instanceof ComplementLabelNode) {
+        //Cool, there is a complement in the set. Let's see if any matches
+        for (Label innerNode : nodes) {
+          if (innerNode != node && !(innerNode instanceof LabelKey)) {
+            if (node.isComplementOf(innerNode)) {
+              if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node)) {
+                //Cool, we found a complement, let's add it to our map.
+                TauLabelNode n = new TauLabelNode(node, innerNode); //Don't want duplicates
+                if (tau.contains(n) || nodes.contains(n)) {
+                  n.destroy();
+                } else {
+                  tau.add(n);
+                }
+              }
             }
+          }
         }
-        return tau;
+      }
     }
+    return tau;
+  }
 
-    //Not sure why, but this no longer is feasible.
-    @Deprecated
-    public static Collection<Label> removeUnsyncableKeys(ComplexProcess p, Collection<Label> labels) {
-        Iterator<Label> iter = labels.iterator();
-        while (iter.hasNext()) {
-            Label l = iter.next();
-            if (!(l instanceof LabelKey key))//we only care about keys
-                continue;
-            if (!(key.from instanceof TauLabelNode))
-                continue; //don't care about regular keys
-            try {
-                if (!SetUtil.recursiveIsSyncable(p, key))//both sides need to be able to do it
-                    iter.remove();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+  //Not sure why, but this no longer is feasible.
+  @Deprecated
+  public static Collection<Label> removeUnsyncableKeys(ComplexProcess p, Collection<Label> labels) {
+    Iterator<Label> iter = labels.iterator();
+    while (iter.hasNext()) {
+      Label l = iter.next();
+      if (!(l instanceof LabelKey key))//we only care about keys
+      {
+        continue;
+      }
+      if (!(key.from instanceof TauLabelNode)) {
+        continue; //don't care about regular keys
+      }
+      try {
+        if (!SetUtil.recursiveIsSyncable(p, key))//both sides need to be able to do it
+        {
+          iter.remove();
         }
-        return labels;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    return labels;
+  }
+
+  public static boolean recursiveIsSyncable(Process p, LabelKey key) {
+    if (!(p instanceof ComplexProcess cp)) {
+      return false;
     }
 
-    public static boolean recursiveIsSyncable(Process p, LabelKey key){
-        if (!(p instanceof ComplexProcess cp))
-            return false;
-
-        if (cp.left.canAct(key) && cp.right.canAct(key))
-            return true;
-        else return (recursiveIsSyncable(cp.left, key)
-                || recursiveIsSyncable(cp.right, key));
+    if (cp.left.canAct(key) && cp.right.canAct(key)) {
+      return true;
+    } else {
+      return (recursiveIsSyncable(cp.left, key)
+          || recursiveIsSyncable(cp.right, key));
     }
+  }
 
-    public static boolean containsOrTau(Collection<Label> labels, Label l){
-        if (l instanceof TauLabelNode tau)
-            return labels.contains(tau.getA()) || labels.contains(tau.getB());
-        else return labels.contains(l);
+  public static boolean containsOrTau(Collection<Label> labels, Label l) {
+    if (l instanceof TauLabelNode tau) {
+      return labels.contains(tau.getA()) || labels.contains(tau.getB());
+    } else {
+      return labels.contains(l);
     }
+  }
 
 }

@@ -1,39 +1,42 @@
 package me.gmx.process;
 
+import java.util.Collection;
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.process.Process;
 
-import java.util.Collection;
-
 public class ProcessContainer {
 
     private Process process;
-    public ProcessContainer(Process p){
+
+    public ProcessContainer(Process p) {
         process = p;
     }
-    public String prettyString(){
+
+    public String prettyString() {
         return process.represent();
     }
-    public Collection<Label> getActionableLabels(){
+
+    public Collection<Label> getActionableLabels() {
         Collection<Label> labels = process.getActionableLabels();
         labels.removeIf(Label::isRestricted);
 
         return labels;
     }
 
-    public boolean canAct(Label node){
+    public boolean canAct(Label node) {
         Collection<Label> l = getActionableLabels();
         return l.contains(node);
     }
 
     //TODO
-    public boolean canActInto(Process p){
-        for (Label l : getActionableLabels()){
+    public boolean canActInto(Process p) {
+        for (Label l : getActionableLabels()) {
             Process p2 = getProcess().clone();
-            if (p2.act(l).equals(getProcess()))
+            if (p2.act(l).equals(getProcess())) {
                 return true;
+            }
         }
         return false;
     }
@@ -48,9 +51,11 @@ public class ProcessContainer {
      */
     public void reverseLastAction() {
         try {
-            if (process.hasKey())
+            if (process.hasKey()) {
                 process = process.act(process.getKey());
-            else throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
+            } else {
+                throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
@@ -65,14 +70,17 @@ public class ProcessContainer {
         return process.hasKey();
     }
 
-    public void reverseOn(LabelKey key){
-        if (canReverse())
-            if (process.getKey().equals(key))
+    public void reverseOn(LabelKey key) {
+        if (canReverse()) {
+            if (process.getKey().equals(key)) {
                 process = process.act(key);
-            else throw new CCSTransitionException(process, key);
+            } else {
+                throw new CCSTransitionException(process, key);
+            }
+        }
     }
 
-    public Process getProcess(){
+    public Process getProcess() {
         return process;
     }
 }

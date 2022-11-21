@@ -1,26 +1,25 @@
 package me.gmx.process.process;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Set;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.process.nodes.Label;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Set;
-
 /**
  * Complex process class is a process that is represented by two processes
  * linked together by an operator
  */
-public abstract class ComplexProcess extends Process{
+public abstract class ComplexProcess extends Process {
 
     public Process left, right;
     CCSGrammar operator;
 
 
-    public ComplexProcess(Process left, Process right, CCSGrammar operator){
+    public ComplexProcess(Process left, Process right, CCSGrammar operator) {
         this.left = left;
         this.right = right;
         this.operator = operator;
@@ -32,7 +31,7 @@ public abstract class ComplexProcess extends Process{
      * Returns a non-recursive sub-process
      */
     @Override
-    public Collection<Process> getChildren(){
+    public Collection<Process> getChildren() {
         return Set.of(left, right);
     }
 
@@ -40,16 +39,17 @@ public abstract class ComplexProcess extends Process{
     /**
      * Checks if the process has been packed
      */
-    public boolean isPacked(){
+    public boolean isPacked() {
         return !(left == null || right == null);
     }
 
     /**
      * "Packs" processes to the left and right of this process to form a packed complex process.
+     *
      * @param template ordered list of processes representing a formula that the process will pack from.
      * @return leftover processes that were not packed
      */
-    public LinkedList<Process> pack(LinkedList<Process> template){
+    public LinkedList<Process> pack(LinkedList<Process> template) {
         for (int i = 0; i < template.size(); i++) {
 
             if (template.get(i) == this) {
@@ -59,9 +59,11 @@ public abstract class ComplexProcess extends Process{
                     i--;
                 }
                 if (right == null) {
-                    RCCS.log(String.format("Using %s to init right ", template.get(i + 1).origin()));
-                    if (template.size() > i + 1)
+                    RCCS.log(
+                        String.format("Using %s to init right ", template.get(i + 1).origin()));
+                    if (template.size() > i + 1) {
                         right = template.remove(i + 1);
+                    }
 
                 }
             }
@@ -76,64 +78,67 @@ public abstract class ComplexProcess extends Process{
     public String represent() {
         String s = "";
         if (ghostKey != null) {
-            if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_1))
+            if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_1)) {
                 s = represent(String.format(
-                        "%s%s%s%s%s"
-                        , CCSGrammar.OPEN_PARENTHESIS
+                    "%s%s%s%s%s"
+                    , CCSGrammar.OPEN_PARENTHESIS
+                    , left == null ? "" : left.represent()
+                    , operator.toString()
+                    , right == null ? "" : right.represent()
+                    , CCSGrammar.CLOSE_PARENTHESIS
+                ));
+            } else if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_3)) {
+                if (left.isGhost) {
+                    s = represent(String.format(
+                        "%s"
+                        , right == null ? "" : right.represent()
+                    ));
+                } else if (right.isGhost) {
+                    s = represent(String.format(
+                        "%s"
+                        , left == null ? "" : left.represent()
+                    ));
+                }
+            } else { //default style
+                if (left.isGhost) {
+                    s = represent(String.format(
+                        "%s{%s} %s %s%s%s"
+                        , ghostKey
                         , left == null ? "" : left.represent()
                         , operator.toString()
+                        , CCSGrammar.OPEN_PARENTHESIS
                         , right == null ? "" : right.represent()
                         , CCSGrammar.CLOSE_PARENTHESIS
-                ));
-            else if (RCCS.config.contains(RCCSFlag.SUMMATION_STYLE_3)) {
-                if (left.isGhost)
-                    s = represent(String.format(
-                            "%s"
-                            , right == null ? "" : right.represent()
                     ));
-                else if (right.isGhost)
+                } else/* if (right.isGhost)*/ {
                     s = represent(String.format(
-                            "%s"
-                            , left == null ? "" : left.represent()
+                        "%s%s%s %s %s{%s}"
+                        , CCSGrammar.OPEN_PARENTHESIS
+                        , left == null ? "" : left.represent()
+                        , CCSGrammar.CLOSE_PARENTHESIS
+                        , operator.toString()
+                        , ghostKey
+                        , right == null ? "" : right.represent()
                     ));
-            } else { //default style
-                if (left.isGhost)
-                    s = represent(String.format(
-                            "%s{%s} %s %s%s%s"
-                            , ghostKey
-                            , left == null ? "" : left.represent()
-                            , operator.toString()
-                            , CCSGrammar.OPEN_PARENTHESIS
-                            , right == null ? "" : right.represent()
-                            , CCSGrammar.CLOSE_PARENTHESIS
-                    ));
-                else/* if (right.isGhost)*/
-                    s = represent(String.format(
-                            "%s%s%s %s %s{%s}"
-                            , CCSGrammar.OPEN_PARENTHESIS
-                            , left == null ? "" : left.represent()
-                            , CCSGrammar.CLOSE_PARENTHESIS
-                            , operator.toString()
-                            , ghostKey
-                            , right == null ? "" : right.represent()
-                    ));
+                }
             }
         }
-             s = super.represent(String.format(
-                "%s%s%s%s%s"
-                , CCSGrammar.OPEN_PARENTHESIS
-                , left == null ? "" : left.represent()
-                , operator.toString()
-                , right == null ? "" : right.represent()
-                , CCSGrammar.CLOSE_PARENTHESIS
+        s = super.represent(String.format(
+            "%s%s%s%s%s"
+            , CCSGrammar.OPEN_PARENTHESIS
+            , left == null ? "" : left.represent()
+            , operator.toString()
+            , right == null ? "" : right.represent()
+            , CCSGrammar.CLOSE_PARENTHESIS
         ));
 
         if (RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-            return s.replaceAll(String.format("\\%s",CCSGrammar.OPEN_PARENTHESIS), "")
-                    .replaceAll(String.format("\\%s",CCSGrammar.CLOSE_PARENTHESIS), "");
+            return s.replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
+                .replaceAll(String.format("\\%s", CCSGrammar.CLOSE_PARENTHESIS), "");
 
-        }else
+        } else {
             return s;
+        }
 
     }
 
@@ -143,23 +148,31 @@ public abstract class ComplexProcess extends Process{
      * @return Internal human readable format of what the process should look like
      */
     @Override
-    public String origin(){
+    public String origin() {
         StringBuilder b = new StringBuilder();
-        if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS))
-            b.append(CCSGrammar.OPEN_PARENTHESIS.toString());
-        if (left != null) b.append(left.origin());
+        if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
+            b.append(CCSGrammar.OPEN_PARENTHESIS);
+        }
+        if (left != null) {
+            b.append(left.origin());
+        }
         b.append(operator);
-        if (right != null) b.append(right.origin());
-        if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS))
-            b.append(CCSGrammar.CLOSE_PARENTHESIS.toString());
+        if (right != null) {
+            b.append(right.origin());
+        }
+        if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
+            b.append(CCSGrammar.CLOSE_PARENTHESIS);
+        }
 
         return b.toString();
     }
 
-    public boolean hasKey(){
-        if (left == null || right == null)
+    public boolean hasKey() {
+        if (left == null || right == null) {
             return false;
-        else return left.hasKey() || right.hasKey();
+        } else {
+            return left.hasKey() || right.hasKey();
+        }
     }
 
     public abstract ComplexProcess clone();

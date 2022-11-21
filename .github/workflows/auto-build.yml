@@ -5,6 +5,8 @@ on:
     branches: [ master, ci_test ]
     tags:
       - 'release-tag'
+
+
   pull_request:
     branches: [ master ]
 
@@ -68,16 +70,11 @@ jobs:
           release_name: Release ${{ env.RELEASE_VERSION }}
           draft: false
           prerelease: false
-      - name:
-        id: get_release
-        uses: bruceadams/get-release@v1.3.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: staging/*.jar
-          asset_name: Release ${{ env.RELEASE_VERSION }}
+          asset_name: Release ${{ env.RELEASE_VERSION }}.jar
           asset_content_type: application/jar

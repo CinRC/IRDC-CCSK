@@ -147,9 +147,9 @@ public abstract class ComplexProcess extends Process{
         StringBuilder b = new StringBuilder();
         if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS))
             b.append(CCSGrammar.OPEN_PARENTHESIS.toString());
-        if (left == null) b.append(""); else b.append(left.origin());
+        if (left != null) b.append(left.origin());
         b.append(operator);
-        if (right == null) b.append(""); else b.append(right.origin());
+        if (right != null) b.append(right.origin());
         if (!RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS))
             b.append(CCSGrammar.CLOSE_PARENTHESIS.toString());
 

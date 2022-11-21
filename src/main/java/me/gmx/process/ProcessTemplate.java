@@ -1,4 +1,4 @@
-package me.gmx.thread;
+package me.gmx.process;
 
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSParserException;

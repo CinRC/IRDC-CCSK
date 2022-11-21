@@ -1,22 +1,29 @@
 package me.gmx;
 
-import me.gmx.thread.ProcessContainer;
-import me.gmx.process.nodes.*;
+import me.gmx.process.ProcessContainer;
+import me.gmx.process.nodes.Label;
+import me.gmx.process.nodes.LabelKey;
 import me.gmx.util.RCCSFlag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class CCSInteractionHandler {
 
-    public ProcessContainer container;
-    public CCSInteractionHandler(ProcessContainer container){
+    private ProcessContainer container;
+
+    public CCSInteractionHandler(ProcessContainer container) {
         this.container = container;
     }
 
 
-    public boolean startInteraction(){
+    public ProcessContainer getContainer() {
+        return container;
+    }
+
+    public boolean startInteraction() {
         Scanner scan = new Scanner(System.in);
-        while(true){
+        while (true) {
             ArrayList<Label> actionable = new ArrayList<Label>(container.getActionableLabels());
             if (actionable.isEmpty())
                 break;
@@ -25,7 +32,7 @@ public class CCSInteractionHandler {
             //Print out labels
             int i = 0;
             for (Label na : actionable)
-                System.out.printf("[%d] %s%n",i++,na);
+                System.out.printf("[%d] %s%n", i++, na);
             System.out.println("------------");
             System.out.printf("%s%n", container.prettyString());
             System.out.println("Please input the index of the label you'd like to act on:");

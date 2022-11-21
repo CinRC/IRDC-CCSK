@@ -1,13 +1,11 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
-import me.gmx.parser.CCSParserException;
-import me.gmx.parser.CCSTransitionException;
+import me.gmx.process.ProcessContainer;
+import me.gmx.process.ProcessTemplate;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
 import me.gmx.process.process.Process;
 import me.gmx.process.process.SummationProcess;
-import me.gmx.thread.ProcessContainer;
-import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 import org.junit.jupiter.api.Test;
 

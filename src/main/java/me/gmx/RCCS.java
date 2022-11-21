@@ -1,12 +1,12 @@
 package me.gmx;
 
 import javafx.application.Application;
+import me.gmx.UI.GUIThread;
 import me.gmx.UI.RCCS_FX;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.LTTNode;
-import me.gmx.thread.GUIThread;
-import me.gmx.thread.ProcessContainer;
-import me.gmx.thread.ProcessTemplate;
+import me.gmx.process.ProcessContainer;
+import me.gmx.process.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 
 import java.io.IOException;

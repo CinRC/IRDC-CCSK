@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSGrammar;
 import me.gmx.parser.CCSTransitionException;
+import me.gmx.parser.LTTNode;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.nodes.ProgramNode;
@@ -254,7 +255,7 @@ public abstract class Process extends ProgramNode {
                 , base));
         //If sent a null string, remove last dot
         if (base.equals(""))
-            s.deleteCharAt(s.length()-1);
+            s.deleteCharAt(s.length() - 1);
         s.append(getRestriction().isEmpty() ? "" : String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
         if (RCCS.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
             return s.toString().replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
@@ -262,13 +263,31 @@ public abstract class Process extends ProgramNode {
         } else return s.toString();
     }
 
+
+    /**
+     * Defines a relationship (R) between this process (p) and given process (q) in which the following
+     * conditions hold true:
+     * 1. For all ( q -a-> q' ). There exists an (a') such that ( p -a'-> p')
+     * 2. the resulting (q') and (p') remain in this relation
+     *
+     * @param q process q to be compared
+     * @return True if this simulates q, false otherwise.
+     */
+    public boolean simulates(Process q) {
+        //TODO: implement
+        LTTNode tp = new LTTNode(this);
+        LTTNode tq = new LTTNode(q);
+        return false;
+    }
+
     public abstract Collection<Process> getChildren();
 
     /**
      * Base superclass method for getting labels. Only adds any keys
+     *
      * @return If hasKey, then key, otherwise empty set
      */
-    public Collection<Label> getActionableLabels(){
+    public Collection<Label> getActionableLabels() {
         Set<Label> l = new HashSet<>();
         if (!prefixes.isEmpty())
             l.add(prefixes.getFirst());

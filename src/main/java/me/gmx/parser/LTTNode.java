@@ -1,9 +1,9 @@
 package me.gmx.parser;
 
+import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.process.Process;
-import me.gmx.thread.ProcessContainer;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,8 +33,6 @@ public class LTTNode {
         node.setCurrentDepth(currentDepth + 1);
         node.echoDepth(0);
         children.put(l, node);
-
-
     }
 
     public int getCurrentDepth() {
@@ -45,6 +43,15 @@ public class LTTNode {
         this.currentDepth = currentDepth;
     }
 
+    /**
+     * Function is called on each leaf node. Leaf node will start with depth 0, and
+     * recursively call parent nodes with depth+1, until reaching the top. At each step
+     * up, the parent node will recalculate its max depth based on given depth.
+     * Sort of like a callback function to calculate depth with a complexity of O(n), as opposed
+     * to O(n^2)   ((I think))
+     *
+     * @param depth
+     */
     protected void echoDepth(int depth) {
         if (depth > maxDepth)
             maxDepth = depth;
@@ -56,6 +63,11 @@ public class LTTNode {
         return maxDepth;
     }
 
+    /**
+     * Enumerate all actionable labels on the parent process, and
+     * extend the tree by adding new nodes as children to this node from each label,
+     * and recursively call this function on all child nodes
+     */
     public void enumerate() {
         ProcessContainer pc = new ProcessContainer(p.clone());
         //For every actionable label in current node,

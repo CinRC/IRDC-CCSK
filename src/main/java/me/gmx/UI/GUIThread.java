@@ -1,7 +1,6 @@
-package me.gmx.thread;
+package me.gmx.UI;
 
 import javafx.application.Application;
-import me.gmx.UI.RCCS_FX;
 
 public class GUIThread extends Thread{
 

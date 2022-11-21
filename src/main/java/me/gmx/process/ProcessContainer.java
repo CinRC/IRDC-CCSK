@@ -1,4 +1,4 @@
-package me.gmx.thread;
+package me.gmx.process;
 
 import me.gmx.parser.CCSTransitionException;
 import me.gmx.process.nodes.Label;

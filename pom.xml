@@ -6,7 +6,7 @@
 
     <groupId>me.gmx</groupId>
     <artifactId>RCCS</artifactId>
-    <version>2.102</version>
+    <version>2.103</version>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -121,23 +121,23 @@
                 </configuration>
             </plugin>
             <plugin>
-            <!--- Since we don't provide our own configuration file, apparently (cf. https://maven.apache.org/plugins-archives/maven-checkstyle-plugin-LATEST/examples/custom-checker-config.html) checkstyle uses the Sun Microsystems Definition by default. -->
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-checkstyle-plugin</artifactId>
-               <version>3.2.0</version>
-               <configuration>
-                  <failOnViolation>false</failOnViolation>
-                  <encoding>UTF-8</encoding>
-               </configuration>
-               <executions>
-                  <execution>
-                     <id>validate</id>
-                     <phase>validate</phase>
-                     <goals>
-                        <goal>check</goal>
-                     </goals>
-                  </execution>
-               </executions>
+                <!--- Since we don't provide our own configuration file, apparently (cf. https://maven.apache.org/plugins-archives/maven-checkstyle-plugin-LATEST/examples/custom-checker-config.html) checkstyle uses the Sun Microsystems Definition by default. -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                    <failOnViolation>false</failOnViolation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 

@@ -1,9 +1,9 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
+import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
 import me.gmx.process.nodes.LabelKey;
-import me.gmx.thread.ProcessContainer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;

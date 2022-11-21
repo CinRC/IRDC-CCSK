@@ -1,11 +1,10 @@
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
+import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
-import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.Process;
-import me.gmx.thread.ProcessContainer;
 import org.junit.jupiter.api.Test;
 
 public class RestrictionTest {

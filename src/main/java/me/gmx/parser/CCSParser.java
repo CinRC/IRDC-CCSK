@@ -1,12 +1,12 @@
 package me.gmx.parser;
 
 import me.gmx.RCCS;
+import me.gmx.process.ProcessTemplate;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
 import me.gmx.process.process.Process;
 import me.gmx.process.process.ProcessImpl;
 import me.gmx.process.process.*;
-import me.gmx.thread.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 

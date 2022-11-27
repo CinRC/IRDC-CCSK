@@ -2,14 +2,8 @@ name: Maven CI/CD
 
 on:
   push:
-    branches: [ master, ci_test ]
-    tags:
-      - 'release-tag'
-      - 'v*'
-
-  pull_request:
-    branches: [ master ]
-
+    branches:
+      - 'releases'
 jobs:
 
   build_and_test:

@@ -282,10 +282,9 @@ public abstract class Process extends ProgramNode {
 
 
   /**
-   * Defines a relationship (R) between this process (p) and given process (q) in which the following
-   * conditions hold true:
-   * 1. For all ( q -a-> q' ). There exists an (a') such that ( p -a'-> p')
-   * 2. the resulting (q') and (p') remain in this relation
+   * Returns true iff this process (p) can simulate the given process (q) in the following sense:
+   * There exists a relation R such that both p and q are in this relation, and
+   * For all a, such that there exists a p' such that p -a-> p', there exists a q' such that q -a-> q' and both p' and q' remain in R
    *
    * @param q process q to be compared
    * @return True if this simulates q, false otherwise.

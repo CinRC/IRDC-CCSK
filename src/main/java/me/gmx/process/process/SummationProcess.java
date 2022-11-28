@@ -63,7 +63,11 @@ public class SummationProcess extends ComplexProcess {
 
     public LabelKey getKey() {
         LabelKey k = null;
+        if (!isPacked()) {
+            return null;
+        }
         Collection<Label> l = getLeftRightLabels();
+
         l.removeIf(x -> !(x instanceof LabelKey));//remove all non-labelkeys
         if (l.size() == 0) {
             if (key != null) {

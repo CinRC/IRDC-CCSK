@@ -2,6 +2,7 @@ package me.gmx.parser;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import me.gmx.process.ProcessContainer;
@@ -13,13 +14,14 @@ public class LTTNode {
 
     public HashMap<Label, LTTNode> children;
     public Process p;
-    public LTTNode parent;
+    public Collection<LTTNode> parents;
     private int currentDepth, maxDepth;
 
     public LTTNode(Process p) {
         this.p = p;
         children = new HashMap<>();
-        this.currentDepth = 0;
+        currentDepth = 0;
+        parents = new HashSet<>();
     }
 
     public HashMap<Label, LTTNode> getOutgoingEdges() {
@@ -27,7 +29,7 @@ public class LTTNode {
     }
 
     public void setParent(LTTNode n) {
-        this.parent = n;
+        this.parents.add(n);
         this.currentDepth = n.getCurrentDepth() + 1;
     }
 
@@ -60,8 +62,12 @@ public class LTTNode {
         if (depth > maxDepth) {
             maxDepth = depth;
         }
-        if (parent != null) {
-            parent.echoDepth(++depth);
+        if (!parents.isEmpty()) {
+            for (LTTNode n : parents) {
+                n.echoDepth(++depth);
+            }
+            //This would be a much more elegant solution, but scope doesnt allow
+            //parents.forEach(p -> p.echoDepth(++depth));
         }
     }
 
@@ -80,13 +86,22 @@ public class LTTNode {
         ProcessContainer pc = new ProcessContainer(p.clone());
         //For every actionable label in current node,
         for (Label l : pc.getActionableLabels()) {
-            if (l instanceof LabelKey) {
-                continue;
+            if (!(l instanceof LabelKey)) {
+                pc.act(l); //Act on that label and make a new node with that child process (clone)
+                Process z = pc.getProcess().clone();
+                addChild(l, z);
+                pc.reverseLastAction();//Then reverse and next label.
+            } else {
+                Label nrl = ((LabelKey) l).from;
+                pc.act(l);
+                for (LTTNode n : parents)
+                //TODO: Check pc.p already exists in parents, else add it.
+                {
+                    continue;
+                }
+                pc.act(nrl);
+
             }
-            pc.act(l); //Act on that label and make a new node with that child process (clone)
-            Process z = pc.getProcess().clone();
-            addChild(l, z);
-            pc.reverseLastAction();//Then reverse and next label.
         }
         if (recurse) {
             for (LTTNode child : children.values()) {
@@ -107,7 +122,7 @@ public class LTTNode {
         for (Label l : node.children.keySet()) { //for every edge of compared
             int match = 0;
             for (Label l2 : keySet) { //iterate through our edges
-                if (l2.simulates(l)) //can our edge do what compared edge can?
+                if (l2.isEquivalent(l)) //can our edge do what compared edge can?
                 {
                     continue;
                 }

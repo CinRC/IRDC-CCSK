@@ -1,5 +1,6 @@
 package me.gmx.util;
 
+import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -81,6 +82,27 @@ public class SetUtil {
       }
     }
     return labels;
+  }
+
+  /**
+   * Checks if the two given sets of labels contain the same labels, without accounting for dupe. In essence,
+   * this is like the base HashSet#equals function, but instead of calling Label#equals, it calls Label#simulates
+   *
+   * @param labels
+   * @param labels2
+   * @return
+   */
+  public static boolean labelsEqual(AbstractSet<Label> labels, AbstractSet<Label> labels2) {
+    Collection<Label> copy = new HashSet<>();
+    for (Label l : labels) {
+      Label l2 = l.clone();
+      l2.dupe = -1;
+      copy.add(l2);
+    }
+    if (!copy.equals(labels2)) {
+      return false;
+    }
+    return true;
   }
 
   public static boolean recursiveIsSyncable(Process p, LabelKey key) {

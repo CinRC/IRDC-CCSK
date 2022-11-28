@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -348,6 +349,61 @@ public abstract class Process extends ProgramNode {
   }
 
   public abstract String origin();
+
+  public boolean equals(Object o) {
+    if (!getClass().equals(o.getClass())) {
+      return false;
+    }
+    if (o instanceof Process p) {
+      //Check if prefixes are the same
+      if (!SetUtil.labelsEqual(new HashSet<Label>(p.getPrefixes())
+          , new HashSet<Label>(getPrefixes()))) {
+        return false;
+      }
+      //Check restrictions are same
+      if (!SetUtil.labelsEqual((AbstractSet<Label>) getRestriction()
+          , (AbstractSet<Label>) p.getRestriction())) {
+        return false;
+      }
+
+      //Check keys
+      if ((!hasKey() && p.hasKey())
+          || (hasKey() && !p.hasKey())) {
+        return false; //Keys are not symmetrical
+      }
+      if ((!hasPrefixKey() && p.hasPrefixKey())
+          || (hasPrefixKey() && !p.hasPrefixKey())) {
+        return false; //Keys are not symmetrical
+      }
+
+      if (hasKey() && p.hasKey()) {
+        if (!getKey().isEquivalent(p.getKey())) {
+          return false;
+        }
+      }
+
+      if (hasPrefixKey() && p.hasPrefixKey()) {
+        if (!getPrefixKey().isEquivalent(p.getPrefixKey())) {
+          return false;
+        }
+      }
+
+      if (this instanceof ComplexProcess c && o instanceof ComplexProcess c2) {
+        if (c.isPacked() && c2.isPacked()) {
+          if (!c.left.equals(c2.left)) {
+            return false;
+          }
+          if (!c.right.equals(c2.right)) {
+            return false;
+          }
+          if (c.operator != c2.operator) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
 
 
 }

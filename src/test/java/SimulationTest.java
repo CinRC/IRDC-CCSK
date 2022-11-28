@@ -26,8 +26,9 @@ public class SimulationTest {
       System.out.printf("%s, ", l);
     }
     System.out.println("\n\n\n");
+
     assert (node_p.canSimulate(node_q));
-    //assert (!node_q.canSimulate(node_p));
+    assert (!node_q.canSimulate(node_p));
 
 
   }

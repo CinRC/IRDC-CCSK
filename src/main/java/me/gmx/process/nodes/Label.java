@@ -105,7 +105,10 @@ public abstract class Label extends ProgramNode {
      * @param l Label to compare
      * @return True if l's class, channel, and restrictions compare equally.
      */
-    public boolean simulates(Label l) {
+    public boolean isEquivalent(Label l) {
+        if (l == null) {
+            return false;
+        }
         if (l.getClass() != this.getClass()) //probably a better way to do this
         {
             return false;

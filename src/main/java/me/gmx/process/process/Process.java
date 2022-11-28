@@ -354,6 +354,10 @@ public abstract class Process extends ProgramNode {
     if (!getClass().equals(o.getClass())) {
       return false;
     }
+    if (this == o) {
+      return true;
+    }
+
     if (o instanceof Process p) {
       //Check if prefixes are the same
       if (!SetUtil.labelsEqual(new HashSet<Label>(p.getPrefixes())

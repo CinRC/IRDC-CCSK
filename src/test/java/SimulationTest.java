@@ -10,6 +10,7 @@ public class SimulationTest {
   @Test
   public void testSimulation() {
     Process p, q;
+    //q simulates p, but p cannot simulate q
     p = CCSParser.parseLine("a.b + a.c").export();
     q = CCSParser.parseLine("a.(b + c)").export();
     LTTNode node_p = new LTTNode(p);
@@ -27,8 +28,8 @@ public class SimulationTest {
     }
     System.out.println("\n\n\n");
 
-    assert (node_p.canSimulate(node_q));
-    assert (!node_q.canSimulate(node_p));
+    assert (node_q.canSimulate(node_p));
+    assert (!node_p.canSimulate(node_q));
 
 
   }

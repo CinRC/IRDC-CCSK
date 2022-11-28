@@ -119,17 +119,20 @@ public class LTTNode {
      */
     public boolean canSimulate(LTTNode node) {
         Collection<Label> keySet = children.keySet();
+
         for (Label l : node.children.keySet()) { //for every edge of compared
             int match = 0;
             for (Label l2 : keySet) { //iterate through our edges
                 if (l2.isEquivalent(l)) //can our edge do what compared edge can?
                 {
+                    if (!children.get(l2).canSimulate(node.children.get(l))) {
+                        return false;
+                    }
+                    match = 1;
                     continue;
                 }
-                match++;
-                break;
             }
-            if (match != 0) {
+            if (match == 0) {
                 return false;
             }
         }

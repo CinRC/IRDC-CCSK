@@ -12,7 +12,7 @@ public class TauLabelNode extends Label {
     int saveDupe;
 
     public TauLabelNode(Label node, Label comp) {
-        super(-2, node.getChannel() + ":" + comp.getChannel());
+        super(-2, node.getChannel());
         this.a = node;
         this.b = comp;
         consumeLeft = consumeRight = false;

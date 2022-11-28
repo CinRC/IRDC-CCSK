@@ -70,6 +70,7 @@ public abstract class Label extends ProgramNode {
         return s;
     }
 
+
     public boolean isComplement() {
         return isComplement;
     }
@@ -97,6 +98,22 @@ public abstract class Label extends ProgramNode {
         }
     }
 
+    /**
+     * Simply checks if given label's class, channel, and restrictions match this. Used for checking if two labels
+     * are the "same", even if they have different IDs.
+     *
+     * @param l Label to compare
+     * @return True if l's class, channel, and restrictions compare equally.
+     */
+    public boolean simulates(Label l) {
+        if (l.getClass() != this.getClass()) //probably a better way to do this
+        {
+            return false;
+        }
+        return (l.getChannel().equals(getChannel())
+            && l.isRestricted == isRestricted());
+    }
+
     public String getChannel() {
         return channel;
     }
@@ -114,13 +131,6 @@ public abstract class Label extends ProgramNode {
      * @return true if the given node is 'synchronizable'
      */
     public boolean isComplementOf(Label node) {
-        /*if (this instanceof LabelNode) {
-            if (node instanceof LabelNode)
-                return false;
-        }else if (this instanceof ComplementLabelNode) {
-            if (node instanceof ComplementLabelNode)
-                return false;
-        }*/
         return node.getChannel().equals(getChannel())
             && node.isComplement() != isComplement();
     }

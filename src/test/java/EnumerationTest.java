@@ -79,7 +79,7 @@ public class EnumerationTest {
         Process p = CCSParser.parseLine("(a|b)|('a+'b)").export();
         System.out.printf("Testing enumeration of %s...\n", p.represent());
         LTTNode node = new LTTNode(p);
-        node.enumerate();
+        node.enumerate(true);
         System.out.println(node);
         System.out.printf("Max depth: %d\n\n\n", node.getMaxDepth());
         assert (node.getMaxDepth() == 3);
@@ -87,7 +87,7 @@ public class EnumerationTest {
         p = CCSParser.parseLine("a.(c|d)").export();
         System.out.printf("Testing enumeration of %s...\n", p.represent());
         node = new LTTNode(p);
-        node.enumerate();
+        node.enumerate(true);
         System.out.println(node);
         System.out.printf("Max depth: %d\n\n\n", node.getMaxDepth());
         assert (node.getMaxDepth() == 3);

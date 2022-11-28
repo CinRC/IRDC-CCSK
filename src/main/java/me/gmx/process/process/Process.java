@@ -290,10 +290,12 @@ public abstract class Process extends ProgramNode {
    * @return True if this simulates q, false otherwise.
    */
   public boolean simulates(Process q) {
-    //TODO: implement
     LTTNode tp = new LTTNode(this);
+    tp.enumerate(true);
     LTTNode tq = new LTTNode(q);
-    return false;
+    tp.enumerate(true);
+    return tp.canSimulate(tq);
+    //TODO: recurse
   }
 
   public abstract Collection<Process> getChildren();

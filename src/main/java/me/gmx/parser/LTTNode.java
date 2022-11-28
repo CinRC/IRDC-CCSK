@@ -1,5 +1,6 @@
 package me.gmx.parser;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,6 +20,10 @@ public class LTTNode {
         this.p = p;
         children = new HashMap<>();
         this.currentDepth = 0;
+    }
+
+    public HashMap<Label, LTTNode> getOutgoingEdges() {
+        return (HashMap<Label, LTTNode>) children.clone();
     }
 
     public void setParent(LTTNode n) {
@@ -67,9 +72,11 @@ public class LTTNode {
     /**
      * Enumerate all actionable labels on the parent process, and
      * extend the tree by adding new nodes as children to this node from each label,
-     * and recursively call this function on all child nodes
+     * and recursively call this function on all child nodes if recurse is true.
+     *
+     * @param recurse
      */
-    public void enumerate() {
+    public void enumerate(boolean recurse) {
         ProcessContainer pc = new ProcessContainer(p.clone());
         //For every actionable label in current node,
         for (Label l : pc.getActionableLabels()) {
@@ -81,9 +88,37 @@ public class LTTNode {
             addChild(l, z);
             pc.reverseLastAction();//Then reverse and next label.
         }
-        for (LTTNode child : children.values()) {
-            child.enumerate();
+        if (recurse) {
+            for (LTTNode child : children.values()) {
+                child.enumerate(true);
+            }
         }
+    }
+
+    /**
+     * Ensures that the given node's edges are a subset of this node's edges.
+     * This operation does not guarantee the reverse.
+     *
+     * @param node
+     * @return True if this node this can simulate all edges of given node
+     */
+    public boolean canSimulate(LTTNode node) {
+        Collection<Label> keySet = children.keySet();
+        for (Label l : node.children.keySet()) { //for every edge of compared
+            int match = 0;
+            for (Label l2 : keySet) { //iterate through our edges
+                if (l2.simulates(l)) //can our edge do what compared edge can?
+                {
+                    continue;
+                }
+                match++;
+                break;
+            }
+            if (match != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isLeafNode() {

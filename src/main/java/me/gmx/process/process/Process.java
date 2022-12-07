@@ -60,9 +60,8 @@ public abstract class Process extends ProgramNode {
     for (Label l : labels) {
       for (Label r : getRestriction()) {
         //if (r.isComplement() == l.isComplement())
-        if (r.getChannel().equals(l.getChannel()))
-        //iter.remove();
-        {
+        if (r.getChannel().equals(l.getChannel())
+            && !(l instanceof TauLabelNode || r instanceof TauLabelNode)) {
           l.setRestricted(true);
         }
       }

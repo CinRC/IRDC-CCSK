@@ -8,7 +8,6 @@ import java.util.Map;
 import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.Process;
 
 public class LTTNode {
@@ -88,12 +87,16 @@ public class LTTNode {
         //For every actionable label in current node,
         for (Label l : pc.getActionableLabels()) {
             if (!(l instanceof LabelKey)) {
+                System.out.println("Before acting: " + pc.prettyString());
                 pc.act(l); //Act on that label and make a new node with that child process (clone)
+                System.out.println("After acting: " + pc.prettyString());
                 Process z = pc.getProcess().clone();
                 addChild(l, z);
                 pc.reverseLastAction();//Then reverse and next label.
+                System.out.println("After reversal: " + pc.prettyString());
+
             } else {
-                Label originalLabel = ((LabelKey) l).from;
+                /*Label originalLabel = ((LabelKey) l).from;
                 pc.act(l);
                 for (LTTNode n : parents)
                 //TODO: Check pc.p already exists in parents, else add it.
@@ -104,7 +107,7 @@ public class LTTNode {
                     ((TauLabelNode) originalLabel).consumeLeft = false;
                     ((TauLabelNode) originalLabel).consumeRight = false;
                 }
-                pc.act(originalLabel);
+                pc.act(originalLabel);*/
             }
         }
         if (recurse) {
@@ -156,7 +159,7 @@ public class LTTNode {
     //https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
     private String print(StringBuilder buffer, String prefix, String childrenPrefix) {
         buffer.append(prefix);
-        buffer.append(p.represent());
+        buffer.append(p.represent() + " --- " + this.currentDepth);
         buffer.append('\n');
         for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator();
              it.hasNext(); ) {

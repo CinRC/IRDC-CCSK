@@ -3,7 +3,7 @@
  *
  * @author Peter Browning
  * @version 1.2
- * @since 1.0
+ * @since 1.0x
  */
 
 package me.gmx;

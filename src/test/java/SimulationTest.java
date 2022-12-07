@@ -1,7 +1,6 @@
-import java.util.Collections;
+import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.LTTNode;
-import me.gmx.process.nodes.Label;
 import me.gmx.process.process.Process;
 import org.junit.jupiter.api.Test;
 
@@ -168,20 +167,24 @@ public class SimulationTest {
     // For instance, for the first rule, P | Q ≡ Q | P, we could have:
     @Test
     public void simulationIsStructural() {
+      RCCS.config.clear();
     Process p, q;
     p = CCSParser.parseLine("(a + b) | c").export();
-    q = CCSParser.parseLine("c | (a + b)").export();
-    // Of course, those processes are too simple, but I don't know if / how I can
-    // - declare two processes, p and q,
-    // - make p1 be p | q and p2 be q | p
-    // simply.
-    LTTNode node_p = new LTTNode(p);
-    node_p.enumerate(true);
-    LTTNode node_q = new LTTNode(q);
-    node_q.enumerate(true);
-    assert (node_q.canSimulate(node_p));
-    assert (node_p.canSimulate(node_q));
-  }
+      q = CCSParser.parseLine("c | (a + b)").export();
+      // Of course, those processes are too simple, but I don't know if / how I can
+      // - declare two processes, p and q,
+      // - make p1 be p | q and p2 be q | p
+      // simply.
+      LTTNode node_p = new LTTNode(p);
+      node_p.enumerate(true);
+      System.out.println(node_p);
+      LTTNode node_q = new LTTNode(q);
+      node_q.enumerate(true);
+      System.out.println(node_q);
+
+      assert (node_q.canSimulate(node_p));
+      assert (node_p.canSimulate(node_q));
+    }
   
 
 }

@@ -51,4 +51,15 @@ public class TauLabelNode extends Label {
         NodeIDGenerator.decrementKey();
     }
 
+    /**
+     * From the outside, theoretically tau nodes are equivalent
+     *
+     * @param l Label to compare
+     * @return
+     */
+    @Override
+    public boolean isEquivalent(Label l) {
+        return (l instanceof TauLabelNode);
+    }
+
 }

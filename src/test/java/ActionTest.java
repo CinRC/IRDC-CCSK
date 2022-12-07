@@ -60,7 +60,7 @@ public class ActionTest {
         assert !p.canAct(b) && !p.canAct(d);
         p.act(a); // a.b+c.d -a-> [k0]b
         assert p.canAct(b) && !p.canAct(c) && !p.canAct(a);
-        p.reverseOn(la); //[k0]b -[k0]-> a.b+c.d
+        p.act(la); //[k0]b -[k0]-> a.b+c.d
         assert p.canAct(a) && p.canAct(c);
         assert !p.canAct(b) && !p.canAct(d);
 
@@ -69,8 +69,8 @@ public class ActionTest {
         Collection<Label> act = p.getActionableLabels();
         act.remove(p.getKey());
         assert act.isEmpty();
-        p.reverseOn(lb);
-        p.reverseOn(la);
+        p.act(lb);
+        p.act(la);
 
         assert p.canAct(a) && p.canAct(c);
         assert !p.canAct(b) && !p.canAct(d);

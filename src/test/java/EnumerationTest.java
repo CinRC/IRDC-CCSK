@@ -34,13 +34,13 @@ public class EnumerationTest {
         System.out.println(p1.prettyString());
         p1.act(a);
         System.out.println(p1.prettyString());
-        p1.reverseOn(la);
+        p1.act(la);
         System.out.println(p1.prettyString());
         p1.act(a);
         p1.act(b);
         System.out.println(p1.prettyString());
-        p1.reverseOn(lb);
-        p1.reverseOn(la);
+        p1.act(lb);
+        p1.act(la);
         System.out.println(p1.prettyString());
 
     }

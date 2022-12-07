@@ -8,6 +8,7 @@ import java.util.Map;
 import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.Process;
 
 public class LTTNode {
@@ -92,15 +93,18 @@ public class LTTNode {
                 addChild(l, z);
                 pc.reverseLastAction();//Then reverse and next label.
             } else {
-                Label nrl = ((LabelKey) l).from;
+                Label originalLabel = ((LabelKey) l).from;
                 pc.act(l);
                 for (LTTNode n : parents)
                 //TODO: Check pc.p already exists in parents, else add it.
                 {
                     continue;
                 }
-                pc.act(nrl);
-
+                if (originalLabel instanceof TauLabelNode) {
+                    ((TauLabelNode) originalLabel).consumeLeft = false;
+                    ((TauLabelNode) originalLabel).consumeRight = false;
+                }
+                pc.act(originalLabel);
             }
         }
         if (recurse) {

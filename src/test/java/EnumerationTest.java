@@ -76,6 +76,7 @@ public class EnumerationTest {
 
     @Test
     public void testTree(){
+        RCCS.config.clear();
         Process p = CCSParser.parseLine("(a|b)|('a+'b)").export();
         System.out.printf("Testing enumeration of %s...\n", p.represent());
         LTTNode node = new LTTNode(p);

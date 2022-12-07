@@ -118,6 +118,9 @@ public class SummationProcess extends ComplexProcess {
 
         if (left.isGhost) {
             right = right.act(key);
+            if (!right.hasKey()) {
+                right.isGhost = false;
+            }
         } else if (right.isGhost) {
             left = left.act(key);
         } else {

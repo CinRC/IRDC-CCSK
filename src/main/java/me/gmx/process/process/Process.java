@@ -124,7 +124,6 @@ public abstract class Process extends ProgramNode {
    * @return will return this, after having acted on the given label
    */
   public Process act(Label label) {
-
     //Key handling
     if (label instanceof LabelKey labelkey) {
       if (ghostKey == null && hasKey()) //Just a regular process? Is it reversible?
@@ -144,6 +143,8 @@ public abstract class Process extends ProgramNode {
     }
 
     Label l = null;
+
+
     if (prefixes.isEmpty())
     //TODO: Throw error?
     {
@@ -157,16 +158,20 @@ public abstract class Process extends ProgramNode {
       actInternal(label);
       return this;
     }
+
+
     //Check if tau can eliminate prefixes. if not, continue to pass down
     if (label instanceof TauLabelNode tau) {
-      if (l.equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
+      if (l.equals(tau.getA()) &&
+          (!tau.consumeLeft || tau.getA().isDebugLabel)) { //prefix == a and left is free
         tau.consumeLeft = true;
         return actInternal(tau);
-      } else if (l.equals(tau.getB()) && !tau.consumeRight) {
+      } else if (l.equals(tau.getB()) && (!tau.consumeRight || tau.getB().isDebugLabel)) {
         tau.consumeRight = true;
         return actInternal(tau);
       }
     }
+
 
     return this.actOn(label);
   }
@@ -224,7 +229,6 @@ public abstract class Process extends ProgramNode {
 
   /**
    * Set CCSK key to provided LabelKey
-   *
    * @param key key to set
    */
   protected void setKey(LabelKey key) {
@@ -333,8 +337,10 @@ public abstract class Process extends ProgramNode {
     if (hasPrefixKey()) {
       l.add(new Pair<Label, LabelKey>(getPrefixKey().from, getPrefixKey()));
       //It's necessary to check that previous life key doesnt match current key, because summation processes can have both a ghostkey and a normal key
-      if (previousLife.hasPrefixKey() && !previousLife.getPrefixKey().equals(getPrefixKey())) {
-        l.addAll(previousLife.getLabelKeyPairs());
+      if (previousLife != null) {
+        if (previousLife.hasPrefixKey() && !previousLife.getPrefixKey().equals(getPrefixKey())) {
+          l.addAll(previousLife.getLabelKeyPairs());
+        }
       }
     }
     return l;
@@ -393,7 +399,7 @@ public abstract class Process extends ProgramNode {
       }
 
       if (this instanceof ComplexProcess c && o instanceof ComplexProcess c2) {
-        if (c.isPacked() && c2.isPacked()) {
+        if (c.isPacked() && c2.isPacked()) {//If they are both instantiated
           if (!c.left.equals(c2.left)) {
             return false;
           }
@@ -403,6 +409,9 @@ public abstract class Process extends ProgramNode {
           if (c.operator != c2.operator) {
             return false;
           }
+        } else if (c.isPacked() || c2.isPacked()) //If only one is instantiated
+        {
+          return false;
         }
       }
     }

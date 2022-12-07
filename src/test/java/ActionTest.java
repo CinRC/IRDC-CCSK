@@ -1,20 +1,38 @@
+import java.util.Collection;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
 import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.TauLabelNode;
+import me.gmx.process.process.Process;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collection;
 
 public class ActionTest {
 
+
     @Test
-    public static void testBasicActions() {
+    public void temporaryTest() {
+        Process p = CCSParser.parseLine("(a+b)|('a|'b)").export();
+        ProcessContainer pc = new ProcessContainer(p);
+        TauLabelNode n = new TauLabelNode(LabelFactory.createDebugLabel("a"),
+            LabelFactory.createDebugLabel("'a"));
+        LabelKey nkey = new LabelKey(n);
+        Label l = LabelFactory.createDebugLabel("b");
+        pc.act(l);
+        pc.act(n);
+        pc.act(nkey);
+        pc.act(n);
+        pc.act(nkey);
+        pc.act(n);
+    }
+
+    @Test
+    public void testBasicActions() {
         RCCS.config.clear();
 
-        Label a,b,c;
+        Label a, b, c;
         a = LabelFactory.createDebugLabel("a");
         b = LabelFactory.createDebugLabel("b");
         c = LabelFactory.createDebugLabel("c");

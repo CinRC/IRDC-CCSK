@@ -17,6 +17,8 @@ public abstract class Label extends ProgramNode {
     protected boolean isRestricted = false;
     UUID id;
 
+    public boolean isDebugLabel;
+
     //Instanced initializer block ??
     {
         synchronizeLock = new HashSet<>();
@@ -25,6 +27,7 @@ public abstract class Label extends ProgramNode {
     public Label(int dupeId, String channel) {
         dupe = dupeId;
         this.channel = channel;
+        isDebugLabel = dupeId == -1 ? true : false;
     }
 
     public UUID getId() {

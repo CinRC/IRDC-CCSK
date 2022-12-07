@@ -120,7 +120,8 @@ public class SetUtil {
 
   public static boolean containsOrTau(Collection<Label> labels, Label l) {
     if (l instanceof TauLabelNode tau) {
-      return labels.contains(tau.getA()) || labels.contains(tau.getB());
+      return ((labels.contains(tau.getA()) && !tau.getA().isRestricted()) ||
+          (labels.contains(tau.getB()) && !tau.getB().isRestricted()));
     } else {
       return labels.contains(l);
     }

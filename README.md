@@ -82,5 +82,10 @@ java -jar target/[Jar file].jar <FLAGS> "[Process]"
 
 ### Testing
 
-To run unit tests, execute `mvn test` in the project root dir. It will run through a set of pre-written unit tests that are designed to represent difficult a diverse range of different scenarios.
+To run unit tests, execute `mvn test` in the project root dir.
+It will run through a set of pre-written unit tests (gathered in the [`src/test/java`](src/test/java) folder) that are designed to represent difficult a diverse range of different scenarios.
+To run e.g., all the test methods whose name starts with `simulationIsStructural` in the `SimulationTest` class, use
 
+```
+mvn -Dtest="SimulationTest#simulationIsStructural*" test
+```

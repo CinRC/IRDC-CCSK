@@ -89,3 +89,14 @@ To run e.g., all the test methods whose name starts with `simulationIsStructural
 ```
 mvn -Dtest="SimulationTest#simulationIsStructural*" test
 ```
+
+## Alternatives
+
+This project, in particular, is a working implementation of the _forward-only_ Calculus of Communicating Systems (CSS).
+Some of the other implementations of [process algebras](https://en.wikipedia.org/wiki/Process_calculus) that are publicly available are:
+
+- This [student project](https://github.com/ComputerScience-Projects/Calculus-of-Communicating-Systems),
+- The [Concurrency Workbench, Aalborg Edition](http://caal.cs.aau.dk/),
+- This [implementation of HOcore](https://people.rennes.inria.fr/Alan.Schmitt/research/hocore/), an intermediate languages between CSS and the π-calculus.
+
+The implementation of CSSk described [in this master thesis](https://leicester.figshare.com/articles/thesis/SimCCSK_simulation_of_the_reversible_process_calculi_CCSK/10091681) is to our knowledge not publicly available.

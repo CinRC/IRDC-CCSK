@@ -1,5 +1,6 @@
 package me.gmx.process.process;
 
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -59,9 +60,8 @@ public abstract class Process extends ProgramNode {
     for (Label l : labels) {
       for (Label r : getRestriction()) {
         //if (r.isComplement() == l.isComplement())
-        if (r.getChannel().equals(l.getChannel()))
-        //iter.remove();
-        {
+        if (r.getChannel().equals(l.getChannel())
+            && !(l instanceof TauLabelNode || r instanceof TauLabelNode)) {
           l.setRestricted(true);
         }
       }
@@ -123,7 +123,6 @@ public abstract class Process extends ProgramNode {
    * @return will return this, after having acted on the given label
    */
   public Process act(Label label) {
-
     //Key handling
     if (label instanceof LabelKey labelkey) {
       if (ghostKey == null && hasKey()) //Just a regular process? Is it reversible?
@@ -143,6 +142,8 @@ public abstract class Process extends ProgramNode {
     }
 
     Label l = null;
+
+
     if (prefixes.isEmpty())
     //TODO: Throw error?
     {
@@ -156,16 +157,20 @@ public abstract class Process extends ProgramNode {
       actInternal(label);
       return this;
     }
+
+
     //Check if tau can eliminate prefixes. if not, continue to pass down
     if (label instanceof TauLabelNode tau) {
-      if (l.equals(tau.getA()) && !tau.consumeLeft) { //prefix == a and left is free
+      if (l.equals(tau.getA()) &&
+          (!tau.consumeLeft || tau.getA().isDebugLabel)) { //prefix == a and left is free
         tau.consumeLeft = true;
         return actInternal(tau);
-      } else if (l.equals(tau.getB()) && !tau.consumeRight) {
+      } else if (l.equals(tau.getB()) && (!tau.consumeRight || tau.getB().isDebugLabel)) {
         tau.consumeRight = true;
         return actInternal(tau);
       }
     }
+
 
     return this.actOn(label);
   }
@@ -223,7 +228,6 @@ public abstract class Process extends ProgramNode {
 
   /**
    * Set CCSK key to provided LabelKey
-   *
    * @param key key to set
    */
   protected void setKey(LabelKey key) {
@@ -290,10 +294,12 @@ public abstract class Process extends ProgramNode {
    * @return True if this simulates q, false otherwise.
    */
   public boolean simulates(Process q) {
-    //TODO: implement
     LTTNode tp = new LTTNode(this);
+    tp.enumerate(true);
     LTTNode tq = new LTTNode(q);
-    return false;
+    tp.enumerate(true);
+    return tp.canSimulate(tq);
+    //TODO: recurse
   }
 
   public abstract Collection<Process> getChildren();
@@ -330,8 +336,10 @@ public abstract class Process extends ProgramNode {
     if (hasPrefixKey()) {
       l.add(new Pair<Label, LabelKey>(getPrefixKey().from, getPrefixKey()));
       //It's necessary to check that previous life key doesnt match current key, because summation processes can have both a ghostkey and a normal key
-      if (previousLife.hasPrefixKey() && !previousLife.getPrefixKey().equals(getPrefixKey())) {
-        l.addAll(previousLife.getLabelKeyPairs());
+      if (previousLife != null) {
+        if (previousLife.hasPrefixKey() && !previousLife.getPrefixKey().equals(getPrefixKey())) {
+          l.addAll(previousLife.getLabelKeyPairs());
+        }
       }
     }
     return l;
@@ -346,6 +354,68 @@ public abstract class Process extends ProgramNode {
   }
 
   public abstract String origin();
+
+  public boolean equals(Object o) {
+    if (!getClass().equals(o.getClass())) {
+      return false;
+    }
+    if (this == o) {
+      return true;
+    }
+
+    if (o instanceof Process p) {
+      //Check if prefixes are the same
+      if (!SetUtil.labelsEqual(new HashSet<Label>(p.getPrefixes())
+          , new HashSet<Label>(getPrefixes()))) {
+        return false;
+      }
+      //Check restrictions are same
+      if (!SetUtil.labelsEqual((AbstractSet<Label>) getRestriction()
+          , (AbstractSet<Label>) p.getRestriction())) {
+        return false;
+      }
+
+      //Check keys
+      if ((!hasKey() && p.hasKey())
+          || (hasKey() && !p.hasKey())) {
+        return false; //Keys are not symmetrical
+      }
+      if ((!hasPrefixKey() && p.hasPrefixKey())
+          || (hasPrefixKey() && !p.hasPrefixKey())) {
+        return false; //Keys are not symmetrical
+      }
+
+      if (hasKey() && p.hasKey()) {
+        if (!getKey().isEquivalent(p.getKey())) {
+          return false;
+        }
+      }
+
+      if (hasPrefixKey() && p.hasPrefixKey()) {
+        if (!getPrefixKey().isEquivalent(p.getPrefixKey())) {
+          return false;
+        }
+      }
+
+      if (this instanceof ComplexProcess c && o instanceof ComplexProcess c2) {
+        if (c.isPacked() && c2.isPacked()) {//If they are both instantiated
+          if (!c.left.equals(c2.left)) {
+            return false;
+          }
+          if (!c.right.equals(c2.right)) {
+            return false;
+          }
+          if (c.operator != c2.operator) {
+            return false;
+          }
+        } else if (c.isPacked() || c2.isPacked()) //If only one is instantiated
+        {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
 
 }

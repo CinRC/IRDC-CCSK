@@ -35,7 +35,6 @@ public class ConcurrentProcess extends ComplexProcess {
         if (right.canAct(label)) {
             right = right.act(label);
         }
-
         return this;
     }
 
@@ -141,7 +140,6 @@ public class ConcurrentProcess extends ComplexProcess {
         if (right.canAct(key)) {
             right = right.act(key);
         }
-
         return this;
 
     }

@@ -34,13 +34,13 @@ public class EnumerationTest {
         System.out.println(p1.prettyString());
         p1.act(a);
         System.out.println(p1.prettyString());
-        p1.reverseOn(la);
+        p1.act(la);
         System.out.println(p1.prettyString());
         p1.act(a);
         p1.act(b);
         System.out.println(p1.prettyString());
-        p1.reverseOn(lb);
-        p1.reverseOn(la);
+        p1.act(lb);
+        p1.act(la);
         System.out.println(p1.prettyString());
 
     }
@@ -76,10 +76,11 @@ public class EnumerationTest {
 
     @Test
     public void testTree(){
+        RCCS.config.clear();
         Process p = CCSParser.parseLine("(a|b)|('a+'b)").export();
         System.out.printf("Testing enumeration of %s...\n", p.represent());
         LTTNode node = new LTTNode(p);
-        node.enumerate();
+        node.enumerate(true);
         System.out.println(node);
         System.out.printf("Max depth: %d\n\n\n", node.getMaxDepth());
         assert (node.getMaxDepth() == 3);
@@ -87,7 +88,7 @@ public class EnumerationTest {
         p = CCSParser.parseLine("a.(c|d)").export();
         System.out.printf("Testing enumeration of %s...\n", p.represent());
         node = new LTTNode(p);
-        node.enumerate();
+        node.enumerate(true);
         System.out.println(node);
         System.out.printf("Max depth: %d\n\n\n", node.getMaxDepth());
         assert (node.getMaxDepth() == 3);

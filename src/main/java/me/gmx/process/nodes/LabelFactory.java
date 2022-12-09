@@ -37,12 +37,14 @@ public class LabelFactory {
   public static Label createDebugLabel(String channel) {
     Label c = parseNode(channel);
     c.dupe = -1;
+    c.isDebugLabel = true;
     return c;
   }
 
   public static LabelKey createDebugLabelKey(Label label) {
     LabelKey c = new LabelKey(label);
     c.dupe = -1;
+    c.isDebugLabel = true;
     return c;
   }
 

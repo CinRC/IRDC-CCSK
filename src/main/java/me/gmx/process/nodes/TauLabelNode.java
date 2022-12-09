@@ -12,7 +12,7 @@ public class TauLabelNode extends Label {
     int saveDupe;
 
     public TauLabelNode(Label node, Label comp) {
-        super(-2, node.getChannel() + ":" + comp.getChannel());
+        super(-2, node.getChannel());
         this.a = node;
         this.b = comp;
         consumeLeft = consumeRight = false;
@@ -49,6 +49,17 @@ public class TauLabelNode extends Label {
 
     public void destroy() {
         NodeIDGenerator.decrementKey();
+    }
+
+    /**
+     * From the outside, theoretically tau nodes are equivalent
+     *
+     * @param l Label to compare
+     * @return
+     */
+    @Override
+    public boolean isEquivalent(Label l) {
+        return (l instanceof TauLabelNode);
     }
 
 }

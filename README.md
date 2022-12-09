@@ -9,7 +9,7 @@ RCCS, or Reversible Calculus of Communicating Systems, and CCSK, or Calculus of 
 
 ## What is this project?
 
-This project is a collaboration attempt between [Peter Browning](https://peterjbrowning.com/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
+This project is a collaboration attempt between [Peter Browning](https://peterjbrowning.com/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
 At its core, this is a parser and evaluation tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
 Everything in this program is original, including string traversal libraries and GUI.
 
@@ -58,7 +58,7 @@ This program can be configured by using command-line arguments, or flags. The fl
 | --dN        	 | Null processes will be displayed explicitly                                                                	 |
 | --iU        	 | Parser will ignore unrecognized characters in the process formula                                          	 |
 | --kL        	 | Keys will be visibly similar to the label they represent                                                   	 |
-| --gui       	 | Program will start with a UI instead of CLI                                                                	 |
+| --gui       	 | Program will start with a GUI instead of CLI                                                               	 |
 | --enumerate  	 | Print enumeration tree of given process                                                                    	 |
 
 
@@ -82,5 +82,21 @@ java -jar target/[Jar file].jar <FLAGS> "[Process]"
 
 ### Testing
 
-To run unit tests, execute `mvn test` in the project root dir. It will run through a set of pre-written unit tests that are designed to represent difficult a diverse range of different scenarios.
+To run unit tests, execute `mvn test` in the project root dir.
+It will run through a set of pre-written unit tests (gathered in the [`src/test/java`](src/test/java) folder) that are designed to represent difficult a diverse range of different scenarios.
+To run e.g., all the test methods whose name starts with `simulationIsStructural` in the `SimulationTest` class, use
 
+```
+mvn -Dtest="SimulationTest#simulationIsStructural*" test
+```
+
+## Alternatives
+
+This project, in particular, is a working implementation of the _forward-only_ Calculus of Communicating Systems (CSS).
+Some of the other implementations of [process algebras](https://en.wikipedia.org/wiki/Process_calculus) that are publicly available are:
+
+- This [student project](https://github.com/ComputerScience-Projects/Calculus-of-Communicating-Systems),
+- The [Concurrency Workbench, Aalborg Edition](http://caal.cs.aau.dk/),
+- This [implementation of HOcore](https://people.rennes.inria.fr/Alan.Schmitt/research/hocore/), an intermediate languages between CSS and the π-calculus.
+
+The implementation of CSSk described [in this master thesis](https://leicester.figshare.com/articles/thesis/SimCCSK_simulation_of_the_reversible_process_calculi_CCSK/10091681) is to our knowledge not publicly available.

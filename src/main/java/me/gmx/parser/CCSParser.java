@@ -1,10 +1,10 @@
 package me.gmx.parser;
 
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import me.gmx.RCCS;
-import me.gmx.process.ProcessTemplate;
+
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelFactory;
 import me.gmx.process.process.ConcurrentProcess;
@@ -12,6 +12,7 @@ import me.gmx.process.process.NullProcess;
 import me.gmx.process.process.Process;
 import me.gmx.process.process.ProcessImpl;
 import me.gmx.process.process.SummationProcess;
+import me.gmx.process.ProcessTemplate;
 import me.gmx.util.RCCSFlag;
 import me.gmx.util.SetUtil;
 
@@ -38,67 +39,66 @@ public class CCSParser {
           String.format("Begin matching with memory %s, counter: %d, set: %b", walker.readMemory(),
               counter, inSetNotation));
 
+      //If parenthesis
       if (CCSGrammar.OPEN_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
-        counter++;
-        //If it's the first parenthesis (opening) then delete first one
+        counter++; //Increment counter to adjust parenthesis depth
         inParenthesis = true;
+        continue;
       }
 
       if (inParenthesis) {
         if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
           counter--;
           if (counter == 0) {
-
-            Process dp = parseLine(
+            Process dp = CCSParser.parseLine(
                 walker.readMemory()
                     .substring(1, walker.readMemory().length() - 1)).export();
             dp.addPrefixes(prefixes);
             template.add(dp);
-
             inParenthesis = false;
             walker.clearMemory();
           }
         }
       } else {
-        for (CCSGrammar g : CCSGrammar.values()) {
-          if (!g.canBeParsed()) {
+        for (CCSGrammar g : Arrays.stream(CCSGrammar.values())
+            .filter(c -> c.canBeParsed()).toList()) {
+          Matcher m = g.match(walker.readMemory());
+          if (!m.find()) //Grammar doesn't match, next one!
+          {
             continue;
           }
 
+          if (!g.match(walker.readMemory())
+              .matches()) //If grammar matches but does not match *everything* in memory
+          {
+            throw new CCSParserException(
+                "Unrecognized character(s): " + walker.readMemory().replace(m.group(), ""));
+          }
 
-          Matcher m = g.match(walker.readMemory());
-          if (m.find()) {
-            RCCS.log("Found match: " + m.group() + " Grammar: " + g.name());
+          RCCS.log("Found match: " + m.group() + " Grammar: " + g.name());
 
-            //Unrecognized char
-            if (!RCCS.config.contains(RCCSFlag.IGNORE_UNRECOGNIZED)) {
-              if (!g.match(walker.readMemory()).matches()) {
-                String tempString = walker.readMemory().replace(m.group(), "");
-                System.out.println("Unrecognized character(s): " + tempString);
-                System.exit(1);
+          if (inSetNotation) {
+            if (g == CCSGrammar.LABEL_COMBINED) { //Is there a label here
+              restrictions.add(
+                  LabelFactory.parseNode(m.group())); //Add restriction to list
+              if (walker.peek()
+                  .equals(",")) { //If the next symbol is a comma, just skip and forget about it
+                walker.walk(false);
               }
+            } else if (g == CCSGrammar.CLOSE_RESTRICTION) {
+              inSetNotation = false;
+              template.addRestrictionToLastProcess(restrictions);
+              restrictions.clear();
+            } else {
+              throw new CCSParserException(
+                  "Found unrecognized character(s) inside restriction: " + walker.readMemory());
             }
+            walker.clearMemory();
+            continue;
+          }
 
-            if (inSetNotation) {
-              if (g == CCSGrammar.LABEL_COMBINED) {
-                restrictions.add(
-                    LabelFactory.parseNode(m.group())); //Add restriction to list
-                if (walker.peek()
-                    .equals(
-                        ",")) //If the next symbol is a comma, just skip and forget about it
-                {
-                  walker.walk(false);
-                }
-              } else if (g == CCSGrammar.CLOSE_RESTRICTION) {
-                inSetNotation = false;
-                template.addRestrictionToLastProcess(restrictions);
-                restrictions.clear();
-              }
-              walker.clearMemory();
-              continue;
-            }
-
-            if (g == CCSGrammar.LABEL_COMBINED) { //a , 'b , c
+          switch (g) {
+            case LABEL_COMBINED:
               RCCS.log("Adding prefix: " + m.group());
               prefixes.add(LabelFactory.parseNode(m.group()));
               if (!walker.canWalk()) {
@@ -108,50 +108,49 @@ public class CCSParser {
                   CCSGrammar.OP_SEQUENTIAL.toString())) { //If there is a . after label, then skip over it and continue.
                 walker.walk(false);
                 //If there is no ., then treat it as an implicit "0" process
+              } else if (!RCCS.config.contains(RCCSFlag.EXPLICIT_NULL)) {
+                template.add(new NullProcess(prefixes));
+                prefixes.clear();
               } else {
-                if (!RCCS.config.contains(RCCSFlag.EXPLICIT_NULL)) {
-                  template.add(new NullProcess(prefixes));
-                  prefixes.clear();
-                } else {
-                  throw new CCSParserException(
-                      "Could not find process for prefixes: " +
-                          SetUtil.csvSet(prefixes));
-                }
+                throw new CCSParserException(
+                    "Could not find process for prefixes: " +
+                        SetUtil.csvSet(prefixes));
               }
-            } else if (g == CCSGrammar.PROCESS) {
+              break;
+
+            case PROCESS:
               if (prefixes.isEmpty()) {
                 template.add(new ProcessImpl(walker.readMemory()));
               } else {
                 template.add(new ProcessImpl(walker.readMemory(), prefixes));
                 prefixes.clear();
               }
-            } else if (g == CCSGrammar.NULL_PROCESS) {
+              break;
+            case NULL_PROCESS:
               if (prefixes.isEmpty()) {
                 template.add(new NullProcess());
               } else {
                 template.add(new NullProcess(prefixes));
                 prefixes.clear();
               }
-            } else if (g == CCSGrammar.OP_CONCURRENT) {
-              //RCCS.log("Parsing into concurrent...");
+              break;
+            case OP_CONCURRENT:
               template.add(new ConcurrentProcess(null, null));
-            } else if (g == CCSGrammar.OP_SUMMATION) {
-              //RCCS.log("Parsing into summation...");
+              break;
+            case OP_SUMMATION:
               template.add(new SummationProcess(null, null));
-            } else if (g == CCSGrammar.OP_SEQUENTIAL) {
-              RCCS.log("Found sequential match: " + m.group());
-            } else if (g == CCSGrammar.OPEN_RESTRICTION) { //\{a,b}
+              break;
+            case OPEN_RESTRICTION:
               if (!inSetNotation) {
                 inSetNotation = true;
               } else {
                 throw new CCSParserException(
                     "Unexpected token: " + walker.readMemory());
               }
-            }
-
-
-            walker.clearMemory();
+              break;
           }
+
+          walker.clearMemory();
         }
       }
 
@@ -159,10 +158,4 @@ public class CCSParser {
 
     return template;
   }
-
-
-  public Collection<Label> determineRestrictions(String s) {
-    return null;
-  }
-
 }

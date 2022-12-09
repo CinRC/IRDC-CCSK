@@ -50,7 +50,7 @@ public class CCSParser {
         if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
           counter--;
           if (counter == 0) {
-            Process dp = parseLine(
+            Process dp = CCSParser.parseLine(
                 walker.readMemory()
                     .substring(1, walker.readMemory().length() - 1)).export();
             dp.addPrefixes(prefixes);

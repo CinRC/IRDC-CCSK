@@ -9,7 +9,7 @@ RCCS, or Reversible Calculus of Communicating Systems, and CCSK, or Calculus of 
 
 ## What is this project?
 
-This project is a collaboration attempt between [Peter Browning](https://peterjbrowning.com/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
+This project is a collaboration attempt between [Peter Browning](https://petech.me/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
 At its core, this is a parser and evaluation tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
 Everything in this program is original, including string traversal libraries and GUI.
 

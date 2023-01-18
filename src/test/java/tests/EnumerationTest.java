@@ -1,3 +1,5 @@
+package tests;
+
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.LTTNode;

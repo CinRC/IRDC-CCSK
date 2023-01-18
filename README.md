@@ -90,6 +90,22 @@ To run e.g., all the test methods whose name starts with `simulationIsStructural
 mvn -Dtest="SimulationTest#simulationIsStructural*" test
 ```
 
+## Contributing
+
+If you'd like to contribute to this project, we encourage you to make a fork of the project and work locally. PRs will be reviewed by Dr. Aubert or Mr. Browning and merged into the main branch.
+
+### Versioning
+
+When contributing, the project version must be appropriately incremented inside the `pom.xml` file. We use a semantic Maj.Min.Patch.Rev system, where:
+* Maj     = Major feature or system overhaul
+* Min     = Feature addition
+* Patch   = Bug fix 
+* Rev     = Revision (code cleanup, minor edits)
+
+When making changes, increment the version number according to changes made.
+
+
+
 ## Alternatives
 
 This project, in particular, is a working implementation of the _forward-only_ Calculus of Communicating Systems (CSS).

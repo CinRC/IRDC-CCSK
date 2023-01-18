@@ -1,3 +1,5 @@
+package tests;
+
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;
 import me.gmx.parser.LTTNode;
@@ -161,7 +163,7 @@ public class SimulationTest {
     
     We cannot reason over all P and Q in our java tests, but we can take reasonably complicated processes and check that those implications.
     */
-    // mvn -Dtest="SimulationTest#simulationIsStructural*" test
+    // mvn -Dtest="tests.SimulationTest#simulationIsStructural*" test
     // To run only the tests in this category.
 
     // For instance, for the first rule, P | Q ≡ Q | P, we could have:

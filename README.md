@@ -114,5 +114,7 @@ Some of the other implementations of [process algebras](https://en.wikipedia.org
 - This [student project](https://github.com/ComputerScience-Projects/Calculus-of-Communicating-Systems),
 - The [Concurrency Workbench, Aalborg Edition](http://caal.cs.aau.dk/),
 - This [implementation of HOcore](https://people.rennes.inria.fr/Alan.Schmitt/research/hocore/), an intermediate languages between CSS and the π-calculus.
+- [muccs](https://github.com/andreasimonetto/muccs), an implementation of CCS in Prolog with some nice examples.
+- [CCS_Prolog](https://github.com/CoffeeStraw/CCS_Prolog), an interpreter for CCS language written in SWI-Prolog.
 
 The implementation of CSSk described [in this master thesis](https://leicester.figshare.com/articles/thesis/SimCCSK_simulation_of_the_reversible_process_calculi_CCSK/10091681) is to our knowledge not publicly available.

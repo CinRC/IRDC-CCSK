@@ -1,5 +1,8 @@
 #CODEOWNERS file
 
-* @peterbro1 @aubertc
+* @peterbro1
 
+README.md @aubertc @peterbro1
+
+examples/* @aubertc @peterbro1
 

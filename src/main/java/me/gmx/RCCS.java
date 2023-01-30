@@ -104,6 +104,10 @@ public class RCCS {
         for (RCCSFlag flag : RCCSFlag.values()) {
             sb.append(flag.getFlag()).append("  -  ").append(flag.getDescription()).append("\n");
         }
+        sb.append("\n--- Examples ---");
+        sb.append("java -jar RCCS.jar \"a.b + 'a.c\"");
+        sb.append("java -jar RCCS.jar \"(a.c|'a.c\\{a}) + 'a|c.b\"");
+        sb.append("java -jar RCCS.jar --enumerate \"(a.b+'a.c)|(b.'a+'a.'b)\"");
         return sb.toString();
     }
 

@@ -45,11 +45,6 @@ public class ProcessImpl extends Process implements ActionableProcess {
   }
 
   @Override
-  public boolean canAct(Label label) {
-    return false;
-  }
-
-  @Override
   public Process actOn(Label label) {
     return new NullProcess();
   }
@@ -62,7 +57,6 @@ public class ProcessImpl extends Process implements ActionableProcess {
   public Collection<Process> getChildren() {
     return Collections.emptySet();
   }
-
 
   @Override
   public Collection<Label> getActionableLabels() {

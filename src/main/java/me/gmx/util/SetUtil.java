@@ -8,6 +8,7 @@ import java.util.Set;
 import me.gmx.process.nodes.ComplementLabelNode;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
+import me.gmx.process.nodes.LabelNode;
 import me.gmx.process.nodes.TauLabelNode;
 import me.gmx.process.process.ComplexProcess;
 import me.gmx.process.process.Process;
@@ -126,6 +127,17 @@ public class SetUtil {
     } else {
       return labels.contains(l);
     }
+  }
+
+  /**
+   * Returns true if given label is affected by restriction syntax. In this situation,
+   * only labelnodes and complement labelnodes should be restrictable. This leaves
+   * keys and taus outside of restriction.
+   * @param l label
+   * @return bool
+   */
+  public static boolean isRestrictable(Label l){
+    return (l instanceof LabelNode || l instanceof ComplementLabelNode);
   }
 
 }

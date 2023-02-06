@@ -40,7 +40,7 @@ public class SetUtil {
       if (node instanceof ComplementLabelNode) {
         //Cool, there is a complement in the set. Let's see if any matches
         for (Label innerNode : nodes) {
-          if (innerNode != node && !(innerNode instanceof LabelKey)) {
+          if (innerNode != node && !(innerNode instanceof LabelKey || innerNode instanceof TauLabelNode)) {
             if (node.isComplementOf(innerNode)) {
               if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node)) {
                 //Cool, we found a complement, let's add it to our map.

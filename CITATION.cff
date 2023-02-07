@@ -4,8 +4,8 @@ authors:
 - family-names: "Aubert"
   given-names: "Clément"
   orcid: "https://orcid.org/0000-0001-6346-3043"
- - family-names: "Browning"
-   given-names: "Peter"
+- family-names: "Browning"
+  given-names: "Peter"
 title: "Implementation of Reversible Distributed Calculus (CCSK)"
 version: 2.0.0
 date-released: 2022-12-09

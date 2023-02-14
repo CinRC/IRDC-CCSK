@@ -1,5 +1,6 @@
 package me.gmx.parser;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,28 +15,28 @@ public class LTTNode {
 
     public HashMap<Label, LTTNode> children;
     public Process p;
-    public Collection<LTTNode> parents;
+    public HashMap<LTTNode, Label> parents;
     private int currentDepth, maxDepth;
 
     public LTTNode(Process p) {
         this.p = p;
         children = new HashMap<>();
         currentDepth = 0;
-        parents = new HashSet<>();
+        parents = new HashMap<>();
     }
 
     public HashMap<Label, LTTNode> getOutgoingEdges() {
         return (HashMap<Label, LTTNode>) children.clone();
     }
 
-    public void setParent(LTTNode n) {
-        this.parents.add(n);
+    public void setParent(Label key, LTTNode n) {
+        this.parents.put(n,key);
         this.currentDepth = n.getCurrentDepth() + 1;
     }
 
     public void addChild(Label l, Process pr) {
         LTTNode node = new LTTNode(pr);
-        node.setParent(this);
+        node.setParent(l, this);
         node.setCurrentDepth(currentDepth + 1);
         node.echoDepth(0);
         children.put(l, node);
@@ -63,11 +64,9 @@ public class LTTNode {
             maxDepth = depth;
         }
         if (!parents.isEmpty()) {
-            for (LTTNode n : parents) {
+            for (LTTNode n : parents.keySet()) {
                 n.echoDepth(++depth);
             }
-            //This would be a much more elegant solution, but scope doesnt allow
-            //parents.forEach(p -> p.echoDepth(++depth));
         }
     }
 
@@ -95,7 +94,7 @@ public class LTTNode {
                 pc.reverseLastAction();//Then reverse and next label.
                 System.out.println("After reversal: " + pc.prettyString());
 
-            } else {
+            } else {//This should be all we need to implement reversibility
                 /*Label originalLabel = ((LabelKey) l).from;
                 pc.act(l);
                 for (LTTNode n : parents)
@@ -150,6 +149,36 @@ public class LTTNode {
         return children.isEmpty();
     }
 
+    /**
+     * Creates set of all terminated processes that consider this process
+     * a 'parent'. e.g: A list of processes that can be obtained by any sequence
+     * of actions
+     * @return
+     */
+    public Collection<LTTNode> getLeafChildren(){
+        HashSet<LTTNode> nodeSet = new HashSet<>();
+        for (LTTNode node : children.values()){
+            if (node.isLeafNode())
+                nodeSet.add(node);
+            else nodeSet.addAll(node.getLeafChildren());
+        }
+        return nodeSet;
+    }
+
+    /**
+     * Recurse through parent processes to determine which sequence of actions
+     * was taken to reach this process from the ancestor parent
+     * @return
+     */
+    public ArrayList<Label> calculatePath(){
+        ArrayList<Label> al = new ArrayList<>();
+            for (Map.Entry<LTTNode, Label> n : parents.entrySet()){
+                al.addAll(n.getKey().calculatePath());
+                al.add(n.getValue());
+                break; //TODO: What do we do if parents size is bigger than one?
+            }
+            return al;
+    }
 
     public String toString() {
         return print(new StringBuilder(500), "", "");
@@ -159,7 +188,10 @@ public class LTTNode {
     //https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
     private String print(StringBuilder buffer, String prefix, String childrenPrefix) {
         buffer.append(prefix);
-        buffer.append(p.represent() + " --- " + this.currentDepth);
+        buffer.append(String.format("%s (Depth: %d), [%s]",
+            p.represent(),
+            this.currentDepth,
+            calculatePath()));
         buffer.append('\n');
         for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator();
              it.hasNext(); ) {

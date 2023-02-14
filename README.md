@@ -44,7 +44,7 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 This program can be configured by using command-line arguments, or flags. The flags are as follows:
 
 | **Flag**    	  | **Description**                                                                                            	 |
-|----------------|--------------------------------------------------------------------------------------------------------------|
+|-----------------|--------------------------------------------------------------------------------------------------------------|
 | --debug     	  | Enables debug mode. Will print info to stdout                                                              	 |
 | --help      	  | Prints help message documenting flags                                                                      	 |
 | --uC        	  | (Currently broken, do not use)                                                                             	 |

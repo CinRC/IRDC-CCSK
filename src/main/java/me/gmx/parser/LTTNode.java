@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import me.gmx.RCCS;
 import me.gmx.process.ProcessContainer;
 import me.gmx.process.nodes.Label;
 import me.gmx.process.nodes.LabelKey;
 import me.gmx.process.process.Process;
+import me.gmx.util.RCCSFlag;
 
 public class LTTNode {
 
@@ -82,17 +84,21 @@ public class LTTNode {
      * @param recurse
      */
     public void enumerate(boolean recurse) {
+        boolean debug = RCCS.config.contains(RCCSFlag.DEBUG);
         ProcessContainer pc = new ProcessContainer(p.clone());
         //For every actionable label in current node,
         for (Label l : pc.getActionableLabels()) {
             if (!(l instanceof LabelKey)) {
-                System.out.println("Before acting: " + pc.prettyString());
+                if (debug)
+                    System.out.println("Before acting: " + pc.prettyString());
                 pc.act(l); //Act on that label and make a new node with that child process (clone)
-                System.out.println("After acting: " + pc.prettyString());
+                if (debug)
+                    System.out.println("After acting: " + pc.prettyString());
                 Process z = pc.getProcess().clone();
                 addChild(l, z);
                 pc.reverseLastAction();//Then reverse and next label.
-                System.out.println("After reversal: " + pc.prettyString());
+                if (debug)
+                    System.out.println("After reversal: " + pc.prettyString());
 
             } else {//This should be all we need to implement reversibility
                 /*Label originalLabel = ((LabelKey) l).from;

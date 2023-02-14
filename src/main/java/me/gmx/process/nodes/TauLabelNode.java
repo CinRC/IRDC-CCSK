@@ -16,6 +16,7 @@ public class TauLabelNode extends Label {
         this.a = node;
         this.b = comp;
         consumeLeft = consumeRight = false;
+        isComplement = false;
         this.saveDupe = NodeIDGenerator.nextAvailableKey();
         this.id = UUID.randomUUID();
     }

@@ -1,3 +1,5 @@
+package tests;
+
 import java.util.Collection;
 import me.gmx.RCCS;
 import me.gmx.parser.CCSParser;

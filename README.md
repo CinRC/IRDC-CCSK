@@ -9,7 +9,7 @@ RCCS, or Reversible Calculus of Communicating Systems, and CCSK, or Calculus of 
 
 ## What is this project?
 
-This project is a collaboration attempt between [Peter Browning](https://peterjbrowning.com/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
+This project is a collaboration attempt between [Peter Browning](https://petech.me/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
 At its core, this is a parser and evaluation tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
 Everything in this program is original, including string traversal libraries and GUI.
 
@@ -43,22 +43,22 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 
 This program can be configured by using command-line arguments, or flags. The flags are as follows:
 
-| **Flag**    	 | **Description**                                                                                            	 |
-|---------------|--------------------------------------------------------------------------------------------------------------|
-| --debug     	 | Enables debug mode. Will print info to stdout                                                              	 |
-| --help      	 | Prints help message documenting flags                                                                      	 |
-| --uC        	 | (Currently broken, do not use)                                                                             	 |
-| --dL        	 | Labels are visibly differentiated by integers                                                              	 |
-| --hide-keys 	 | CCSK keys are hidden                                                                                       	 |
-| --kM        	 | (Currently broken, do not use)                                                                             	 |
-| --sA        	 | Alternative display mode for summation processes. Reversible summations are not annotated                  	 |
-| --sC        	 | Alternative display mode for summation processes. Reversible summations are hidden after execution         	 |
-| --eN        	 | Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached 	 |
-| --hP        	 | Parenthesis surrounding complex processes will be omitted                                                  	 |
-| --dN        	 | Null processes will be displayed explicitly                                                                	 |
-| --iU        	 | Parser will ignore unrecognized characters in the process formula                                          	 |
-| --kL        	 | Keys will be visibly similar to the label they represent                                                   	 |
-| --gui       	 | Program will start with a GUI instead of CLI                                                               	 |
+| **Flag**    	  | **Description**                                                                                            	 |
+|----------------|--------------------------------------------------------------------------------------------------------------|
+| --debug     	  | Enables debug mode. Will print info to stdout                                                              	 |
+| --help      	  | Prints help message documenting flags                                                                      	 |
+| --uC        	  | (Currently broken, do not use)                                                                             	 |
+| --dL        	  | Labels are visibly differentiated by integers                                                              	 |
+| --hide-keys 	  | CCSK keys are hidden                                                                                       	 |
+| --kM        	  | (Currently broken, do not use)                                                                             	 |
+| --sA        	  | Alternative display mode for summation processes. Reversible summations are not annotated                  	 |
+| --sC        	  | Alternative display mode for summation processes. Reversible summations are hidden after execution         	 |
+| --eN        	  | Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached 	 |
+| --hP        	  | Parenthesis surrounding complex processes will be omitted                                                  	 |
+| --dN        	  | Null processes will be displayed explicitly                                                                	 |
+| --iU        	  | Parser will ignore unrecognized characters in the process formula                                          	 |
+| --kL        	  | Keys will be visibly similar to the label they represent                                                   	 |
+| --gui       	  | Program will start with a GUI instead of CLI                                                               	 |
 | --enumerate  	 | Print enumeration tree of given process                                                                    	 |
 
 
@@ -84,11 +84,27 @@ java -jar target/[Jar file].jar <FLAGS> "[Process]"
 
 To run unit tests, execute `mvn test` in the project root dir.
 It will run through a set of pre-written unit tests (gathered in the [`src/test/java`](src/test/java) folder) that are designed to represent difficult a diverse range of different scenarios.
-To run e.g., all the test methods whose name starts with `simulationIsStructural` in the `SimulationTest` class, use
+To run e.g., all the test methods whose name starts with `simulationIsStructural` in the `tests.SimulationTest` class, use
 
 ```
-mvn -Dtest="SimulationTest#simulationIsStructural*" test
+mvn -Dtest="tests.SimulationTest#simulationIsStructural*" test
 ```
+
+## Contributing
+
+If you'd like to contribute to this project, we encourage you to make a fork of the project and work locally. PRs will be reviewed by Dr. Aubert or Mr. Browning and merged into the main branch.
+
+### Versioning
+
+When contributing, the project version must be appropriately incremented inside the `pom.xml` file. We use a semantic Maj.Min.Patch.Rev system, where:
+* Maj     = Major feature or system overhaul
+* Min     = Feature addition
+* Patch   = Bug fix 
+* Rev     = Revision (code cleanup, minor edits)
+
+When making changes, increment the version number according to changes made.
+
+
 
 ## Alternatives
 
@@ -98,5 +114,7 @@ Some of the other implementations of [process algebras](https://en.wikipedia.org
 - This [student project](https://github.com/ComputerScience-Projects/Calculus-of-Communicating-Systems),
 - The [Concurrency Workbench, Aalborg Edition](http://caal.cs.aau.dk/),
 - This [implementation of HOcore](https://people.rennes.inria.fr/Alan.Schmitt/research/hocore/), an intermediate languages between CSS and the π-calculus.
+- [muccs](https://github.com/andreasimonetto/muccs), an implementation of CCS in Prolog with some nice examples.
+- [CCS_Prolog](https://github.com/CoffeeStraw/CCS_Prolog), an interpreter for CCS language written in SWI-Prolog.
 
 The implementation of CSSk described [in this master thesis](https://leicester.figshare.com/articles/thesis/SimCCSK_simulation_of_the_reversible_process_calculi_CCSK/10091681) is to our knowledge not publicly available.

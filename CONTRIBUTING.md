@@ -13,6 +13,12 @@ git remote add $USER git@github.com:$USER/irdc-ccsk.git
 git fetch -av
 ```
 
+When contributing, the project version must be appropriately incremented inside the `pom.xml` file. We use a semantic Maj.Min.Patch.Rev system, where:
+* Maj     = Major feature or system overhaul
+* Min     = Feature addition
+* Patch   = Bug fix
+* Rev     = Revision (code cleanup, minor edits)
+
 ## Contribution Flow
 
 This is a rough outline of what a contributor's workflow looks like:

@@ -3,7 +3,7 @@
 ## What is RCCS/CCSK?
 
 The Reversible Calculus of Communicating Systems (RCCS) and the Calculus of Communicating Systems with Keys (CCSK) are two formal languages that describes the interaction of concurrent systems in a reversible paradigm.
-They are both described in Ivan Lanese, Doriana Medic, Claudio Antares Mezzina: **Static versus dynamic reversibility in CCS**. Acta Informatica 58(1-2): 1-34 (2021), [doi:10.1007/s00236-019-00346-6](https://doi.org/10.1007/s00236-019-00346-6), and shown to be equivalent (in terms of labelled transition system isomorphism) in the same paper.
+They are both described in **Static versus dynamic reversibility in CCS** ([doi:10.1007/s00236-019-00346-6](https://doi.org/10.1007/s00236-019-00346-6)), and shown to be equivalent (in terms of labelled transition system isomorphism) in the same paper.
 
 ## What is this project?
 
@@ -19,8 +19,9 @@ Please, refer to [our list of contributors](https://github.com/CinRC/IRDC-CCSK/g
 
 ### Use-Only
 
-You will need the Java Runtime Environment (JRE) (>= 8) to execute this program.
-Download the .jar file in our [latest release](https://github.com/CinRC/IRDC-CCSK/releases/latest), potentially using this simple one-liner^[Inspired by <https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8>.]:
+You will need the Java Runtime Environment (JRE) (≥8) to execute this program.
+Download the .jar file in our [latest release](https://github.com/CinRC/IRDC-CCSK/releases/latest), potentially using this simple one-liner[^1]:
+[^1]: Inspired by <https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8>.]
 
 ```
 curl -s https://api.github.com/repos/CinRC/IRDC-CCSK/releases/latest \
@@ -45,6 +46,27 @@ java -jar RCCS-*.jar <FLAGS> "[Process]"
 The flags are [documented below](#flags).
 
 
+### Building
+
+You will need [Maven](https://maven.apache.org/) (≥3.0) and the Java Development Kit (≥17) to compile this program.
+Some of the possible phases are:
+
+- `mvn package` to build from source (the executable will be in the `target/` folder),
+- `mvn validate` to test for checkstyle violations (we use [google_checks.xml](google_checks.xml)),
+- `mvn test` to run our pre-written unit tests (gathered in the [`src/test/java`](src/test/java) folder) that are designed to represent difficult a diverse range of different scenarios.
+
+To run e.g., all the test methods whose name starts with `simulationIsStructural` in the `tests.SimulationTest` class, use
+
+```
+mvn -Dtest="tests.SimulationTest#simulationIsStructural*" test
+```
+
+### Contributing
+
+We are thrilled that you consider contributing to our project.
+Please refer to our [contributing](CONTRIBUTING.md) guidelines.
+
+## Additional Information
 
 ### Developer slang
 
@@ -54,12 +76,12 @@ Some parts of this program are named different from the convention. Some of the 
 2. Parallel operators (`|`) are referred to as 'Concurrent Processes'
 3. Deterministic operators (`+`) are referred to as 'Summation Processes'
 4. Label prefixings (`a.b.P`) are referred to as 'Action Prefix Processes'
-5. CCSK keys (`[a].b.P`) are referred to as Label Keys
+5. CCSK keys (`a[k0].b.P`) are referred to as 'Label Keys'
 
 ### Syntax and Precedence of Operators {#syntax}
 
 This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.
-- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable in the main config
+- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable using [the `dN` flag](#flags).
 - Channel labels are limited to lowercase english letters [a-z]
 - Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc
 - Process names are limited to uppercase english letters [A-Z]
@@ -71,7 +93,7 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 - Of course, parenthesis take precedence over all operators.
   - Redundant parenthesis are permitted `(((a)|(b)))`
 
-## Command arguments (flags) {#flags}
+## Command arguments (flags)(#flags)
 
 This program can be configured by using command-line arguments, or flags. The flags are as follows:
 
@@ -94,33 +116,6 @@ This program can be configured by using command-line arguments, or flags. The fl
 | --enumerate  	 | Print enumeration tree of given process                                                                    	 |
 
 
-## Requirements
-
-### Building
-`Maven  >=  3.0`
-`JDK    >=  17`
-
-Building from source can be done with the `mvn package` goal.
-
-### Running
-
-`JRE >= 8`
-
-To run with a GUI, use the `--gui` flag. Else, a CLI will open instead.
-
-```
-java -jar target/[Jar file].jar <FLAGS> "[Process]"
-```
-
-### Testing
-
-To run unit tests, execute `mvn test` in the project root dir.
-It will run through a set of pre-written unit tests (gathered in the [`src/test/java`](src/test/java) folder) that are designed to represent difficult a diverse range of different scenarios.
-To run e.g., all the test methods whose name starts with `simulationIsStructural` in the `tests.SimulationTest` class, use
-
-```
-mvn -Dtest="tests.SimulationTest#simulationIsStructural*" test
-```
 
 ## Alternatives
 

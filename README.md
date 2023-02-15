@@ -64,7 +64,7 @@ mvn -Dtest="tests.SimulationTest#simulationIsStructural*" test
 ### Contributing
 
 We are thrilled that you consider contributing to our project.
-Please refer to our [contributing](CONTRIBUTING.md) guidelines.
+Please refer to our [contributing](.github/CONTRIBUTING.md) guidelines.
 
 ## Additional Information
 

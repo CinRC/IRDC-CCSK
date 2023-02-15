@@ -1,17 +1,49 @@
-# IRDC-CCSK
-
-Implementation of Reversible Distributed Calculus (CCSK)
-
+# Implementation of Reversible Distributed Calculus (CCSK)
 
 ## What is RCCS/CCSK?
 
-RCCS, or Reversible Calculus of Communicating Systems, and CCSK, or Calculus of Communicating Systems with Keys, are formal language that describes the interaction of concurrent systems in a reversible paradigm.
+The Reversible Calculus of Communicating Systems (RCCS) and the Calculus of Communicating Systems with Keys (CCSK) are two formal languages that describes the interaction of concurrent systems in a reversible paradigm.
+They are both described in Ivan Lanese, Doriana Medic, Claudio Antares Mezzina: **Static versus dynamic reversibility in CCS**. Acta Informatica 58(1-2): 1-34 (2021), [doi:10.1007/s00236-019-00346-6](https://doi.org/10.1007/s00236-019-00346-6), and shown to be equivalent (in terms of labelled transition system isomorphism) in the same paper.
 
 ## What is this project?
 
-This project is a collaboration attempt between [Peter Browning](https://petech.me/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/) to be the first to implement a functional formal language (in this case, CCSK-ish) that models concurrent reversible systems.
-At its core, this is a parser and evaluation tool. The program takes user input in the form of CCS equations (using syntax specified below) and parses, tokenizes, and traverses it at the user's will.
+This project is the first to publicly available implementation a functional formal language (in this case, inspired by CCSK) that models concurrent reversible systems.
+At its core, this is a parser and evaluation tool.
+The program takes user input in the form of CCS processes (using the syntax [specified below](#syntax)) and parses, tokenizes, and traverses it at the user's will (using CSSK's labelled transition system, described and exemplified in [this documentation](docs/lts.md)).
+
 Everything in this program is original, including string traversal libraries and GUI.
+It is currently developed in the [School of Computer and Cyber Sciences](https://www.augusta.edu/ccs/), primarily by [Peter Browning](https://petech.me/) and Dr. [Clément Aubert](https://spots.augusta.edu/caubert/).
+Please, refer to [our list of contributors](https://github.com/CinRC/IRDC-CCSK/graphs/contributors) for an up-to-date list of contributors.
+
+## Getting Started
+
+### Use-Only
+
+You will need the Java Runtime Environment (JRE) (>= 8) to execute this program.
+Download the .jar file in our [latest release](https://github.com/CinRC/IRDC-CCSK/releases/latest), potentially using this simple one-liner^[Inspired by <https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8>.]:
+
+```
+curl -s https://api.github.com/repos/CinRC/IRDC-CCSK/releases/latest \
+| grep browser_download_url \
+| cut -d : -f 2,3 \
+| tr -d \" \
+| wget -qi -
+```
+
+Then execute e.g., the process $((a+b) | \overline{b}) | \overline{a}) \backslash a$ using
+
+```
+java -jar RCCS-*.jar "(((a+b) |'b)|'a)\{a}"
+```
+
+To run with a GUI, use the `--gui` flag. Else, a command-line-interface will open instead, you can use it with:
+
+```
+java -jar RCCS-*.jar <FLAGS> "[Process]"
+```
+
+The flags are [documented below](#flags).
+
 
 
 ### Developer slang
@@ -24,7 +56,7 @@ Some parts of this program are named different from the convention. Some of the 
 4. Label prefixings (`a.b.P`) are referred to as 'Action Prefix Processes'
 5. CCSK keys (`[a].b.P`) are referred to as Label Keys
 
-### Syntax and Precedence of Operators
+### Syntax and Precedence of Operators {#syntax}
 
 This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.
 - By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable in the main config
@@ -39,7 +71,7 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 - Of course, parenthesis take precedence over all operators.
   - Redundant parenthesis are permitted `(((a)|(b)))`
 
-## Command arguments (flags)
+## Command arguments (flags) {#flags}
 
 This program can be configured by using command-line arguments, or flags. The flags are as follows:
 

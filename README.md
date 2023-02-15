@@ -34,13 +34,13 @@ curl -s https://api.github.com/repos/CinRC/IRDC-CCSK/releases/latest \
 Then execute e.g., the process $((a+b) | \overline{b}) | \overline{a}) \backslash a$ using
 
 ```
-java -jar RCCS-*.jar "(((a+b) |'b)|'a)\{a}"
+java -jar IRDC-*.jar "(((a+b) |'b)|'a)\{a}"
 ```
 
 To run with a GUI, use the `--gui` flag. Else, a command-line-interface will open instead, you can use it with:
 
 ```
-java -jar RCCS-*.jar <FLAGS> "[Process]"
+java -jar IRDC-*.jar <FLAGS> "[Process]"
 ```
 
 Some examples of processes are indicated in <docs/example_processes.md> if you need inspiration.

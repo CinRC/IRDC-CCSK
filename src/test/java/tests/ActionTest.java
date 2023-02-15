@@ -1,14 +1,14 @@
 package tests;
 
 import java.util.Collection;
-import me.gmx.RCCS;
-import me.gmx.parser.CCSParser;
-import me.gmx.process.ProcessContainer;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelFactory;
-import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.TauLabelNode;
-import me.gmx.process.process.Process;
+import org.cinrc.IRDC;
+import org.cinrc.parser.CCSParser;
+import org.cinrc.process.ProcessContainer;
+import org.cinrc.process.nodes.Label;
+import org.cinrc.process.nodes.LabelFactory;
+import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.TauLabelNode;
+import org.cinrc.process.process.Process;
 import org.junit.jupiter.api.Test;
 
 public class ActionTest {
@@ -32,7 +32,7 @@ public class ActionTest {
 
     @Test
     public void testBasicActions() {
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
 
         Label a, b, c;
         a = LabelFactory.createDebugLabel("a");
@@ -45,7 +45,7 @@ public class ActionTest {
 
     @Test
     public void testAdvancedActions() {
-        RCCS.config.clear();
+        IRDC.config.clear();
 
         Label a,b,c,d ;
         a = LabelFactory.createDebugLabel("a");

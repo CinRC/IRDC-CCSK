@@ -1,9 +1,9 @@
 package tests;
 
-import me.gmx.RCCS;
-import me.gmx.parser.CCSParser;
-import me.gmx.parser.LTTNode;
-import me.gmx.process.process.Process;
+import org.cinrc.IRDC;
+import org.cinrc.parser.CCSParser;
+import org.cinrc.parser.LTTNode;
+import org.cinrc.process.process.Process;
 import org.junit.jupiter.api.Test;
 
 // Those tests are for forward-only simulations.
@@ -169,7 +169,7 @@ public class SimulationTest {
     // For instance, for the first rule, P | Q ≡ Q | P, we could have:
     @Test
     public void simulationIsStructural() {
-      RCCS.config.clear();
+      IRDC.config.clear();
     Process p, q;
     p = CCSParser.parseLine("(a + b) | c").export();
       q = CCSParser.parseLine("c | (a + b)").export();

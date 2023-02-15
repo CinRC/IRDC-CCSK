@@ -34,13 +34,13 @@ curl -s https://api.github.com/repos/CinRC/IRDC-CCSK/releases/latest \
 Then execute e.g., the process $((a+b) | \overline{b}) | \overline{a}) \backslash a$ using
 
 ```
-java -jar RCCS-*.jar "(((a+b) |'b)|'a)\{a}"
+java -jar IRDC-*.jar "(((a+b) |'b)|'a)\{a}"
 ```
 
 To run with a GUI, use the `--gui` flag. Else, a command-line-interface will open instead, you can use it with:
 
 ```
-java -jar RCCS-*.jar <FLAGS> "[Process]"
+java -jar IRDC-*.jar <FLAGS> "[Process]"
 ```
 
 Some examples of processes are indicated in <docs/example_processes.md> if you need inspiration.
@@ -66,7 +66,7 @@ mvn -Dtest="tests.SimulationTest#simulationIsStructural*" test
 ### Contributing
 
 We are thrilled that you consider contributing to our project.
-Please refer to our [contributing](.github/CONTRIBUTING.md) guidelines.
+Please refer to our [contributing](CONTRIBUTING.md) guidelines.
 
 ## Additional Information
 
@@ -99,28 +99,28 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 
 This program can be configured by using command-line arguments, or flags. The flags are as follows:
 
-| **Flag**    	  | **Description**                                                                                            	 |
-|-----------------|--------------------------------------------------------------------------------------------------------------|
-| --debug     	  | Enables debug mode. Will print info to stdout                                                              	 |
-| --help      	  | Prints help message documenting flags                                                                      	 |
-| --uC        	  | (Currently broken, do not use)                                                                             	 |
-| --dL        	  | Labels are visibly differentiated by integers                                                              	 |
-| --hide-keys 	  | CCSK keys are hidden                                                                                       	 |
-| --kM        	  | (Currently broken, do not use)                                                                             	 |
-| --sA        	  | Alternative display mode for summation processes. Reversible summations are not annotated                  	 |
-| --sC        	  | Alternative display mode for summation processes. Reversible summations are hidden after execution         	 |
-| --eN        	  | Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached 	 |
-| --hP        	  | Parenthesis surrounding complex processes will be omitted                                                  	 |
-| --dN        	  | Null processes will be displayed explicitly                                                                	 |
-| --iU        	  | Parser will ignore unrecognized characters in the process formula                                          	 |
-| --kL        	  | Keys will be visibly similar to the label they represent                                                   	 |
-| --gui       	  | Program will start with a GUI instead of CLI                                                               	 |
-| --enumerate  	  | Print enumeration tree of given process                                                                    	 |
+| **Flag**    	                    | **Description**                                                                                            	 |
+|----------------------------------|--------------------------------------------------------------------------------------------------------------|
+| --debug     	                    | Enables debug mode. Will print info to stdout                                                              	 |
+| --help      	                    | Prints help message documenting flags                                                                      	 |
+| --uC        	                    | (Currently broken, do not use)                                                                             	 |
+| --dL        	                    | Labels are visibly differentiated by integers                                                              	 |
+| --hide-keys 	                    | CCSK keys are hidden                                                                                       	 |
+| --kM        	                    | (Currently broken, do not use)                                                                             	 |
+| --sA        	                    | Alternative display mode for summation processes. Reversible summations are not annotated                  	 |
+| --sC        	                    | Alternative display mode for summation processes. Reversible summations are hidden after execution         	 |
+| --require-explicit-null        	 | Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached 	 |
+| --hP        	                    | Parenthesis surrounding complex processes will be omitted                                                  	 |
+| --dN        	                    | Null processes will be displayed explicitly                                                                	 |
+| --iU        	                    | Parser will ignore unrecognized characters in the process formula                                          	 |
+| --kL        	                    | Keys will be visibly similar to the label they represent                                                   	 |
+| --gui       	                    | Program will start with a GUI instead of CLI                                                               	 |
+| --enumerate  	                   | Print enumeration tree of given process                                                                    	 |
 
 
 ## Contributing
 
-If you'd like to contribute to this project, we encourage you to make a fork of the project and work locally. PRs will be reviewed by Dr. Aubert or Mr. Browning and merged into the main branch.
+If you'd like to contribute to this project, please refer to the CONTRIBUTING.md file
 
 ### Versioning
 

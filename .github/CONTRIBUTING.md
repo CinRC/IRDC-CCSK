@@ -114,10 +114,9 @@ repository.
 
 Running `mvn test` will run all unit tests. `mvn package` will build the code, which incorporates unit tests in the build.
 
-
 ## Reporting Bugs and Creating Issues
 
 When opening a new issue, try to roughly follow the commit message format
 conventions above.
 
-*This file is an adaptation of the one given by VMWare [here](https://github.com/vmware/govmom)*
+*This file is an adaptation of the one given by VMWare [here](https://github.com/vmware/govmom).*

@@ -21,7 +21,7 @@ Please, refer to [our list of contributors](https://github.com/CinRC/IRDC-CCSK/g
 
 You will need the Java Runtime Environment (JRE) (≥8) to execute this program.
 Download the .jar file in our [latest release](https://github.com/CinRC/IRDC-CCSK/releases/latest), potentially using this simple one-liner[^1]:
-[^1]: Inspired by <https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8>.]
+[^1]: Inspired by <https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8>.
 
 ```
 curl -s https://api.github.com/repos/CinRC/IRDC-CCSK/releases/latest \
@@ -43,7 +43,7 @@ To run with a GUI, use the `--gui` flag. Else, a command-line-interface will ope
 java -jar RCCS-*.jar <FLAGS> "[Process]"
 ```
 
-The flags are [documented below](#flags).
+The flags are [documented below](#command-arguments-flags).
 
 
 ### Building
@@ -81,19 +81,19 @@ Some parts of this program are named different from the convention. Some of the 
 ### Syntax and Precedence of Operators {#syntax}
 
 This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.
-- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable using [the `dN` flag](#flags).
-- Channel labels are limited to lowercase english letters [a-z]
-- Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc
-- Process names are limited to uppercase english letters [A-Z]
-- We assume that all channels sharing the same label are duplicates. This means that `'a` is the complement to `a`, `'b` to `b`, and so forth
-- Restrictions are applied under the following format: `a.P\{a,b,c}`
-- We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.
-  - This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`
+- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable using [the `dN` flag](#command-arguments-flags).
+- Channel labels are limited to lowercase english letters `[a-z]`.
+- Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc.
+- Process names are limited to uppercase english letters `[A-Z]`.
+- We assume that all channels sharing the same label are duplicates. This means that `'a` is the complement to `a`, `'b` to `b`, and so forth.
+- Restrictions are applied under the following format: `a.P\{a,b,c}`.
+- We assume that the operators have decreasing binding power, in the following order: `\a`, `a.`, `|`, `+`.
+  - This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`.
   - More specifically, `a.a + b | c \{a}` is to be read as `(a.a) + (b | (c\a))` (infix notation) or `+ . a a | b \a c`  (postfix notation).
-- Of course, parenthesis take precedence over all operators.
-  - Redundant parenthesis are permitted `(((a)|(b)))`
+  - Of course, parenthesis take precedence over all operators.
+  - Redundant parenthesis are permitted, e.g., `(((a)|(b)))` will be accepted but interpreted as `(a|b)`.
 
-## Command arguments (flags)(#flags)
+### Command arguments (flags)
 
 This program can be configured by using command-line arguments, or flags. The flags are as follows:
 
@@ -113,8 +113,7 @@ This program can be configured by using command-line arguments, or flags. The fl
 | --iU        	  | Parser will ignore unrecognized characters in the process formula                                          	 |
 | --kL        	  | Keys will be visibly similar to the label they represent                                                   	 |
 | --gui       	  | Program will start with a GUI instead of CLI                                                               	 |
-| --enumerate  	 | Print enumeration tree of given process                                                                    	 |
-
+| --enumerate  	  | Print enumeration tree of given process                                                                    	 |
 
 
 ## Alternatives

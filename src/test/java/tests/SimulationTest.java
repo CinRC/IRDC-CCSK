@@ -153,6 +153,7 @@ public class SimulationTest {
     // q = Q
     // q and p should not be able to simulate each other (we should assume that different 
     // letters correspond to different processes), and yet they can.
+    // Cf. https://github.com/CinRC/IRDC-CCSK/issues/55
 
     Process p, q;
     p = CCSParser.parseLine("P").export();

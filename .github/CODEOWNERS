@@ -1,6 +1,10 @@
 #CODEOWNERS file
 
-* @peterbro1
+src/* @peterbro1
+
+.github/* @aubertc @peterbro1
+
+
 
 README.md @aubertc @peterbro1
 examples/* @aubertc @peterbro1

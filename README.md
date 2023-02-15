@@ -118,6 +118,22 @@ This program can be configured by using command-line arguments, or flags. The fl
 | --enumerate  	  | Print enumeration tree of given process                                                                    	 |
 
 
+## Contributing
+
+If you'd like to contribute to this project, we encourage you to make a fork of the project and work locally. PRs will be reviewed by Dr. Aubert or Mr. Browning and merged into the main branch.
+
+### Versioning
+
+When contributing, the project version must be appropriately incremented inside the `pom.xml` file. We use a semantic Maj.Min.Patch.Rev system, where:
+* Maj     = Major feature or system overhaul
+* Min     = Feature addition
+* Patch   = Bug fix 
+* Rev     = Revision (code cleanup, minor edits)
+
+When making changes, increment the version number according to changes made.
+
+
+
 ## Alternatives
 
 This project, in particular, is a working implementation of the _forward-only_ Calculus of Communicating Systems (CSS).
@@ -126,5 +142,7 @@ Some of the other implementations of [process algebras](https://en.wikipedia.org
 - This [student project](https://github.com/ComputerScience-Projects/Calculus-of-Communicating-Systems),
 - The [Concurrency Workbench, Aalborg Edition](http://caal.cs.aau.dk/),
 - This [implementation of HOcore](https://people.rennes.inria.fr/Alan.Schmitt/research/hocore/), an intermediate languages between CSS and the π-calculus.
+- [muccs](https://github.com/andreasimonetto/muccs), an implementation of CCS in Prolog with some nice examples.
+- [CCS_Prolog](https://github.com/CoffeeStraw/CCS_Prolog), an interpreter for CCS language written in SWI-Prolog.
 
 The implementation of CSSk described [in this master thesis](https://leicester.figshare.com/articles/thesis/SimCCSK_simulation_of_the_reversible_process_calculi_CCSK/10091681) is to our knowledge not publicly available.

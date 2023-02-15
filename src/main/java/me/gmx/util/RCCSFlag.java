@@ -22,9 +22,9 @@ public enum RCCSFlag {
   SUMMATION_STYLE_3(
       "Alternative display mode for summation processes. Reversible summations are hidden after execution",
       "--sC"),
-  EXPLICIT_NULL(
+  REQUIRE_EXPLICIT_NULL(
       "Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached.",
-      "--eN"),
+      "--require-explicit-null"),
   HIDE_PARENTHESIS("Parenthesis surrounding complex processes will be omitted",
       "--hP"),
   DISPLAY_NULL("Null processes will be displayed explicitly",

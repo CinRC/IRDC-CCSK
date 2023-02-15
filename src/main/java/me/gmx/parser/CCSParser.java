@@ -108,7 +108,7 @@ public class CCSParser {
                   CCSGrammar.OP_SEQUENTIAL.toString())) { //If there is a . after label, then skip over it and continue.
                 walker.walk(false);
                 //If there is no ., then treat it as an implicit "0" process
-              } else if (!RCCS.config.contains(RCCSFlag.EXPLICIT_NULL)) {
+              } else if (!RCCS.config.contains(RCCSFlag.REQUIRE_EXPLICIT_NULL)) {
                 template.add(new NullProcess(prefixes));
                 prefixes.clear();
               } else {

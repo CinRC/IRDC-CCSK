@@ -80,7 +80,7 @@ Some parts of this program are named different from the convention. Some of the 
 4. Label prefixings (`a.b.P`) are referred to as 'Action Prefix Processes'
 5. CCSK keys (`a[k0].b.P`) are referred to as 'Label Keys'
 
-### Syntax and Precedence of Operators {#syntax}
+### Syntax and Precedence of Operators
 
 This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.
 - By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable using [the `dN` flag](#command-arguments-flags).
@@ -131,8 +131,6 @@ When contributing, the project version must be appropriately incremented inside 
 * Rev     = Revision (code cleanup, minor edits)
 
 When making changes, increment the version number according to changes made.
-
-
 
 ## Alternatives
 

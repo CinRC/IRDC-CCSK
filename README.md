@@ -77,8 +77,8 @@ Some parts of this program are named different from the convention. Some of the 
 1. Channel names are referred to as 'Labels'
 2. Parallel operators (`|`) are referred to as 'Concurrent Processes'
 3. Deterministic operators (`+`) are referred to as 'Summation Processes'
-4. Label prefixings (`a.b.P`) are referred to as 'Action Prefix Processes'
-5. CCSK keys (`a[k0].b.P`) are referred to as 'Label Keys'
+4. Label prefixings (`a.P`) are referred to as 'Action Prefix Processes'
+5. CCSK keys (`a[k0].P`) are referred to as 'Label Keys'
 
 ### Syntax and Precedence of Operators
 
@@ -87,7 +87,7 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 - Channel labels are limited to lowercase english letters `[a-z]`.
 - Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc.
 - Process names are limited to uppercase english letters `[A-Z]`.
-- We assume that all channels sharing the same label are duplicates. This means that `'a` is the complement to `a`, `'b` to `b`, and so forth.
+- We assume that all channels sharing the same label are complements. This means that `'a` is the complement to `a`, `'b` to `b`, and so forth.
 - Restrictions are applied under the following format: `a.P\{a,b,c}`.
 - We assume that the operators have decreasing binding power, in the following order: `\a`, `a.`, `|`, `+`.
   - This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`.

@@ -83,7 +83,7 @@ Some parts of this program are named different from the convention. Some of the 
 ### Syntax and Precedence of Operators
 
 This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.
-- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable using [the `dN` flag](#command-arguments-flags).
+- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable using [the `--require-explicit-null` flag](#command-arguments-flags).
 - Channel labels are limited to lowercase english letters `[a-z]`.
 - Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc.
 - Process names are limited to uppercase english letters `[A-Z]`.

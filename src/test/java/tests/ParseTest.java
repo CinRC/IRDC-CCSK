@@ -1,14 +1,14 @@
 package tests;
 
-import me.gmx.RCCS;
-import me.gmx.parser.CCSParser;
-import me.gmx.process.ProcessContainer;
-import me.gmx.process.ProcessTemplate;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelFactory;
-import me.gmx.process.process.Process;
-import me.gmx.process.process.SummationProcess;
-import me.gmx.util.RCCSFlag;
+import org.cinrc.IRDC;
+import org.cinrc.parser.CCSParser;
+import org.cinrc.process.ProcessContainer;
+import org.cinrc.process.ProcessTemplate;
+import org.cinrc.process.nodes.Label;
+import org.cinrc.process.nodes.LabelFactory;
+import org.cinrc.process.process.Process;
+import org.cinrc.process.process.SummationProcess;
+import org.cinrc.util.RCCSFlag;
 import org.junit.jupiter.api.Test;
 
 public class ParseTest {
@@ -19,7 +19,7 @@ public class ParseTest {
 
     @Test
     public void testPrecedence(){
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
         Label a = LabelFactory.createDebugLabel("a");
         Label b = LabelFactory.createDebugLabel("b");
         Label c = LabelFactory.createDebugLabel("c");
@@ -38,7 +38,7 @@ public class ParseTest {
 
     @Test
     public void testOriginMatching() {
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
         String[] matchTest;
         matchTest = new String[]{
                 "a.b.P",
@@ -54,7 +54,7 @@ public class ParseTest {
             assert compare(a, s);
         }
 
-        RCCS.config.add(RCCSFlag.HIDE_PARENTHESIS);
+        org.cinrc.IRDC.config.add(RCCSFlag.HIDE_PARENTHESIS);
 
         matchTest = new String[]{
                 "a.b.P",
@@ -74,7 +74,7 @@ public class ParseTest {
 
     @Test
     public void testRedundantParenthesis() {
-        RCCS.config.clear();
+        IRDC.config.clear();
 
         //There's likely a better way to do this with a hashmap, but it works.
         //Mainly just want to see if the program doesnt die when trying to parse. Result should be stable
@@ -100,7 +100,7 @@ public class ParseTest {
 
     @Test
     public void testInvalidParse() {
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
         boolean isFailed = false;
 
         ProcessTemplate t = CCSParser.parseLine("ab");

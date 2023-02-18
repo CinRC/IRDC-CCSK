@@ -1,12 +1,12 @@
 package tests;
 
-import me.gmx.RCCS;
-import me.gmx.parser.CCSParser;
-import me.gmx.process.ProcessContainer;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelFactory;
-import me.gmx.process.nodes.TauLabelNode;
-import me.gmx.process.process.Process;
+import org.cinrc.IRDC;
+import org.cinrc.parser.CCSParser;
+import org.cinrc.process.ProcessContainer;
+import org.cinrc.process.nodes.Label;
+import org.cinrc.process.nodes.LabelFactory;
+import org.cinrc.process.nodes.TauLabelNode;
+import org.cinrc.process.process.Process;
 import org.junit.jupiter.api.Test;
 
 public class RestrictionTest {
@@ -17,7 +17,7 @@ public class RestrictionTest {
      */
     @Test
     public void testRestrictionBlocking(){
-        RCCS.config.clear();
+        IRDC.config.clear();
         Label a,oa;
         a = LabelFactory.createDebugLabel("a");
         oa = LabelFactory.createDebugLabel("'a");
@@ -35,7 +35,7 @@ public class RestrictionTest {
      */
     @Test
     public void testRestrictionNonBlocking(){
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
         Label a,oa,b;
         a = LabelFactory.createDebugLabel("a");
         oa = LabelFactory.createDebugLabel("'a");
@@ -57,7 +57,7 @@ public class RestrictionTest {
      */
     @Test
     public void testRestrictionSync(){
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
         Label a,oa,ta,taswitch;
         a = LabelFactory.createDebugLabel("a");
         oa = LabelFactory.createDebugLabel("'a");

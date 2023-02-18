@@ -1,15 +1,15 @@
 package tests;
 
-import me.gmx.RCCS;
-import me.gmx.parser.CCSParser;
-import me.gmx.parser.LTTNode;
-import me.gmx.process.ProcessContainer;
-import me.gmx.process.nodes.Label;
-import me.gmx.process.nodes.LabelFactory;
-import me.gmx.process.nodes.LabelKey;
-import me.gmx.process.nodes.TauLabelNode;
-import me.gmx.process.process.Process;
-import me.gmx.util.RCCSFlag;
+import org.cinrc.IRDC;
+import org.cinrc.parser.CCSParser;
+import org.cinrc.parser.LTTNode;
+import org.cinrc.process.ProcessContainer;
+import org.cinrc.process.nodes.Label;
+import org.cinrc.process.nodes.LabelFactory;
+import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.TauLabelNode;
+import org.cinrc.process.process.Process;
+import org.cinrc.util.RCCSFlag;
 import org.junit.jupiter.api.Test;
 
 public class EnumerationTest {
@@ -18,11 +18,11 @@ public class EnumerationTest {
     //Just make sure it doesnt crash
     @Test
     public void testEnumerate(){
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
 
-        RCCS.config.add(RCCSFlag.DISPLAY_NULL);
-        RCCS.config.add(RCCSFlag.DIFFERENTIATE_LABELS);
-        RCCS.config.add(RCCSFlag.DEBUG);
+        org.cinrc.IRDC.config.add(RCCSFlag.DISPLAY_NULL);
+        org.cinrc.IRDC.config.add(RCCSFlag.DIFFERENTIATE_LABELS);
+        org.cinrc.IRDC.config.add(RCCSFlag.DEBUG);
         Process p = CCSParser.parseLine("a.b|c.d").export();
         Process pc = p.clone();
         ProcessContainer p1 = new ProcessContainer(p);
@@ -50,10 +50,10 @@ public class EnumerationTest {
     //@Test
     //TODO: Broken
     public void test(){
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
 
-        RCCS.config.add(RCCSFlag.DEBUG);
-        RCCS.config.add(RCCSFlag.KEYS_MATCH_LABELS);
+        org.cinrc.IRDC.config.add(RCCSFlag.DEBUG);
+        IRDC.config.add(RCCSFlag.KEYS_MATCH_LABELS);
         ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b|'a.c").export());
         Label a,aa,b,c;
         a = LabelFactory.createDebugLabel("a");
@@ -78,7 +78,7 @@ public class EnumerationTest {
 
     @Test
     public void testTree(){
-        RCCS.config.clear();
+        org.cinrc.IRDC.config.clear();
         Process p = CCSParser.parseLine("(a|b)|('a+'b)").export();
         System.out.printf("Testing enumeration of %s...\n", p.represent());
         LTTNode node = new LTTNode(p);

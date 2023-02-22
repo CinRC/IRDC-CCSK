@@ -57,7 +57,7 @@ public class CCSInteractionHandler {
         container.act(n);
       } catch (Exception e) {
         System.out.println("Could not act on label!");
-        if (org.cinrc.IRDC.config.contains(RCCSFlag.DEBUG)) {
+        if (IRDC.config.contains(RCCSFlag.DEBUG)) {
           e.printStackTrace();
         }
       }

@@ -41,7 +41,8 @@ public class SetUtil {
       if (node instanceof ComplementLabelNode) {
         //Cool, there is a complement in the set. Let's see if any matches
         for (Label innerNode : nodes) {
-          if (innerNode != node && !(innerNode instanceof LabelKey || innerNode instanceof TauLabelNode)) {
+          if (innerNode != node &&
+              !(innerNode instanceof LabelKey || innerNode instanceof TauLabelNode)) {
             if (node.isComplementOf(innerNode)) {
               if (node.canSynchronize(innerNode) && innerNode.canSynchronize(node)) {
                 //Cool, we found a complement, let's add it to our map.
@@ -100,10 +101,7 @@ public class SetUtil {
       l2.dupe = -1;
       copy.add(l2);
     }
-    if (!copy.equals(labels2)) {
-      return false;
-    }
-    return true;
+    return copy.equals(labels2);
   }
 
   public static boolean recursiveIsSyncable(Process p, LabelKey key) {
@@ -133,10 +131,11 @@ public class SetUtil {
    * Returns true if given label is affected by restriction syntax. In this situation,
    * only labelnodes and complement labelnodes should be restrictable. This leaves
    * keys and taus outside of restriction.
+   *
    * @param l label
    * @return bool
    */
-  public static boolean isRestrictable(Label l){
+  public static boolean isRestrictable(Label l) {
     return (l instanceof LabelNode || l instanceof ComplementLabelNode);
   }
 

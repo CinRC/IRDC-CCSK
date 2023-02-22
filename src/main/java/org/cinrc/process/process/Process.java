@@ -228,6 +228,7 @@ public abstract class Process extends ProgramNode {
 
   /**
    * Set CCSK key to provided LabelKey
+   *
    * @param key key to set
    */
   protected void setKey(LabelKey key) {
@@ -276,7 +277,7 @@ public abstract class Process extends ProgramNode {
     }
     s.append(getRestriction().isEmpty() ? "" :
         String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
-    if (org.cinrc.IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
+    if (IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
       return s.toString().replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
           .replaceAll(String.format("\\%s", CCSGrammar.CLOSE_PARENTHESIS), "");
     } else {
@@ -398,6 +399,7 @@ public abstract class Process extends ProgramNode {
       }
 
       if (this instanceof ComplexProcess c && o instanceof ComplexProcess c2) {
+        //If only one is instantiated
         if (c.isPacked() && c2.isPacked()) {//If they are both instantiated
           if (!c.left.equals(c2.left)) {
             return false;
@@ -405,12 +407,9 @@ public abstract class Process extends ProgramNode {
           if (!c.right.equals(c2.right)) {
             return false;
           }
-          if (c.operator != c2.operator) {
-            return false;
-          }
-        } else if (c.isPacked() || c2.isPacked()) //If only one is instantiated
-        {
-          return false;
+          return c.operator == c2.operator;
+        } else {
+          return !c.isPacked() && !c2.isPacked();
         }
       }
     }

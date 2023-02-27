@@ -11,6 +11,7 @@ import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.process.Process;
+import org.cinrc.process.process.ProcessImpl;
 import org.cinrc.util.RCCSFlag;
 
 public class LTTNode {
@@ -89,20 +90,19 @@ public class LTTNode {
     //For every actionable label in current node,
     for (Label l : pc.getActionableLabels()) {
       if (!(l instanceof LabelKey)) {
-          if (debug) {
-              System.out.println("Before acting: " + pc.prettyString());
-          }
+        if (debug) {
+          System.out.println("Before acting: " + pc.prettyString());
+        }
         pc.act(l); //Act on that label and make a new node with that child process (clone)
-          if (debug) {
-              System.out.println("After acting: " + pc.prettyString());
-          }
+        if (debug) {
+          System.out.println("After acting: " + pc.prettyString());
+        }
         Process z = pc.getProcess().clone();
         addChild(l, z);
         pc.reverseLastAction();//Then reverse and next label.
-          if (debug) {
-              System.out.println("After reversal: " + pc.prettyString());
-          }
-
+        if (debug) {
+          System.out.println("After reversal: " + pc.prettyString());
+        }
 
 
       } else {//This should be all we need to implement reversibility
@@ -138,9 +138,12 @@ public class LTTNode {
    */
   public boolean canSimulate(LTTNode node) {
     Collection<Label> keySet = children.keySet();
-
-    for (Label l : node.children.keySet()) { //for every edge of compared
+    if (node.p instanceof ProcessImpl && p instanceof ProcessImpl)
+      if (!node.p.hasSameProcess(this.p))
+        return false;
+    for (Map.Entry<Label, LTTNode> entry : node.children.entrySet()) { //for every edge of compared
       int match = 0;
+      Label l = entry.getKey();
       for (Label l2 : keySet) { //iterate through our edges
         if (l2.isEquivalent(l)) //can our edge do what compared edge can?
         {
@@ -148,7 +151,6 @@ public class LTTNode {
             return false; //If cant simulate, end the investigation and return false
           }
           match = 1;
-          continue;
         }
       }
       if (match == 0) {
@@ -172,11 +174,11 @@ public class LTTNode {
   public Collection<LTTNode> getLeafChildren() {
     HashSet<LTTNode> nodeSet = new HashSet<>();
     for (LTTNode node : children.values()) {
-        if (node.isLeafNode()) {
-            nodeSet.add(node);
-        } else {
-            nodeSet.addAll(node.getLeafChildren());
-        }
+      if (node.isLeafNode()) {
+        nodeSet.add(node);
+      } else {
+        nodeSet.addAll(node.getLeafChildren());
+      }
     }
     return nodeSet;
   }
@@ -205,13 +207,10 @@ public class LTTNode {
   //https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
   private String print(StringBuilder buffer, String prefix, String childrenPrefix) {
     buffer.append(prefix);
-    buffer.append(String.format("%s (Depth: %d), [%s]",
-        p.represent(),
-        this.currentDepth,
-        calculatePath()));
+    buffer.append(
+        String.format("%s (Depth: %d), [%s]", p.represent(), this.currentDepth, calculatePath()));
     buffer.append('\n');
-    for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator();
-         it.hasNext(); ) {
+    for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<Label, LTTNode> entry = it.next();
       LTTNode next = entry.getValue();
       Label l = entry.getKey();

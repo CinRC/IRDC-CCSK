@@ -162,8 +162,8 @@ public class SimulationTest {
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
     node_q.enumerate(true);
-    assert (node_q.canSimulate(node_p));
-    assert (node_p.canSimulate(node_q));
+    assert (!node_q.canSimulate(node_p));
+    assert (!node_p.canSimulate(node_q));
   }
 
   /* Now we check basic properties of our simulation, namely that it contains the structural equivalence. */

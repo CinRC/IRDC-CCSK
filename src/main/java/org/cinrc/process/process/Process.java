@@ -331,6 +331,10 @@ public abstract class Process extends ProgramNode {
     return s;
   }
 
+  public boolean hasSameProcess(Process p){
+      //If the process is both a real process (P,Q)
+      return (p.origin().equals(origin()));
+  }
 
   public List<Pair<Label, LabelKey>> getLabelKeyPairs() {
     List<Pair<Label, LabelKey>> l = new ArrayList<Pair<Label, LabelKey>>();

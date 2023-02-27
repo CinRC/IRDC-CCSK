@@ -13,6 +13,8 @@ import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.LTTNode;
 import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.ProcessTemplate;
+import org.cinrc.process.nodes.LabelNode;
+import org.cinrc.process.process.Process;
 import org.cinrc.util.RCCSFlag;
 
 public class IRDC {
@@ -21,8 +23,13 @@ public class IRDC {
   public static void main(String[] args) {
     if (args.length == 0) {
       System.out.println(helpMessage());
-      System.exit(1);
-    } else if (args.length > 1) {
+      System.exit(0);
+    } else if (args.length == 1){
+      if (args[0].equals(RCCSFlag.HELP_MSG.getFlag())){
+        System.out.println(helpMessage());
+        System.exit(0);
+      }
+    }else if (args.length > 1) {
       for (int i = 0; i < args.length - 1; i++) {
         RCCSFlag f = getFlagMatchOrNull(args[i]);
         if (f == null) {

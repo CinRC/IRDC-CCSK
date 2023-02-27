@@ -103,6 +103,8 @@ public class LTTNode {
               System.out.println("After reversal: " + pc.prettyString());
           }
 
+
+
       } else {//This should be all we need to implement reversibility
                 /*Label originalLabel = ((LabelKey) l).from;
                 pc.act(l);

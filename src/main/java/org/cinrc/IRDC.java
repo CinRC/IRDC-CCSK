@@ -22,7 +22,7 @@ public class IRDC {
 
   public static void main(String[] args) {
     if (args.length == 0) {
-      System.out.println(helpMessage());
+      System.out.println("Incorrect arguments! Please use the form `java -jar IRDC.jar <flags> \"a.b|c.a\"`\n" + helpMessage());
       System.exit(0);
     } else if (args.length == 1){
       if (args[0].equals(RCCSFlag.HELP_MSG.getFlag())){
@@ -105,16 +105,13 @@ public class IRDC {
 
   public static String helpMessage() {
     StringBuilder sb = new StringBuilder();
-    sb.append(
-        "Incorrect arguments! Please use the form `java -jar IRDC.jar <flags> \"a.b|c.a\"");
-    sb.append("\n");
     for (RCCSFlag flag : RCCSFlag.values()) {
       sb.append(flag.getFlag()).append("  -  ").append(flag.getDescription()).append("\n");
     }
-    sb.append("\n--- Examples ---");
-    sb.append("java -jar IRDC.jar \"a.b + 'a.c\"");
-    sb.append("java -jar IRDC.jar \"(a.c|'a.c\\{a}) + 'a|c.b\"");
-    sb.append("java -jar IRDC.jar --enumerate \"(a.b+'a.c)|(b.'a+'a.'b)\"");
+    sb.append("\n--- Examples ---\n");
+    sb.append("java -jar IRDC.jar \"a.b + 'a.c\"\n");
+    sb.append("java -jar IRDC.jar \"(a.c|'a.c\\{a}) + 'a|c.b\"\n");
+    sb.append("java -jar IRDC.jar --enumerate \"(a.b+'a.c)|(b.'a+'a.'b)\"\n");
     return sb.toString();
   }
 

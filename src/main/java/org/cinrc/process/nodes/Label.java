@@ -83,9 +83,9 @@ public abstract class Label extends ProgramNode {
       return false;
     }
     Label label = (Label) o;
-    if (IRDC.config.contains(RCCSFlag.UNIQUE_CHANNELS)) {
-      return label.getId().equals(getId());
-    } else {
+//    if (IRDC.config.contains(RCCSFlag.UNIQUE_CHANNELS)) {
+//      return label.getId().equals(getId());
+//    } else {
       if (isComplement() != label.isComplement()) {
         return false;
       }
@@ -93,11 +93,11 @@ public abstract class Label extends ProgramNode {
       String t = getChannel() + dupe;
       String n = label.getChannel() + label.dupe;
       //If dupe of -1, do not check dupe
-      if (dupe == -1 || label.dupe == -1) {
+      if (dupe == -1 || label.dupe == -1)
         return getChannel().equals(label.getChannel());
-      }
+
       return t.equals(n); //Check if label + dupe id are equal // a0 == a0, a1 != a0
-    }
+ //   }
   }
 
   /**

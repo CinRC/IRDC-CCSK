@@ -53,6 +53,43 @@ public class LTTNode {
     this.currentDepth = currentDepth;
   }
 
+
+  /**
+   * Ensures that the given node's edges are a subset of this node's edges.
+   * This operation does not guarantee the reverse. Note that in this context, because
+   * Label#isEquivalent does not care about complements, a is equivalent to 'a
+   * and thus a.P can simulate 'a.P
+   *
+   * @param node
+   * @return True if this node this can simulate all edges of given node
+   */
+  public boolean canSimulate(LTTNode node) {
+    Collection<Label> keySet = children.keySet();
+    if (node.p instanceof ProcessImpl && p instanceof ProcessImpl
+      && !IRDC.config.contains(RCCSFlag.PROCESS_NAMES_EQUIVALENT))
+      if (!node.p.hasSameProcess(this.p))
+        return false;
+
+
+    for (Map.Entry<Label, LTTNode> entry : node.children.entrySet()) { //for every edge of compared
+      int match = 0;
+      Label l = entry.getKey();
+      for (Label l2 : keySet) { //iterate through our edges
+        if (l2.isEquivalent(l)) //can our edge do what compared edge can?
+        {
+          if (!children.get(l2).canSimulate(node.children.get(l))) {
+            return false; //If cant simulate, end the investigation and return false
+          }
+          match = 1;
+        }
+      }
+      if (match == 0) {
+        return false; //If at the end and turns out cant simulate return false
+      }
+    }
+    return true;
+  }
+
   /**
    * Function is called on each leaf node. Leaf node will start with depth 0, and
    * recursively call parent nodes with depth+1, until reaching the top. At each step
@@ -125,39 +162,6 @@ public class LTTNode {
         child.enumerate(true);
       }
     }
-  }
-
-  /**
-   * Ensures that the given node's edges are a subset of this node's edges.
-   * This operation does not guarantee the reverse. Note that in this context, because
-   * Label#isEquivalent does not care about complements, a is equivalent to 'a
-   * and thus a.P can simulate 'a.P
-   *
-   * @param node
-   * @return True if this node this can simulate all edges of given node
-   */
-  public boolean canSimulate(LTTNode node) {
-    Collection<Label> keySet = children.keySet();
-    if (node.p instanceof ProcessImpl && p instanceof ProcessImpl)
-      if (!node.p.hasSameProcess(this.p))
-        return false;
-    for (Map.Entry<Label, LTTNode> entry : node.children.entrySet()) { //for every edge of compared
-      int match = 0;
-      Label l = entry.getKey();
-      for (Label l2 : keySet) { //iterate through our edges
-        if (l2.isEquivalent(l)) //can our edge do what compared edge can?
-        {
-          if (!children.get(l2).canSimulate(node.children.get(l))) {
-            return false; //If cant simulate, end the investigation and return false
-          }
-          match = 1;
-        }
-      }
-      if (match == 0) {
-        return false; //If at the end and turns out cant simulate return false
-      }
-    }
-    return true;
   }
 
   public boolean isLeafNode() {

@@ -99,23 +99,22 @@ This program follows a slightly modified semantic structure based off of CCSK. S
 
 This program can be configured by using command-line arguments, or flags. The flags are as follows:
 
-| **Flag**    	                    | **Description**                                                                                            	 |
-|----------------------------------|--------------------------------------------------------------------------------------------------------------|
-| --debug     	                    | Enables debug mode. Will print info to stdout                                                              	 |
-| --help      	                    | Prints help message documenting flags                                                                      	 |
-| --uC        	                    | (Currently broken, do not use)                                                                             	 |
-| --dL        	                    | Labels are visibly differentiated by integers                                                              	 |
-| --hide-keys 	                    | CCSK keys are hidden                                                                                       	 |
-| --kM        	                    | (Currently broken, do not use)                                                                             	 |
-| --sA        	                    | Alternative display mode for summation processes. Reversible summations are not annotated                  	 |
-| --sC        	                    | Alternative display mode for summation processes. Reversible summations are hidden after execution         	 |
-| --require-explicit-null        	 | Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached 	 |
-| --hP        	                    | Parenthesis surrounding complex processes will be omitted                                                  	 |
-| --dN        	                    | Null processes will be displayed explicitly                                                                	 |
-| --iU        	                    | Parser will ignore unrecognized characters in the process formula                                          	 |
-| --kL        	                    | Keys will be visibly similar to the label they represent                                                   	 |
-| --gui       	                    | Program will start with a GUI instead of CLI                                                               	 |
-| --enumerate  	                   | Print enumeration tree of given process                                                                    	 |
+| **Flag**    	                       | **Description**                                                                                            	 |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| --debug     	                       | Enables debug mode. Will print info to stdout                                                              	 |
+| --help      	                       | Prints help message documenting flags                                                                      	 |
+| --dL        	                       | Labels are visibly differentiated by integers                                                              	 |
+| --hide-keys 	                       | CCSK keys are hidden                                                                                       	 |
+| --sA        	                       | Alternative display mode for summation processes. Reversible summations are not annotated                  	 |
+| --process-names-equivalent        	 | Processes names will be treated as being equivalent (P == Q)                  	                              |
+| --sC        	                       | Alternative display mode for summation processes. Reversible summations are hidden after execution         	 |
+| --require-explicit-null        	    | Labels explicitly require a trailing process. Labels will no longer have an implicit null process attached 	 |
+| --hP        	                       | Parenthesis surrounding complex processes will be omitted                                                  	 |
+| --dN        	                       | Null processes will be displayed explicitly                                                                	 |
+| --iU        	                       | Parser will ignore unrecognized characters in the process formula                                          	 |
+| --kL        	                       | Keys will be visibly similar to the label they represent                                                   	 |
+| --gui       	                       | Program will start with a GUI instead of CLI                                                               	 |
+| --enumerate  	                      | Print enumeration tree of given process                                                                    	 |
 
 
 ## Contributing

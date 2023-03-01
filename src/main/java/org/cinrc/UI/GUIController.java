@@ -46,6 +46,7 @@ public class GUIController {
         node.enumerate(true);
         outputField.setText(String.valueOf(node));
         inputBox.setText("");
+        IRDC.config.remove(RCCSFlag.ENUMERATE);
     }
 
 

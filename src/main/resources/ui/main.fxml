@@ -33,7 +33,7 @@
         </MenuBar>
         <AnchorPane prefHeight="375.0" prefWidth="600.0">
          <children>
-            <Button fx:id="enumerateBtn" layoutX="414.0" layoutY="62.0" mnemonicParsing="false" onAction="#enumerate" text="Enumerate" />
+            <Button fx:id="enumerateBtn" layoutX="400.0" layoutY="71.0" mnemonicParsing="false" onAction="#enumerate" text="Enumerate" />
             <TextField fx:id="inputBox" floatText="Process" layoutX="205.0" layoutY="65.0" />
             <Label fx:id="outputField" contentDisplay="CENTER" layoutX="149.0" layoutY="118.0" prefHeight="154.0" prefWidth="251.0" />
             <Label alignment="CENTER" layoutX="213.0" layoutY="7.0" prefHeight="40.0" prefWidth="158.0" text="RCCS Parser">

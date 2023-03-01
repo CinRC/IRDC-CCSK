@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -35,12 +36,16 @@
          <children>
             <Button fx:id="enumerateBtn" layoutX="400.0" layoutY="71.0" mnemonicParsing="false" onAction="#enumerate" text="Enumerate" />
             <TextField fx:id="inputBox" floatText="Process" layoutX="205.0" layoutY="65.0" />
-            <Label fx:id="outputField" contentDisplay="CENTER" layoutX="149.0" layoutY="118.0" prefHeight="154.0" prefWidth="251.0" />
             <Label alignment="CENTER" layoutX="213.0" layoutY="7.0" prefHeight="40.0" prefWidth="158.0" text="RCCS Parser">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
+            <ScrollPane layoutX="157.0" layoutY="114.0" prefHeight="200.0" prefWidth="339.0">
+               <content>
+                  <Label fx:id="outputField" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="187.0" prefWidth="325.0" />
+               </content>
+            </ScrollPane>
          </children>
         </AnchorPane>
     </children>

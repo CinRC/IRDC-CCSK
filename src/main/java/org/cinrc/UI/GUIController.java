@@ -1,7 +1,6 @@
 package org.cinrc.UI;
 
 import com.gluonhq.charm.glisten.control.TextField;
-import javafx.css.CssParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,35 +18,33 @@ import java.beans.EventHandler;
 public class GUIController {
     @FXML
     Label outputField;
-
     @FXML
     TextField inputBox;
-
     @FXML
     Button enumerateBtn;
 
-//    CSSParser // return process template
-//    exmport process template
-//
-//    ProcessContainer
-//
-//            LTTNode
-
     public void enumerate(ActionEvent event){
-        IRDC.config.add(RCCSFlag.ENUMERATE);
-        String process = inputBox.getText();
-        if(!process.contains("")){ // adds qutations if not already added
-            process = '"' + process + '"';
+        try{
+            IRDC.config.add(RCCSFlag.ENUMERATE); // adds enumerate flag to allow enumeration of process
+            String process = inputBox.getText(); // gets the user inputed text
+            if(process.startsWith("\"")){ // removes qutation marks
+                process = process.substring(1);
+            }
+            if(process.endsWith("\"")){ // removes qutation marks
+                process = process.substring(0, process.length() - 1);
+            }
+            CCSParser parser = new CCSParser();
+            org.cinrc.process.process.Process p =
+                    parser.parseLine(process).export(); // parses through user input
+            LTTNode node = new LTTNode(p);
+            node.enumerate(true); // enumerates through process
+            outputField.setText(String.valueOf(node)); // outputs process
+            inputBox.setText(""); // clears input
+            IRDC.config.remove(RCCSFlag.ENUMERATE); // removes enumerate flag
         }
-        CCSParser parser = new CCSParser();
-        org.cinrc.process.process.Process p =
-                CCSParser.parseLine(process).export();
-        LTTNode node = new LTTNode(p);
-        node.enumerate(true);
-        outputField.setText(String.valueOf(node));
-        inputBox.setText("");
-        IRDC.config.remove(RCCSFlag.ENUMERATE);
+        catch(Exception e){
+            outputField.setText(String.valueOf(e));
+        }
+
     }
-
-
 }

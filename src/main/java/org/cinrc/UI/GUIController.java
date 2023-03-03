@@ -1,5 +1,4 @@
 package org.cinrc.UI;
-
 import com.gluonhq.charm.glisten.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +17,7 @@ public class GUIController {
     TextField inputBox;
     @FXML
     Button enumerateBtn;
-
+    // this is a test for john
     public void enumerate(ActionEvent event){
         try{
             IRDC.config.add(RCCSFlag.ENUMERATE); // adds enumerate flag to allow enumeration of process

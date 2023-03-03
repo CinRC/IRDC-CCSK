@@ -5,19 +5,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
-
+import javafx.scene.control.TextArea;
 import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.LTTNode;
 import org.cinrc.util.RCCSFlag;
-
 import java.beans.EventHandler;
-
-
 public class GUIController {
     @FXML
-    Label outputField;
+   TextArea outputField;
     @FXML
     TextField inputBox;
     @FXML
@@ -34,8 +30,7 @@ public class GUIController {
                 process = process.substring(0, process.length() - 1);
             }
             CCSParser parser = new CCSParser();
-            org.cinrc.process.process.Process p =
-                    parser.parseLine(process).export(); // parses through user input
+            org.cinrc.process.process.Process p = parser.parseLine(process).export(); // parses through user input
             LTTNode node = new LTTNode(p);
             node.enumerate(true); // enumerates through process
             outputField.setText(String.valueOf(node)); // outputs process
@@ -43,6 +38,7 @@ public class GUIController {
             IRDC.config.remove(RCCSFlag.ENUMERATE); // removes enumerate flag
         }
         catch(Exception e){
+            IRDC.config.remove(RCCSFlag.ENUMERATE);
             outputField.setText(String.valueOf(e));
         }
 

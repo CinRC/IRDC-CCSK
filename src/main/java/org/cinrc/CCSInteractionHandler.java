@@ -34,6 +34,7 @@ public class CCSInteractionHandler {
       for (Label na : actionable) {
         System.out.printf("[%d] %s%n", i++, na);
       }
+      System.out.println("[q] Quit program");
       System.out.println("------------");
       System.out.printf("%s%n", container.prettyString());
       System.out.println("Please input the index of the label you'd like to act on:");

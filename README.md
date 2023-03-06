@@ -77,8 +77,7 @@ Some parts of this program are named different from the convention. Some of the 
 1. Channel names are referred to as 'Labels'
 2. Parallel operators (`|`) are referred to as 'Concurrent Processes'
 3. Deterministic operators (`+`) are referred to as 'Summation Processes'
-4. Label prefixings (`a.P`) are referred to as 'Action Prefix Processes'
-5. CCSK keys (`a[k0].P`) are referred to as 'Label Keys'
+4. CCSK keys (`a[k0].P`) are referred to as 'Label Keys'
 
 ### Syntax and Precedence of Operators
 

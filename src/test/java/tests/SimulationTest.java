@@ -147,8 +147,8 @@ public class SimulationTest {
     assert (!node_p.canSimulate(node_q));
   }
 
-    @Test
-    public void testSimulation8() {
+  @Test
+  public void testSimulation8() {
     // p = P
     // q = Q
     // q and p should not be able to simulate each other (we should assume that different

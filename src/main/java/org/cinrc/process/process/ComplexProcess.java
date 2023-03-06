@@ -15,7 +15,9 @@ import org.cinrc.util.SetUtil;
  */
 public abstract class ComplexProcess extends Process {
 
-  public Process left, right;
+  public Process left;
+
+  public Process right;
   CCSGrammar operator;
 
 
@@ -44,7 +46,8 @@ public abstract class ComplexProcess extends Process {
   }
 
   /**
-   * "Packs" processes to the left and right of this process to form a packed complex process.
+   * "Packs" processes to the left and right of this process to form
+   * a packed complex process.
    *
    * @param template ordered list of processes representing a formula that the process will pack from.
    * @return leftover processes that were not packed
@@ -80,56 +83,56 @@ public abstract class ComplexProcess extends Process {
     if (ghostKey != null) {
       if (IRDC.config.contains(RCCSFlag.SUMMATION_STYLE_1)) {
         s = represent(String.format(
-            "%s%s%s%s%s"
-            , CCSGrammar.OPEN_PARENTHESIS
-            , left == null ? "" : left.represent()
-            , operator.toString()
-            , right == null ? "" : right.represent()
-            , CCSGrammar.CLOSE_PARENTHESIS
+            "%s%s%s%s%s",
+            CCSGrammar.OPEN_PARENTHESIS,
+            left == null ? "" : left.represent(),
+            operator.toString(),
+            right == null ? "" : right.represent(),
+            CCSGrammar.CLOSE_PARENTHESIS
         ));
       } else if (IRDC.config.contains(RCCSFlag.SUMMATION_STYLE_3)) {
         if (left.isGhost) {
           s = represent(String.format(
-              "%s"
-              , right == null ? "" : right.represent()
+              "%s",
+              right == null ? "" : right.represent()
           ));
         } else if (right.isGhost) {
           s = represent(String.format(
-              "%s"
-              , left == null ? "" : left.represent()
+              "%s",
+              left == null ? "" : left.represent()
           ));
         }
       } else { //default style
         if (left.isGhost) {
           s = represent(String.format(
-              "%s{%s} %s %s%s%s"
-              , ghostKey
-              , left == null ? "" : left.represent()
-              , operator.toString()
-              , CCSGrammar.OPEN_PARENTHESIS
-              , right == null ? "" : right.represent()
-              , CCSGrammar.CLOSE_PARENTHESIS
+              "%s{%s} %s %s%s%s",
+              ghostKey,
+              left == null ? "" : left.represent(),
+              operator.toString(),
+              CCSGrammar.OPEN_PARENTHESIS,
+              right == null ? "" : right.represent(),
+              CCSGrammar.CLOSE_PARENTHESIS
           ));
-        } else/* if (right.isGhost)*/ {
+        } else {
           s = represent(String.format(
-              "%s%s%s %s %s{%s}"
-              , CCSGrammar.OPEN_PARENTHESIS
-              , left == null ? "" : left.represent()
-              , CCSGrammar.CLOSE_PARENTHESIS
-              , operator.toString()
-              , ghostKey
-              , right == null ? "" : right.represent()
+              "%s%s%s %s %s{%s}",
+              CCSGrammar.OPEN_PARENTHESIS,
+              left == null ? "" : left.represent(),
+              CCSGrammar.CLOSE_PARENTHESIS,
+              operator.toString(),
+              ghostKey,
+              right == null ? "" : right.represent()
           ));
         }
       }
     }
     s = super.represent(String.format(
-        "%s%s%s%s%s"
-        , CCSGrammar.OPEN_PARENTHESIS
-        , left == null ? "" : left.represent()
-        , operator.toString()
-        , right == null ? "" : right.represent()
-        , CCSGrammar.CLOSE_PARENTHESIS
+        "%s%s%s%s%s",
+        CCSGrammar.OPEN_PARENTHESIS,
+        left == null ? "" : left.represent(),
+        operator.toString(),
+        right == null ? "" : right.represent(),
+        CCSGrammar.CLOSE_PARENTHESIS
     ));
 
     if (IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
@@ -143,7 +146,7 @@ public abstract class ComplexProcess extends Process {
   }
 
   /**
-   * Returns the 'debug' form of human readable representation
+   * Returns the 'debug' form of human readable representation.
    *
    * @return Internal human readable format of what the process should look like
    */

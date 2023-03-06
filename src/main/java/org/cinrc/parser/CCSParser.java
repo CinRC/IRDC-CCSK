@@ -3,8 +3,8 @@ package org.cinrc.parser;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
-
 import org.cinrc.IRDC;
+import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelFactory;
 import org.cinrc.process.process.ConcurrentProcess;
@@ -12,7 +12,6 @@ import org.cinrc.process.process.NullProcess;
 import org.cinrc.process.process.Process;
 import org.cinrc.process.process.ProcessImpl;
 import org.cinrc.process.process.SummationProcess;
-import org.cinrc.process.ProcessTemplate;
 import org.cinrc.util.RCCSFlag;
 import org.cinrc.util.SetUtil;
 
@@ -22,7 +21,7 @@ public class CCSParser {
   }
 
   public static ProcessTemplate parseLine(String line) {
-    org.cinrc.IRDC.log("Starting parsing of " + line);
+    IRDC.log("Starting parsing of " + line);
     StringWalker walker = new StringWalker(line);
     walker.setIgnore(' ');
 
@@ -35,7 +34,7 @@ public class CCSParser {
 
     do {
       walker.walk();
-      org.cinrc.IRDC.log(
+      IRDC.log(
           String.format("Begin matching with memory %s, counter: %d, set: %b", walker.readMemory(),
               counter, inSetNotation));
 
@@ -99,7 +98,7 @@ public class CCSParser {
 
           switch (g) {
             case LABEL_COMBINED:
-              org.cinrc.IRDC.log("Adding prefix: " + m.group());
+              IRDC.log("Adding prefix: " + m.group());
               prefixes.add(LabelFactory.parseNode(m.group()));
               if (!walker.canWalk()) {
                 template.add(new NullProcess(prefixes));
@@ -108,7 +107,7 @@ public class CCSParser {
                   CCSGrammar.OP_SEQUENTIAL.toString())) { //If there is a . after label, then skip over it and continue.
                 walker.walk(false);
                 //If there is no ., then treat it as an implicit "0" process
-              } else if (!org.cinrc.IRDC.config.contains(RCCSFlag.REQUIRE_EXPLICIT_NULL)) {
+              } else if (!IRDC.config.contains(RCCSFlag.REQUIRE_EXPLICIT_NULL)) {
                 template.add(new NullProcess(prefixes));
                 prefixes.clear();
               } else {

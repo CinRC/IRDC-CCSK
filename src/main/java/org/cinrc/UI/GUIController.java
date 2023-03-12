@@ -3,45 +3,82 @@ import com.gluonhq.charm.glisten.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import org.cinrc.CCSInteractionHandler;
 import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.LTTNode;
+import org.cinrc.process.ProcessContainer;
+import org.cinrc.process.ProcessTemplate;
 import org.cinrc.util.RCCSFlag;
-
 import java.awt.*;
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class GUIController {
+public class GUIController implements Initializable {
 
     private Stage stage;
     private Scene scene;
     private Parent root;
 
     @FXML
-   TextArea outputField;
+    public TextArea outputField;
     @FXML
-    TextField inputBox;
+    public TextField inputBox;
+//    @FXML
+//    Button enumerateBtn;
+//    @FXML
+//    Button walkThrough;
     @FXML
-    Button enumerateBtn;
+    ChoiceBox<String> myChoiceBox;
+    @FXML
+    Button run;
 
-    public void enumerate(ActionEvent event){
+    private String[] choices = {"Enumerate", "Walk Through"}; // values for dropdown box
+                                                              // populated in initailize
+
+    public void evaluate(ActionEvent event){
+        String action = myChoiceBox.getValue();
+        if(action.equals("Enumerate")){
+            enumerate();
+        }
+        if(action.equals("Walk Through")){
+            walkThrough();
+        }
+    }
+    public void walkThrough(){
+//        IRDC.config.add(RCCSFlag.GUI);
+//        String process = inputBox.getText();
+//        if(process.startsWith("\"")){
+//            process = process.substring(1);
+//        }
+//        if(process.endsWith("\"")){
+//            process = process.substring(0, process.length() - 1);
+//        }
+//        ProcessTemplate template = CCSParser.parseLine(process);
+//
+//
+//        new CCSInteractionHandler(new ProcessContainer(template.export())).startInteraction();
+    }
+
+    public void enumerate(){
         try{
             IRDC.config.add(RCCSFlag.ENUMERATE); // adds enumerate flag to allow enumeration of process
-            String process = inputBox.getText(); // gets the user inputed text
-            if(process.startsWith("\"")){ // removes qutation marks
+            String process = inputBox.getText();
+            if(process.startsWith("\"")){
                 process = process.substring(1);
             }
-            if(process.endsWith("\"")){ // removes qutation marks
+            if(process.endsWith("\"")){
                 process = process.substring(0, process.length() - 1);
             }
             CCSParser parser = new CCSParser();
@@ -49,14 +86,13 @@ public class GUIController {
             LTTNode node = new LTTNode(p);
             node.enumerate(true); // enumerates through process
             outputField.setText(String.valueOf(node)); // outputs process
-            inputBox.setText(""); // clears input
-            IRDC.config.remove(RCCSFlag.ENUMERATE); // removes enumerate flag
+            inputBox.setText("");
+            IRDC.config.remove(RCCSFlag.ENUMERATE);
         }
         catch(Exception e){
             IRDC.config.remove(RCCSFlag.ENUMERATE);
             outputField.setText(String.valueOf(e));
         }
-
     }
     //switches the view from the information page to the main page.
     public void main(ActionEvent event) throws IOException {
@@ -77,5 +113,10 @@ public class GUIController {
 
     public void openLink(ActionEvent event) throws URISyntaxException, IOException {
         Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK"));
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        myChoiceBox.getItems().addAll(choices);
     }
 }

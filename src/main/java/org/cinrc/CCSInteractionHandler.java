@@ -2,6 +2,8 @@ package org.cinrc;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.cinrc.UI.GUIController;
 import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
@@ -57,7 +59,7 @@ public class CCSInteractionHandler {
         container.act(n);
       } catch (Exception e) {
         System.out.println("Could not act on label!");
-        if (org.cinrc.IRDC.config.contains(RCCSFlag.DEBUG)) {
+        if (IRDC.config.contains(RCCSFlag.DEBUG)) {
           e.printStackTrace();
         }
       }
@@ -68,6 +70,8 @@ public class CCSInteractionHandler {
 
     return true;
   }
+
+
 
 
 }

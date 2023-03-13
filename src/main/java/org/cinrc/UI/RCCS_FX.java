@@ -3,9 +3,14 @@ package org.cinrc.UI;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.cinrc.parser.CCSParser;
+import org.cinrc.process.ProcessContainer;
+import org.cinrc.process.ProcessTemplate;
+import org.cinrc.process.process.Process;
 
 public class RCCS_FX extends Application {
   @Override
@@ -23,6 +28,8 @@ public class RCCS_FX extends Application {
     stage.setScene(scene);
     stage.show();
   }
+
+
 
   public void main(String[] args) {
     launch();

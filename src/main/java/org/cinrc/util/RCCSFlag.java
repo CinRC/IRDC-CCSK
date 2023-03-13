@@ -8,14 +8,14 @@ public enum RCCSFlag {
   HELP_MSG("Print this help message",
       "--help"),
   VALIDATE("Validate all given processes inside the file inputted after this flag", "--validate"),
-  UNIQUE_CHANNELS("[broken] Should each channel's identity be dictated by it's unique ID",
-      "--uC"),
+/*  UNIQUE_CHANNELS("[broken] Should each channel's identity be dictated by it's unique ID",
+      "--uC"),*/
   DIFFERENTIATE_LABELS("Labels are visibly differentiated by integers",
       "--dL"),
   HIDE_KEYS("CCSK keys are hidden",
       "--hide-keys"),
-  KEY_MATCHING_MODE("[broken] Should a label's identity be determined by its unique ID?",
-      "--kM"), //0 = true 1 = false
+/*  KEY_MATCHING_MODE("[broken] Should a label's identity be determined by its unique ID?",
+      "--kM"), //0 = true 1 = false*/
   SUMMATION_STYLE_1(
       "Alternative display mode for summation processes. Reversible summations are not annotated",
       "--sA"),
@@ -27,6 +27,8 @@ public enum RCCSFlag {
       "--require-explicit-null"),
   HIDE_PARENTHESIS("Parenthesis surrounding complex processes will be omitted",
       "--hP"),
+  PROCESS_NAMES_EQUIVALENT("Process names will be treated as equivalent (P == Q)",
+      "--equivalent-process-names"),
   DISPLAY_NULL("Null processes will be displayed explicitly",
       "--dN"),
   IGNORE_UNRECOGNIZED("Unrecognized characters in process are ignored",

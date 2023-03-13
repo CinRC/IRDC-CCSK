@@ -86,7 +86,7 @@ public class IRDC {
       template.initComplex();
       log(String.format("Formula after complex init and minimization: %s",
           template.prettyString()));
-      new CCSInteractionHandler(new ProcessContainer(template.export())).startInteraction();
+      new CCSInteractionHandler(template.export()).startInteraction();
     } catch (Exception e) {
       e.printStackTrace();
     }

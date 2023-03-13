@@ -52,24 +52,20 @@ public class ConcurrentProcess extends ComplexProcess {
   public LabelKey getKey() {
     LabelKey k = null;
     Collection<Label> l = getActionableLabelsStrict();
-    l.removeIf(x -> !(x instanceof LabelKey));//remove all non-labelkeys
+    l.removeIf(x -> !(x instanceof LabelKey)); //remove all non-labelkeys
     if (l.size() == 0) {
       if (key != null) {
         return key;
       } else {
-        throw new CCSParserException(
-            "Attempted to get key from concurrent process " + represent() +
-                " but could not find one!");
+        throw new CCSParserException("Attempted to get key from concurrent process " + represent() +
+            " but could not find one!");
       }
-    } else if (l.size() == 1)
-    //If only one key, then this is the key
-    {
+    } else if (l.size() == 1) {
       return (LabelKey) l.toArray()[0];
     }
     //If more than one key, find latest
     else if (l.size() > 1) {
-      for (Label label : l)//otherwise, lets find which one happened last
-      {
+      for (Label label : l) { //find which happened most recently
         if (k == null || ((LabelKey) label).time.isAfter(k.time)) {
           k = (LabelKey) label;
         }
@@ -78,11 +74,11 @@ public class ConcurrentProcess extends ComplexProcess {
     return k;
   }
 
+
   private void refactorRecentKey() {
     Collection<Label> l = getActionableLabelsStrict();
-    l.removeIf(x -> !(x instanceof LabelKey));//remove all non-labelkeys
-    for (Label label : l)//otherwise, lets find which one happened last
-    {
+    l.removeIf(x -> !(x instanceof LabelKey)); //remove all non-labelkeys
+    for (Label label : l) {
       if (key == null || ((LabelKey) label).time.isAfter(key.time)) {
         key = (LabelKey) label;
       }
@@ -122,8 +118,7 @@ public class ConcurrentProcess extends ComplexProcess {
   }
 
   public Process attemptRewind(LabelKey key) {
-    if (getLeftRightLabels().stream()
-        .noneMatch(LabelKey.class::isInstance))//no keys left/right?
+    if (getLeftRightLabels().stream().noneMatch(LabelKey.class::isInstance))//no keys left/right?
     {
       if (key.equals(getPrefixKey())) {
         return previousLife;//return previous life

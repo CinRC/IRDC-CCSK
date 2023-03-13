@@ -20,6 +20,14 @@ public class CCSParser {
   public CCSParser() {
   }
 
+  /**
+   * Primary parsing function of this program. This method will parse
+   * the given input string and return a ProcessTemplate representing that
+   * string, if successful.
+   *
+   * @param line String representing process in proper format
+   * @return ProcessTemplate representing that string
+   */
   public static ProcessTemplate parseLine(String line) {
     IRDC.log("Starting parsing of " + line);
     StringWalker walker = new StringWalker(line);
@@ -50,8 +58,7 @@ public class CCSParser {
           counter--;
           if (counter == 0) {
             Process dp = CCSParser.parseLine(
-                walker.readMemory()
-                    .substring(1, walker.readMemory().length() - 1)).export();
+                walker.readMemory().substring(1, walker.readMemory().length() - 1)).export();
             dp.addPrefixes(prefixes);
             template.add(dp);
             inParenthesis = false;
@@ -59,27 +66,21 @@ public class CCSParser {
           }
         }
       } else {
-        for (CCSGrammar g : Arrays.stream(CCSGrammar.values())
-            .filter(c -> c.canBeParsed()).toList()) {
+        for (CCSGrammar g : Arrays.stream(CCSGrammar.values()).filter(c -> c.canBeParsed())
+            .toList()) {
           Matcher m = g.match(walker.readMemory());
-          if (!m.find()) //Grammar doesn't match, next one!
-          {
+          if (!m.find()) {
             continue;
           }
-
-          if (!g.match(walker.readMemory())
-              .matches()) //If grammar matches but does not match *everything* in memory
-          {
+          //If grammar matches but does not match *everything* in memory
+          if (!g.match(walker.readMemory()).matches()) {
             throw new CCSParserException(
                 "Unrecognized character(s): " + walker.readMemory().replace(m.group(), ""));
           }
-
           IRDC.log("Found match: " + m.group() + " Grammar: " + g.name());
-
           if (inSetNotation) {
             if (g == CCSGrammar.LABEL_COMBINED) { //Is there a label here
-              restrictions.add(
-                  LabelFactory.parseNode(m.group())); //Add restriction to list
+              restrictions.add(LabelFactory.parseNode(m.group())); //Add restriction to list
               if (walker.peek()
                   .equals(",")) { //If the next symbol is a comma, just skip and forget about it
                 walker.walk(false);
@@ -103,8 +104,8 @@ public class CCSParser {
               if (!walker.canWalk()) {
                 template.add(new NullProcess(prefixes));
                 prefixes.clear();
-              } else if (walker.peek().equals(
-                  CCSGrammar.OP_SEQUENTIAL.toString())) { //If there is a . after label, then skip over it and continue.
+                //If there is a . after label, then skip over it and continue.
+              } else if (walker.peek().equals(CCSGrammar.OP_SEQUENTIAL.toString())) {
                 walker.walk(false);
                 //If there is no ., then treat it as an implicit "0" process
               } else if (!IRDC.config.contains(RCCSFlag.REQUIRE_EXPLICIT_NULL)) {
@@ -112,8 +113,8 @@ public class CCSParser {
                 prefixes.clear();
               } else {
                 throw new CCSParserException(
-                    "Could not find process for prefixes: " +
-                        SetUtil.csvSet(prefixes));
+                    String.format("Could not find process for prefixes: %s",
+                        SetUtil.csvSet(prefixes)));
               }
               break;
 
@@ -144,11 +145,10 @@ public class CCSParser {
                 inSetNotation = true;
               } else {
                 throw new CCSParserException(
-                    "Unexpected token: " + walker.readMemory());
+                    String.format("Unexpected token: %s", walker.readMemory()));
               }
               break;
           }
-
           walker.clearMemory();
         }
       }

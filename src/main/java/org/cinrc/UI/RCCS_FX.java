@@ -7,10 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.cinrc.parser.CCSParser;
-import org.cinrc.process.ProcessContainer;
-import org.cinrc.process.ProcessTemplate;
-import org.cinrc.process.process.Process;
 
 public class RCCS_FX extends Application {
   @Override

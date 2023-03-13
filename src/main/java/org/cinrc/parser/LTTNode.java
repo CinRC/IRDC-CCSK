@@ -17,12 +17,14 @@ import org.cinrc.util.RCCSFlag;
 public class LTTNode {
 
   public HashMap<Label, LTTNode> children;
-  public Process p;
+  public Process internalProcess;
   public HashMap<LTTNode, Label> parents;
-  private int currentDepth, maxDepth;
+  private int currentDepth;
 
-  public LTTNode(Process p) {
-    this.p = p;
+  private int maxDepth;
+
+  public LTTNode(Process internalProcess) {
+    this.internalProcess = internalProcess;
     children = new HashMap<>();
     currentDepth = 0;
     parents = new HashMap<>();
@@ -60,23 +62,23 @@ public class LTTNode {
    * Label#isEquivalent does not care about complements, a is equivalent to 'a
    * and thus a.P can simulate 'a.P
    *
-   * @param node
+   * @param node LTTNode
    * @return True if this node this can simulate all edges of given node
    */
   public boolean canSimulate(LTTNode node) {
     Collection<Label> keySet = children.keySet();
-    if (node.p instanceof ProcessImpl && p instanceof ProcessImpl
-      && !IRDC.config.contains(RCCSFlag.PROCESS_NAMES_EQUIVALENT))
-      if (!node.p.hasSameProcess(this.p))
+    if (node.internalProcess instanceof ProcessImpl && internalProcess instanceof ProcessImpl
+        && !IRDC.config.contains(RCCSFlag.PROCESS_NAMES_EQUIVALENT)) {
+      if (!node.internalProcess.hasSameProcess(this.internalProcess)) {
         return false;
-
+      }
+    }
 
     for (Map.Entry<Label, LTTNode> entry : node.children.entrySet()) { //for every edge of compared
       int match = 0;
       Label l = entry.getKey();
       for (Label l2 : keySet) { //iterate through our edges
-        if (l2.isEquivalent(l)) //can our edge do what compared edge can?
-        {
+        if (l2.isEquivalent(l)) { //can our edge do what compared edge can?
           if (!children.get(l2).canSimulate(node.children.get(l))) {
             return false; //If cant simulate, end the investigation and return false
           }
@@ -97,7 +99,7 @@ public class LTTNode {
    * Sort of like a callback function to calculate depth with a complexity of O(n), as opposed
    * to O(n^2)   ((I think))
    *
-   * @param depth
+   * @param depth Depth of current node
    */
   protected void echoDepth(int depth) {
     if (depth > maxDepth) {
@@ -119,11 +121,11 @@ public class LTTNode {
    * extend the tree by adding new nodes as children to this node from each label,
    * and recursively call this function on all child nodes if recurse is true.
    *
-   * @param recurse
+   * @param recurse Whether or not to enumerate children as well
    */
   public void enumerate(boolean recurse) {
     boolean debug = IRDC.config.contains(RCCSFlag.DEBUG);
-    ProcessContainer pc = new ProcessContainer(p.clone());
+    ProcessContainer pc = new ProcessContainer(internalProcess.clone());
     //For every actionable label in current node,
     for (Label l : pc.getActionableLabels()) {
       if (!(l instanceof LabelKey)) {
@@ -136,13 +138,13 @@ public class LTTNode {
         }
         Process z = pc.getProcess().clone();
         addChild(l, z);
-        pc.reverseLastAction();//Then reverse and next label.
+        pc.reverseLastAction(); //Then reverse and next label.
         if (debug) {
           System.out.println("After reversal: " + pc.prettyString());
         }
 
 
-      } else {//This should be all we need to implement reversibility
+      } else { //This should be all we need to implement reversibility
                 /*Label originalLabel = ((LabelKey) l).from;
                 pc.act(l);
                 for (LTTNode n : parents)
@@ -171,9 +173,9 @@ public class LTTNode {
   /**
    * Creates set of all fully reduced processes that consider this process
    * an 'ancestor' (but not necessarily the top level ancestor).
-   * e.g: A list of processes that can be obtained by any sequence of actions
+   * e.g: A list of processes that can be obtained by any sequence of actions.
    *
-   * @return
+   * @return HashSet of LTTNodes that represent leaf nodes
    */
   public Collection<LTTNode> getLeafChildren() {
     HashSet<LTTNode> nodeSet = new HashSet<>();
@@ -189,9 +191,9 @@ public class LTTNode {
 
   /**
    * Recurse through parent processes to determine which sequence of actions
-   * was taken to reach this process from the ancestor parent
+   * was taken to reach this process from the ancestor parent.
    *
-   * @return
+   * @return ArrayList of labels that it's ancestor must have taken in order to reach this.
    */
   public ArrayList<Label> calculatePath() {
     ArrayList<Label> al = new ArrayList<>();
@@ -209,19 +211,24 @@ public class LTTNode {
 
 
   //https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
-  private String print(StringBuilder buffer, String prefix, String childrenPrefix) {
+  private String print(final StringBuilder buffer, final String prefix,
+                       final String childrenPrefix) {
     buffer.append(prefix);
     buffer.append(
-        String.format("%s (Depth: %d), [%s]", p.represent(), this.currentDepth, calculatePath()));
+        String.format("%s (Depth: %d), [%s]",
+            internalProcess.represent(),
+            this.currentDepth, calculatePath()));
     buffer.append('\n');
     for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<Label, LTTNode> entry = it.next();
       LTTNode next = entry.getValue();
       Label l = entry.getKey();
       if (it.hasNext()) {
-        next.print(buffer, childrenPrefix + "├─" + l + "─ ", childrenPrefix + "│   ");
+        next.print(buffer, childrenPrefix
+            + "├─" + l + "─ ", childrenPrefix + "│   ");
       } else {
-        next.print(buffer, childrenPrefix + "└─" + l + "─ ", childrenPrefix + "    ");
+        next.print(buffer, childrenPrefix
+            + "└─" + l + "─ ", childrenPrefix + "    ");
       }
     }
     return buffer.toString();

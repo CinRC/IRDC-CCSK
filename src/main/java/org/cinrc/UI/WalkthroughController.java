@@ -37,10 +37,11 @@ public class WalkthroughController {
     Button act;
 
     private boolean firstTime = true; // takes the process as initial input and then indexs for the act on
-    CCSInteractionHandler exported = null;
-    ArrayList<Label> actionable = null;
+    private CCSInteractionHandler exported = null;
+    private ArrayList<Label> actionable = null;
 
     public void act(){ // not yet working the way we would like, will fix this next
+        //takes a proccess to start
         if(firstTime){
             String process = actInput.getText();
             if(process.startsWith("\"")){
@@ -63,7 +64,9 @@ public class WalkthroughController {
             }
 
             firstTime = false;
+            actInput.setText("");
         }
+        // now takes indexes as input
         Label n = null;
         int index = Integer.parseInt(actInput.getText());
         try {
@@ -84,6 +87,7 @@ public class WalkthroughController {
             outputField.setText(outputField.getText() +
                     "\n[" + i++ + "] " + la);
         }
+        actInput.setText("");
     }
     public void close(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/ui/main.fxml"));

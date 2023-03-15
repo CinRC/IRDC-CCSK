@@ -15,14 +15,17 @@ import org.cinrc.CCSInteractionHandler;
 import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.LTTNode;
-import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.ProcessTemplate;
+import org.cinrc.process.nodes.Label;
 import org.cinrc.util.RCCSFlag;
+
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.ResourceBundle;
 
 public class GUIController implements Initializable {
@@ -35,40 +38,23 @@ public class GUIController implements Initializable {
     public TextArea outputField;
     @FXML
     public TextField inputBox;
-//    @FXML
-//    Button enumerateBtn;
-//    @FXML
-//    Button walkThrough;
+
     @FXML
     ChoiceBox<String> myChoiceBox;
     @FXML
     Button run;
 
-    private String[] choices = {"Enumerate", "Walk Through"}; // values for dropdown box
+    private String[] choices = {"Enumerate", "Walkthrough"}; // values for dropdown box
                                                               // populated in initailize
 
-    public void evaluate(ActionEvent event){
+    public void evaluate(ActionEvent event) throws IOException {
         String action = myChoiceBox.getValue();
         if(action.equals("Enumerate")){
             enumerate();
         }
-        if(action.equals("Walk Through")){
-            walkThrough();
+        if(action.equals("Walkthrough")){
+            walkthroughPage(event);
         }
-    }
-    public void walkThrough(){
-//        IRDC.config.add(RCCSFlag.GUI);
-//        String process = inputBox.getText();
-//        if(process.startsWith("\"")){
-//            process = process.substring(1);
-//        }
-//        if(process.endsWith("\"")){
-//            process = process.substring(0, process.length() - 1);
-//        }
-//        ProcessTemplate template = CCSParser.parseLine(process);
-//
-//
-//        new CCSInteractionHandler(new ProcessContainer(template.export())).startInteraction();
     }
 
     public void enumerate(){
@@ -94,10 +80,9 @@ public class GUIController implements Initializable {
             outputField.setText(String.valueOf(e));
         }
     }
-    //switches the view from the information page to the main page.
-    public void main(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/ui/main.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    public void walkthroughPage(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/walkthroughPage.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
@@ -110,13 +95,12 @@ public class GUIController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-
     public void openLink(ActionEvent event) throws URISyntaxException, IOException {
         Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK"));
     }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         myChoiceBox.getItems().addAll(choices);
+        myChoiceBox.setValue("Walkthrough");
     }
 }

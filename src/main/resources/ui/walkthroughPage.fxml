@@ -61,7 +61,8 @@
                      </content>
                   </ScrollPane>
                   <Button fx:id="act" layoutX="391.0" layoutY="75.0" mnemonicParsing="false" onAction="#act" text="Act" />
-                  <Button layoutX="463.0" layoutY="75.0" mnemonicParsing="false" onAction="#close" text="Close" />
+                  <Button fx:id="closeBtn" layoutX="512.0" layoutY="322.0" mnemonicParsing="false" onAction="#close" text="Close" />
+                  <Button fx:id="resetBtn" layoutX="458.0" layoutY="75.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
                </children>
             </AnchorPane>
          </children>

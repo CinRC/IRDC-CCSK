@@ -44,7 +44,7 @@ public class GUIController implements Initializable {
     @FXML
     Button run;
 
-    private String[] choices = {"Enumerate", "Walkthrough"}; // values for dropdown box
+    private String[] choices = {"Walkthrough", "Enumerate"}; // values for dropdown box
                                                               // populated in initailize
 
     public void evaluate(ActionEvent event) throws IOException {

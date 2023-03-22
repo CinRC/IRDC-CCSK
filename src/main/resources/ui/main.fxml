@@ -64,6 +64,7 @@
                 <Hyperlink layoutX="33.0" layoutY="16.0" onAction="#openLink" text="Github" />
             <ChoiceBox fx:id="myChoiceBox" layoutX="371.0" layoutY="75.0" prefHeight="26.0" prefWidth="114.0" />
             <Button fx:id="evaluate" layoutX="504.0" layoutY="73.0" mnemonicParsing="false" onAction="#evaluate" text="Run" />
+            <Button fx:id="genRandomProcess" layoutX="57.0" layoutY="73.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
             </children>
         </AnchorPane>
     </children>

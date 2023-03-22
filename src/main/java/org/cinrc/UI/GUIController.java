@@ -42,10 +42,21 @@ public class GUIController implements Initializable {
     @FXML
     ChoiceBox<String> myChoiceBox;
     @FXML
-    Button run;
+    Button genRandomProcess;
 
     private String[] choices = {"Walkthrough", "Enumerate"}; // values for dropdown box
                                                               // populated in initailize
+
+    public void genRandom() {
+        String[] rProcesses = {"((a)|('a))+((a)|('a))", "(a|'a)\\{a}", "a.b.c.d | 'a.'b.'c.'d", // generic processes
+                "(a.b | 'b.'a)\\{a, b}", "(a)\\{'a}", // stuck processes
+                "a.a.(b+c)", "a.a.b + a.a.c",  // bisiumlation
+                "a.P", "a.b.P", "a.(b.X|Y)", "a.P\\{b}", "a.P|b.Q", "a.P + b.Q", "a.P|'a.Q"
+        }; // examples from LTS/SOS
+        inputBox.setFloatText("");
+        int randomNum = (int) Math.floor(Math.random() * rProcesses.length);
+        inputBox.setText(rProcesses[randomNum]);
+    }
 
     public void evaluate(ActionEvent event) throws IOException {
         String action = myChoiceBox.getValue();

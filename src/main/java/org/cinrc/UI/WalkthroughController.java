@@ -18,6 +18,7 @@ import org.cinrc.util.RCCSFlag;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 public class WalkthroughController {
 
     @FXML
@@ -27,11 +28,26 @@ public class WalkthroughController {
     @FXML
     Button act;
 
+    @FXML
+    Button genRandomProcess;
+
     private boolean firstTime = true; // takes the process as initial input and then indexs for the act on
     private CCSInteractionHandler exported = null;
     private ArrayList<Label> actionable = null;
 
-    public void act(){ // not yet working the way we would like, will fix this next
+    public void genRandom() {
+        reset();
+        String[] rProcesses = {"((a)|('a))+((a)|('a))", "(a|'a)\\{a}", "a.b.c.d | 'a.'b.'c.'d", // generic processes
+                "(a.b | 'b.'a)\\{a, b}", "(a)\\{'a}", // stuck processes
+                "a.a.(b+c)", "a.a.b + a.a.c",  // bisiumlation
+                "a.P", "a.b.P", "a.(b.X|Y)", "a.P\\{b}", "a.P|b.Q", "a.P + b.Q", "a.P|'a.Q"
+        }; // examples from LTS/SOS
+        actInput.setFloatText("");
+        int randomNum = (int) Math.floor(Math.random() * rProcesses.length);
+        actInput.setText(rProcesses[randomNum]);
+    }
+
+    public void act(){
         //takes a proccess to start
         try{
             if(firstTime){
@@ -44,13 +60,13 @@ public class WalkthroughController {
                 }
                 outputField.setText("");
                 IRDC.config.add(RCCSFlag.GUI);
-                ProcessTemplate template = CCSParser.parseLine(process);
+                ProcessTemplate template = CCSParser.parseLine(process); // parses the initial input
                 exported = new CCSInteractionHandler(template.export());
-                actionable = exported.getActionableLabels();
+                actionable = exported.getActionableLabels(); // gets all labels of exported process
                 outputField.setText(exported.getProcessRepresentation() +
                         "\n----------------\nPlease input the index of the label you'd like to act on:");
                 int i = 0;
-                for(Label la : actionable){
+                for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
                     outputField.setText(outputField.getText() +
                             "\n[" + i++ + "] " + la);
                 }
@@ -61,7 +77,7 @@ public class WalkthroughController {
             else{
                 // now takes indexes as input
                 Label n = null;
-                int index = Integer.parseInt(actInput.getText());
+                int index = Integer.parseInt(actInput.getText()); // takes user input in form of index, e.g. 0,1,2,3..
                 try {
                     n = actionable.get(index);
                 } catch (Exception e) {
@@ -72,11 +88,11 @@ public class WalkthroughController {
                 }catch(Exception e){
                     outputField.setText(outputField.getText() + "\n------------------\nCould not act on label!");
                 }
-                actionable = exported.getActionableLabels();
+                actionable = exported.getActionableLabels(); // gets new actionable labels
                 outputField.setText(exported.getProcessRepresentation() +
                         "\n----------------\nPlease input the index of the label you'd like to act on:");
                 int i = 0;
-                for(Label la : actionable){
+                for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
                     outputField.setText(outputField.getText() +
                             "\n[" + i++ + "] " + la);
                 }
@@ -85,17 +101,15 @@ public class WalkthroughController {
         }
         catch(Exception e){
             actInput.setText("");
-            outputField.setText(outputField.getText() + "\n----------------\n" + e);
+            outputField.setText(outputField.getText() + "\n----------------\n" + e); // displays errors if encountered
         }
-
-
     }
 
-    public void reset() {
+    public void reset() { // resets page, clears input and sets first to true to allow a process to be taken as input
         outputField.setText("");
         firstTime = true;
     }
-    public void close(ActionEvent event) throws IOException {
+    public void close(ActionEvent event) throws IOException { // displays landing page
         Parent root = FXMLLoader.load(getClass().getResource("/ui/main.fxml"));
         Stage stage;
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

@@ -98,6 +98,9 @@ public class GUIController implements Initializable {
     public void openLink(ActionEvent event) throws URISyntaxException, IOException {
         Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK"));
     }
+    public void openReadme(ActionEvent event) throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK/blob/master/README.md"));
+    };
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         myChoiceBox.getItems().addAll(choices);

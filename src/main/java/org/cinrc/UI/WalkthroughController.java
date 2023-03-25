@@ -16,7 +16,10 @@ import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.util.RCCSFlag;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class WalkthroughController {
@@ -37,6 +40,7 @@ public class WalkthroughController {
 
     public void genRandom() {
         reset();
+        // processes taken from https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md
         String[] rProcesses = {"((a)|('a))+((a)|('a))", "(a|'a)\\{a}", "a.b.c.d | 'a.'b.'c.'d", // generic processes
                 "(a.b | 'b.'a)\\{a, b}", "(a)\\{'a}", // stuck processes
                 "a.a.(b+c)", "a.a.b + a.a.c",  // bisiumlation
@@ -117,4 +121,8 @@ public class WalkthroughController {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void openProcessExamples(ActionEvent event) throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md"));
+    };
 }

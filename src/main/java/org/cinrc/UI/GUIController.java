@@ -48,6 +48,7 @@ public class GUIController implements Initializable {
                                                               // populated in initailize
 
     public void genRandom() {
+        // processes taken from https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md
         String[] rProcesses = {"((a)|('a))+((a)|('a))", "(a|'a)\\{a}", "a.b.c.d | 'a.'b.'c.'d", // generic processes
                 "(a.b | 'b.'a)\\{a, b}", "(a)\\{'a}", // stuck processes
                 "a.a.(b+c)", "a.a.b + a.a.c",  // bisiumlation
@@ -55,7 +56,6 @@ public class GUIController implements Initializable {
         }; // examples from LTS/SOS
         inputBox.setFloatText("");
         int randomNum = (int) Math.floor(Math.random() * rProcesses.length);
-        System.out.println(rProcesses.length);
         inputBox.setText(rProcesses[randomNum]);
     }
 
@@ -113,6 +113,10 @@ public class GUIController implements Initializable {
     }
     public void openReadme(ActionEvent event) throws URISyntaxException, IOException {
         Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK/blob/master/README.md"));
+    };
+
+    public void openProcessExamples(ActionEvent event) throws URISyntaxException, IOException {
+        Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md"));
     };
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

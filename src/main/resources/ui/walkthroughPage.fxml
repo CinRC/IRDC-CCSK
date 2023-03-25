@@ -35,6 +35,11 @@
                         <MenuItem mnemonicParsing="false" text="About" />
                      </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Processes">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#openProcessExamples" text="Process Information" />
+                    </items>
+                  </Menu>
                </menus>
             </MenuBar>
             <AnchorPane prefHeight="375.0" prefWidth="600.0">

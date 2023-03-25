@@ -55,6 +55,7 @@ public class GUIController implements Initializable {
         }; // examples from LTS/SOS
         inputBox.setFloatText("");
         int randomNum = (int) Math.floor(Math.random() * rProcesses.length);
+        System.out.println(rProcesses.length);
         inputBox.setText(rProcesses[randomNum]);
     }
 
@@ -64,7 +65,7 @@ public class GUIController implements Initializable {
             enumerate();
         }
         if(action.equals("Walkthrough")){
-            walkthroughPage(event);
+            walkthroughPage(event, inputBox.getText());
         }
     }
 
@@ -91,12 +92,13 @@ public class GUIController implements Initializable {
             outputField.setText(String.valueOf(e));
         }
     }
-    public void walkthroughPage(ActionEvent event) throws IOException{
+    public void walkthroughPage(ActionEvent event, String proccess) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("/ui/walkthroughPage.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene (root);
         stage.setScene(scene);
         stage.show();
+
     }
     //switches the view from the main page to the main information page.
     public void infoPage(ActionEvent event) throws IOException{

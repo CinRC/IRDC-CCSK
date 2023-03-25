@@ -4,12 +4,12 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,9 +21,9 @@
         <MenuBar prefWidth="600.0">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                    </items>
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openLink" text="GitHub" />
+               </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
@@ -32,7 +32,8 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#openReadme" text="Information" />
                     </items>
                 </Menu>
             </menus>
@@ -60,8 +61,6 @@
                         </TextArea>
                     </content>
                 </ScrollPane>
-                <Button layoutX="489.0" layoutY="13.0" mnemonicParsing="false" onAction="#infoPage" text="Information" />
-                <Hyperlink layoutX="33.0" layoutY="16.0" onAction="#openLink" text="Github" />
             <ChoiceBox fx:id="myChoiceBox" layoutX="371.0" layoutY="75.0" prefHeight="26.0" prefWidth="114.0" />
             <Button fx:id="evaluate" layoutX="504.0" layoutY="73.0" mnemonicParsing="false" onAction="#evaluate" text="Run" />
             <Button fx:id="genRandomProcess" layoutX="57.0" layoutY="73.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />

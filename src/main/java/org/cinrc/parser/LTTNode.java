@@ -76,10 +76,10 @@ public class LTTNode {
 
     for (Map.Entry<Label, LTTNode> entry : node.children.entrySet()) { //for every edge of compared
       int match = 0;
-      Label l = entry.getKey();
-      for (Label l2 : keySet) { //iterate through our edges
-        if (l2.isEquivalent(l)) { //can our edge do what compared edge can?
-          if (!children.get(l2).canSimulate(node.children.get(l))) {
+      Label compareLabel = entry.getKey();
+      for (Label ourLabel : keySet) { //iterate through our edges
+        if (ourLabel.isEquivalent(compareLabel)) { //can our edge do what compared edge can?
+          if (!children.get(ourLabel).canSimulate(node.children.get(compareLabel))) {
             return false; //If cant simulate, end the investigation and return false
           }
           match = 1;

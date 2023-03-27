@@ -298,7 +298,7 @@ public abstract class Process extends ProgramNode {
     LTTNode tp = new LTTNode(this);
     tp.enumerate(true);
     LTTNode tq = new LTTNode(q);
-    tp.enumerate(true);
+    tq.enumerate(true);
     return tp.canSimulate(tq);
     //TODO: recurse
   }

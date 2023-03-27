@@ -2,6 +2,7 @@ package org.cinrc.process;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import org.cinrc.parser.CCSGrammar;
@@ -30,7 +31,7 @@ public class ProcessTemplate {
    */
   public void initComplex() {
     //Collect complex processes
-    Set<ComplexProcess> complex = new HashSet<>();
+    LinkedHashSet<ComplexProcess> complex = new LinkedHashSet<>();
     for (Process process : tList) {
       if (process instanceof ComplexProcess) {
         complex.add((ComplexProcess) process);
@@ -45,6 +46,7 @@ public class ProcessTemplate {
           if (p.left == null)
           //Consume object to the left
           {
+            int i = tList.indexOf(p) - 1;
             p.left = tList.remove(tList.indexOf(p) - 1);
           }
           if (p.right == null)

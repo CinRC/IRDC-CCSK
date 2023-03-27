@@ -5,8 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.application.Application;
+import javafx.util.Pair;
 import org.cinrc.UI.GUIThread;
 import org.cinrc.UI.RCCS_FX;
 import org.cinrc.parser.CCSParser;
@@ -122,25 +125,35 @@ public class IRDC {
     for(int i = 0; i < formula.length; i++){
       try {
         Process p = CCSParser.parseLine(formula[i]).export();
-        System.out.printf("[%d] %s => Parsed Successfully.\n", i, p.represent());
+        sb.append(String.format("[%d] %s => Parsed Successfully.\n", i, p.represent()));
         processes.add(p);
       } catch(CCSParserException e){
         System.out.printf("%s is not properly formatted! Please check formatting guidelines.", formula);
         System.exit(1);
       }
     }
+    sb.append("\n\n");
+    List<Pair<String, String>> simulates = new ArrayList<>();
     for (Process p : processes){
       for (Process p2 : processes) {
         if (p == p2) continue;
-        boolean sim = false;
-        boolean bisim = false;
-        sim = p2.simulates(p);
-        bisim = sim && p.simulates(p2);
-        String operator = bisim ? "is in bisimulation with" : sim ? "simulates" : "has no relation to";
-        sb.append(String.format("%s %s %s\n", p2.represent(),operator,p.represent()));
+        if (p2.simulates(p)) simulates.add( new Pair(p2.represent(), p.represent()));
       }
-      System.out.println(sb);
     }
+    sb.append("Simulations and Bisimulations: \n ------------\n");
+    for (Pair<String, String> e : simulates){ //Print simulations
+      sb.append(String.format("%s %s %s\n",e.getKey(), "≲", e.getValue()));
+
+      for (Pair<String, String> pair : simulates){
+        if (pair == e) continue;
+
+        if (pair.getKey().equals(e.getValue()) && e.getKey().equals(pair.getValue())) {
+          sb.append(String.format("%s %s %s\n",pair.getKey(), "≈", pair.getValue()));
+        }
+      }
+    }
+    System.out.println(sb);
+
   }
 
   private static void startGUI() {

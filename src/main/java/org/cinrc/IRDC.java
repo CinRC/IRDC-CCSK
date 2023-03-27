@@ -5,9 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javafx.application.Application;
 import javafx.util.Pair;
 import org.cinrc.UI.GUIThread;
@@ -15,7 +13,6 @@ import org.cinrc.UI.RCCS_FX;
 import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.CCSParserException;
 import org.cinrc.parser.LTTNode;
-import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.process.Process;
 import org.cinrc.util.RCCSFlag;
@@ -60,8 +57,8 @@ public class IRDC {
       enumerate(args[args.length - 1]);
     } else if (config.contains(RCCSFlag.INTERACTIVE)) {
       interactive(args[args.length - 1]);
-    }else if (config.contains(RCCSFlag.EQUIVALENCE)){
-     equivalence(args[args.length - 1]);
+    } else if (config.contains(RCCSFlag.EQUIVALENCE)) {
+      equivalence(args[args.length - 1]);
     } else {
       enumerate(args[args.length - 1]);
     }
@@ -70,7 +67,7 @@ public class IRDC {
 
   }
 
-  private static void validate(String args){
+  private static void validate(String args) {
     Path path = null;
     try {
       path = Paths.get(args);
@@ -93,7 +90,7 @@ public class IRDC {
     }
   }
 
-  private static void enumerate(String args){
+  private static void enumerate(String args) {
     org.cinrc.process.process.Process p =
         CCSParser.parseLine(args).export();
     LTTNode node = new LTTNode(p);
@@ -102,7 +99,7 @@ public class IRDC {
     System.exit(0);
   }
 
-  private static void interactive(String args){
+  private static void interactive(String args) {
     try {
       ProcessTemplate template = CCSParser.parseLine(args);
       log(String.format("Formula before complex init and minimization: %s",
@@ -117,38 +114,45 @@ public class IRDC {
     }
   }
 
-  private static void equivalence(String args){
+  private static void equivalence(String args) {
     //Default:
     ArrayList<Process> processes = new ArrayList<>();
     String[] formula = args.split(",");
     StringBuilder sb = new StringBuilder();
-    for(int i = 0; i < formula.length; i++){
+    for (int i = 0; i < formula.length; i++) {
       try {
         Process p = CCSParser.parseLine(formula[i]).export();
         sb.append(String.format("[%d] %s => Parsed Successfully.\n", i, p.represent()));
         processes.add(p);
-      } catch(CCSParserException e){
-        System.out.printf("%s is not properly formatted! Please check formatting guidelines.", formula);
+      } catch (CCSParserException e) {
+        System.out.printf("%s is not properly formatted! Please check formatting guidelines.",
+            formula);
         System.exit(1);
       }
     }
     sb.append("\n\n");
     List<Pair<String, String>> simulates = new ArrayList<>();
-    for (Process p : processes){
+    for (Process p : processes) {
       for (Process p2 : processes) {
-        if (p == p2) continue;
-        if (p2.simulates(p)) simulates.add( new Pair(p2.represent(), p.represent()));
+        if (p == p2) {
+          continue;
+        }
+        if (p2.simulates(p)) {
+          simulates.add(new Pair(p2.represent(), p.represent()));
+        }
       }
     }
     sb.append("Simulations and Bisimulations: \n ------------\n");
-    for (Pair<String, String> e : simulates){ //Print simulations
-      sb.append(String.format("%s %s %s\n",e.getKey(), "≲", e.getValue()));
+    for (Pair<String, String> e : simulates) { //Print simulations
+      sb.append(String.format("%s %s %s\n", e.getKey(), "≲", e.getValue()));
 
-      for (Pair<String, String> pair : simulates){
-        if (pair == e) continue;
+      for (Pair<String, String> pair : simulates) {
+        if (pair == e) {
+          continue;
+        }
 
         if (pair.getKey().equals(e.getValue()) && e.getKey().equals(pair.getValue())) {
-          sb.append(String.format("%s %s %s\n",pair.getKey(), "≈", pair.getValue()));
+          sb.append(String.format("%s %s %s\n", pair.getKey(), "≈", pair.getValue()));
         }
       }
     }
@@ -212,7 +216,6 @@ public class IRDC {
     }
     return null;
   }
-
 
 
 }

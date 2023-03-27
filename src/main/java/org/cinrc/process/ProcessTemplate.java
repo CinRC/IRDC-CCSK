@@ -1,10 +1,8 @@
 package org.cinrc.process;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.Set;
 import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParserException;
 import org.cinrc.process.nodes.Label;

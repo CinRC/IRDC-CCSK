@@ -6,7 +6,7 @@
 
     <groupId>org.cinrc</groupId>
     <artifactId>IRDC</artifactId>
-    <version>2.4.7.10</version>
+    <version>2.4.7.12</version>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

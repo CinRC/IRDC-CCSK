@@ -22,9 +22,7 @@ public class IRDC {
 
   public static void main(String[] args) {
     if (args.length == 0) {
-      System.out.println(
-          "Incorrect arguments! Please use the form `java -jar IRDC.jar <flags> \"a.b|c.a\"`\n" +
-              helpMessage());
+      startGUI();
       System.exit(0);
     } else if (args.length == 1) {
       if (args[0].equals(RCCSFlag.HELP_MSG.getFlag())) {

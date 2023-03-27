@@ -144,7 +144,7 @@ public class IRDC {
     }
     sb.append("Simulations and Bisimulations: \n ------------\n");
     for (Pair<String, String> e : simulates) { //Print simulations
-      sb.append(String.format("%s %s %s\n", e.getKey(), "≲", e.getValue()));
+      sb.append(String.format("%s %s %s\n", e.getKey(), "≳", e.getValue()));
 
       for (Pair<String, String> pair : simulates) {
         if (pair == e) {

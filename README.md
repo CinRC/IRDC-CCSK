@@ -54,6 +54,7 @@ java -jar IRDC-*.jar <FLAGS> "[Process]"
 
 Some examples of processes are indicated in [`docs/example_processes.md`](docs/example_processes.md) if you need inspiration.
 
+
 The flags are [documented below](#command-arguments-flags).
 
 ### Building
@@ -87,20 +88,18 @@ Some parts of this program are named different from the convention. Some of the 
 1. Channel names are referred to as 'Labels'
 2. Parallel operators (`|`) are referred to as 'Concurrent Processes'
 3. Deterministic operators (`+`) are referred to as 'Summation Processes'
-4. Label prefixings (`a.b.P`) are referred to as 'Action Prefix Processes'
-5. CCSK keys (`a[k0].b.P`) are referred to as 'Label Keys'
+4. CCSK keys (`a[k0].P`) are referred to as 'Label Keys'
 
-### Syntax and Precedence of Operators {#syntax}
+### Syntax and Precedence of Operators
 
 This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.
 
-- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable
-  using [the `dN` flag](#command-arguments-flags).
+- By default, all labels are given implicit null processes (`a` is implied to represent `a.0`). This is toggleable using [the `--require-explicit-null` flag](#command-arguments-flags).
 - Channel labels are limited to lowercase english letters `[a-z]`.
 - Complement channels are represented by an apostrophe before the label, `'a`, `'b`, etc.
 - Process names are limited to uppercase english letters `[A-Z]`.
-- We assume that all channels sharing the same label are duplicates. This means that `'a` is the complement to `a`, `'b`
-  to `b`, and so forth.
+- We assume that all channels sharing the same label are complements. This means that `'a` is the complement to `a`, `'b` to `b`, and so forth.
+
 - Restrictions are applied under the following format: `a.P\{a,b,c}`.
 - We assume that the operators have decreasing binding power, in the following order: `\a`, `a.`, `|`, `+`.
     - This means that `a|b\{a}` will be interpreted as `(a)|(b\{a})`.
@@ -148,7 +147,6 @@ Maj.Min.Patch.Rev system, where:
 * Rev = Revision (code cleanup, minor edits)
 
 When making changes, increment the version number according to changes made.
-
 ## Alternatives
 
 This project, in particular, is a working implementation of the _forward-only_ Calculus of Communicating Systems (CSS).

@@ -1,5 +1,5 @@
-_This document is best viewed in ["raw format" on github](https://raw.githubusercontent.com/CinRC/IRDC-CCSK/docs/lts.md)
-._
+
+_This document is best viewed in ["raw format" on github](https://raw.githubusercontent.com/CinRC/IRDC-CCSK/master/docs/lts.md)._
 
 The LTS (labelled transition system, or SOS, for structural operational semantics) of CSSK is the set of "reduction
 rules" describing how the system reacts / evolves.

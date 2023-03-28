@@ -13,11 +13,13 @@ git remote add $USER git@github.com:$USER/irdc-ccsk.git
 git fetch -av
 ```
 
-When contributing, the project version must be appropriately incremented inside the `pom.xml` file. We use a semantic Maj.Min.Patch.Rev system, where:
-* Maj     = Major feature or system overhaul
-* Min     = Feature addition
-* Patch   = Bug fix
-* Rev     = Revision (code cleanup, minor edits)
+When contributing, the project version must be appropriately incremented inside the `pom.xml` file. We use a semantic
+Maj.Min.Patch.Rev system, where:
+
+* Maj = Major feature or system overhaul
+* Min = Feature addition
+* Patch = Bug fix
+* Rev = Revision (code cleanup, minor edits)
 
 ## Contribution Flow
 
@@ -37,6 +39,7 @@ and recommendations.
 > **Note:** If you are new to Git(hub) check out [Git rebase, squash...oh
 > my!](https://www.mgasch.com/2021/05/git-basics/) for more details on how to
 > successfully contribute to an open source project.
+
 ### Example 1 - Fix a Bug in `IRDC-CCSK`
 
 ```bash
@@ -115,10 +118,12 @@ We follow the conventions described in [How to Write a Git Commit
 Message](http://chris.beams.io/posts/git-commit/).
 
 ### Running CI Checks and Tests
+
 You can run both `mvn test` and `mvn package` from the top level of the
 repository.
 
-Running `mvn test` will run all unit tests. `mvn package` will build the code, which incorporates unit tests in the build.
+Running `mvn test` will run all unit tests. `mvn package` will build the code, which incorporates unit tests in the
+build.
 
 ## Reporting Bugs and Creating Issues
 

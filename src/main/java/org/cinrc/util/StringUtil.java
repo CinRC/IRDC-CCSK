@@ -21,7 +21,7 @@ public class StringUtil {
       sb.append(l).append(".");
     }
     return sb.toString();
-
-
   }
+
+
 }

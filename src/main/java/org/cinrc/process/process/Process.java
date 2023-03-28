@@ -298,7 +298,7 @@ public abstract class Process extends ProgramNode {
     LTTNode tp = new LTTNode(this);
     tp.enumerate(true);
     LTTNode tq = new LTTNode(q);
-    tp.enumerate(true);
+    tq.enumerate(true);
     return tp.canSimulate(tq);
     //TODO: recurse
   }
@@ -331,9 +331,9 @@ public abstract class Process extends ProgramNode {
     return s;
   }
 
-  public boolean hasSameProcess(Process p){
-      //If the process is both a real process (P,Q)
-      return (p.origin().equals(origin()));
+  public boolean hasSameProcess(Process p) {
+    //If the process is both a real process (P,Q)
+    return (p.origin().equals(origin()));
   }
 
   public List<Pair<Label, LabelKey>> getLabelKeyPairs() {

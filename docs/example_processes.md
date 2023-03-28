@@ -33,7 +33,7 @@ cf. Robert J. van Glabbeek and Ursula Goltz. Refinement of actions and equivalen
 concurrent systems. Acta Informatica, 37(4/5):229–327, 2001. doi:10.1007/s002360000041.
 
 ```
-a | (b+c))+(a | b)+((a+c) |b)   
+(a | (b+c)) + (a|b) + ((a+c) |b)   
 (a | (b + c)) + ((a + c) | b)
 ```
 

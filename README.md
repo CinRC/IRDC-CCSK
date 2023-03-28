@@ -52,7 +52,7 @@ To run with a GUI, use the `--gui` flag. Else, a command-line-interface will ope
 java -jar IRDC-*.jar <FLAGS> "[Process]"
 ```
 
-Some examples of processes are indicated in <docs/example_processes.md> if you need inspiration.
+Some examples of processes are indicated in [`docs/example_processes.md`](docs/example_processes.md) if you need inspiration.
 
 The flags are [documented below](#command-arguments-flags).
 

@@ -48,6 +48,7 @@ public class GUIController implements Initializable {
                                                               // populated in initailize
 
     public void genRandom() {
+        outputField.setText("");
         // processes taken from https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md
         String[] rProcesses = {"((a)|('a))+((a)|('a))", "(a|'a)\\{a}", "a.b.c.d | 'a.'b.'c.'d", // generic processes
                 "(a.b | 'b.'a)\\{a, b}", "(a)\\{'a}", // stuck processes

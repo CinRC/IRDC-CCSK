@@ -25,11 +25,6 @@
                   <MenuItem mnemonicParsing="false" onAction="#openLink" text="GitHub" />
                </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                   <SeparatorMenuItem mnemonicParsing="false" />

@@ -44,7 +44,7 @@ public class GUIController implements Initializable {
     @FXML
     Button genRandomProcess;
 
-    private String[] choices = {"Walkthrough", "Enumerate"}; // values for dropdown box
+    private String[] choices = {"Walkthrough", "Enumerate", "Equivalence"}; // values for dropdown box
                                                               // populated in initailize
 
     public void genRandom() {
@@ -68,6 +68,13 @@ public class GUIController implements Initializable {
         if(action.equals("Walkthrough")){
             walkthroughPage(event, inputBox.getText());
         }
+        if(action.equals("Equivalence")){
+            equivalence();
+        }
+    }
+
+    private void equivalence() {
+        //does not do anything yet
     }
 
     public void enumerate(){

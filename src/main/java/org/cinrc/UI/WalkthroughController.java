@@ -47,8 +47,9 @@ public class WalkthroughController {
                 "a.P", "a.b.P", "a.(b.X|Y)", "a.P\\{b}", "a.P|b.Q", "a.P + b.Q", "a.P|'a.Q"
         }; // examples from LTS/SOS
         actInput.setFloatText("");
-        int randomNum = (int) Math.floor(Math.random() * rProcesses.length);
-        actInput.setText(rProcesses[randomNum]);
+        int randomNum = (int) Math.floor(Math.random() * rProcesses.length); // generates a random number from the
+                                                                             // length of process array
+        actInput.setText(rProcesses[randomNum]); // sets input text to random number index of array
     }
 
     public void act(){
@@ -75,7 +76,7 @@ public class WalkthroughController {
                             "\n[" + i++ + "] " + la);
                 }
 
-                firstTime = false;
+                firstTime = false; // all input following will now be in the else block
                 actInput.setText("");
             }
             else{
@@ -122,7 +123,8 @@ public class WalkthroughController {
         stage.show();
     }
 
-    public void openProcessExamples(ActionEvent event) throws URISyntaxException, IOException {
+    public void openProcessExamples(ActionEvent event) throws URISyntaxException, IOException { // directs user to page
+                                                                                                // containing process info
         Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md"));
     };
 }

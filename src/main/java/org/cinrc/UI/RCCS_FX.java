@@ -22,6 +22,7 @@ public class RCCS_FX extends Application {
     VBox pane = loader.load();
     Scene scene = new Scene(pane);
     stage.setScene(scene);
+    stage.setResizable(false);
     stage.show();
   }
 

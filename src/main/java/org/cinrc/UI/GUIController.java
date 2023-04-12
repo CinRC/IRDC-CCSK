@@ -105,6 +105,7 @@ public class GUIController implements Initializable {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene (root);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
 
     }
@@ -114,6 +115,7 @@ public class GUIController implements Initializable {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene (root);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
     public void openLink(ActionEvent event) throws URISyntaxException, IOException {

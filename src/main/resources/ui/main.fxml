@@ -20,12 +20,12 @@
     <children>
         <MenuBar prefWidth="600.0">
             <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Link">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#openLink" text="GitHub" />
                </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="Read Me">
                     <items>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#openReadme" text="Information" />
@@ -38,7 +38,7 @@
             </Menu>
             </menus>
         </MenuBar>
-        <AnchorPane prefHeight="375.0" prefWidth="600.0">
+        <AnchorPane prefHeight="375.0" prefWidth="600.0" style="-fx-background-color: grey;">
             <children>
                 <TextField fx:id="inputBox" floatText="Process" layoutX="205.0" layoutY="65.0" />
                 <Label alignment="CENTER" layoutX="213.0" layoutY="7.0" prefHeight="40.0" prefWidth="158.0" text="RCCS Parser">

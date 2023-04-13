@@ -3,8 +3,12 @@ package org.cinrc.util;
 public enum RCCSFlag {
   DEBUG("Prints debug info",
       "--debug"),
-  ENUMERATE("Prints enumeration tree of given process",
+  ENUMERATE("Prints enumeration tree of given process (Default)",
       "--enumerate"),
+  INTERACTIVE("Run the program in interactive mode",
+      "--interactive"),
+  EQUIVALENCE("Run the program in equivalence mode. See help message for syntax",
+      "--equivalence"),
   HELP_MSG("Print this help message",
       "--help"),
   VALIDATE("Validate all given processes inside the file inputted after this flag", "--validate"),

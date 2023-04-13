@@ -18,7 +18,7 @@ public class CCSInteractionHandler {
     this.container = new ProcessContainer(p);
   }
 
-  public void setProcess(Process p){
+  public void setProcess(Process p) {
     this.container = new ProcessContainer(p);
   }
 
@@ -26,21 +26,21 @@ public class CCSInteractionHandler {
     return container;
   }
 
-  public boolean actOn(int labelIndex){
-    try{
+  public boolean actOn(int labelIndex) {
+    try {
       container.act(getActionableLabels().get(labelIndex));
       return true;
-    }catch (CCSTransitionException e){
+    } catch (CCSTransitionException e) {
       e.printStackTrace();
       return false;
     }
   }
 
-  public String getProcessRepresentation(){
+  public String getProcessRepresentation() {
     return container.prettyString();
   }
 
-  public ArrayList<Label> getActionableLabels(){
+  public ArrayList<Label> getActionableLabels() {
     return new ArrayList<Label>(container.getActionableLabels());
   }
 

@@ -3,6 +3,7 @@ package org.cinrc.UI;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -21,8 +22,11 @@ public class RCCS_FX extends Application {
     VBox pane = loader.load();
     Scene scene = new Scene(pane);
     stage.setScene(scene);
+    stage.setResizable(false);
     stage.show();
   }
+
+
 
   public void main(String[] args) {
     launch();

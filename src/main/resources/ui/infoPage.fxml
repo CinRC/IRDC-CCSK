@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cinrc.UI.InfoController">
+   <children>
+      <Button layoutX="628.0" layoutY="360.0" mnemonicParsing="false" onAction="#main" text="Close" />
+      <TextArea editable="false" layoutX="40.0" layoutY="61.0" prefHeight="291.0" prefWidth="644.0" text="What is RCCS/CCSK?&#10;&#10;The Reversible Calculus of Communicating Systems(RCCS) and the Calculus of Communicating Systems with Keys(CCSK) are fromal languages that describes the interaction of concurrent systems in a &#10;reversible paradigm.&#10;&#10;Developer slang&#10;Some parts of this program are named different from the convention. Some of the notable ones are are listed below:&#10;&#10;Channel names are referred to as 'Labels'&#10;Parallel operators (|) are referred to as 'Concurrent Processes'&#10;Deterministic operators (+) are referred to as 'Summation Processes'&#10;Label prefixings (a.b.P) are referred to as 'Action Prefix Processes'&#10;CCSK keys (a[k0].b.P) are referred to as 'Label Keys'&#10;&#10;Syntax and Precedence of Operators {#syntax}&#10;&#10;This program follows a slightly modified semantic structure based off of CCSK. Some notes are included below.&#10;&#10;By default, all labels are given implicit null processes (a is implied to represent a.0). This is toggleable using the dN flag.&#10;Channel labels are limited to lowercase english letters [a-z].&#10;Complement channels are represented by an apostrophe before the label, 'a, 'b, etc.&#10;Process names are limited to uppercase english letters [A-Z].&#10;We assume that all channels sharing the same label are duplicates. This means that 'a is the complement to a, 'b to b, and so forth.&#10;Restrictions are applied under the following format: a.P\{a,b,c}.&#10;We assume that the operators have decreasing binding power, in the following order: \a, a., |, +.&#10;This means that a|b\{a} will be interpreted as (a)|(b\{a}).&#10;More specifically, a.a + b | c \{a} is to be read as (a.a) + (b | (c\a)) (infix notation) or + . a a | b \a c (postfix notation).&#10;Of course, parenthesis take precedence over all operators.&#10;Redundant parenthesis are permitted, e.g., (((a)|(b))) will be accepted but interpreted as (a|b).&#10;" wrapText="true" />
+      <Label layoutX="270.0" layoutY="14.0" text="Information Page">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

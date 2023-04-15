@@ -68,16 +68,23 @@ public class WalkthroughController {
                 ProcessTemplate template = CCSParser.parseLine(process); // parses the initial input
                 exported = new CCSInteractionHandler(template.export());
                 actionable = exported.getActionableLabels(); // gets all labels of exported process
-                outputField.setText(exported.getProcessRepresentation() +
-                        "\n----------------\nPlease input the index of the label you'd like to act on:");
-                int i = 0;
-                for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
-                    outputField.setText(outputField.getText() +
-                            "\n[" + i++ + "] " + la);
+                if(actionable.size() == 0){
+                    outputField.setText(exported.getProcessRepresentation() + "\n----------------\nNo labels to act on!");
+                    actInput.setText("");
                 }
+                else{
+                    outputField.setText(exported.getProcessRepresentation() +
+                            "\n----------------\nPlease input the index of the label you'd like to act on:");
+                    int i = 0;
+                    for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
+                        outputField.setText(outputField.getText() +
+                                "\n[" + i++ + "] " + la);
+                    }
 
-                firstTime = false; // all input following will now be in the else block
-                actInput.setText("");
+                    firstTime = false; // all input following will now be in the else block
+                    actInput.setFloatText("Action");
+                    actInput.setText("");
+                }
             }
             else{
                 // now takes indexes as input
@@ -94,14 +101,19 @@ public class WalkthroughController {
                     outputField.setText(outputField.getText() + "\n------------------\nCould not act on label!");
                 }
                 actionable = exported.getActionableLabels(); // gets new actionable labels
-                outputField.setText(exported.getProcessRepresentation() +
-                        "\n----------------\nPlease input the index of the label you'd like to act on:");
-                int i = 0;
-                for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
-                    outputField.setText(outputField.getText() +
-                            "\n[" + i++ + "] " + la);
+                if(actionable.size() == 0){
+                    outputField.setText("No labels to act on!");
                 }
-                actInput.setText("");
+                else {
+                    outputField.setText(exported.getProcessRepresentation() +
+                            "\n----------------\nPlease input the index of the label you'd like to act on:");
+                    int i = 0;
+                    for (Label la : actionable) { // displays all actionable lables in "[i] "label format"
+                        outputField.setText(outputField.getText() +
+                                "\n[" + i++ + "] " + la);
+                    }
+                    actInput.setText("");
+                }
             }
         }
         catch(Exception e){
@@ -112,6 +124,7 @@ public class WalkthroughController {
 
     public void reset() { // resets page, clears input and sets first to true to allow a process to be taken as input
         outputField.setText("");
+        actInput.setFloatText("Process");
         firstTime = true;
     }
     public void close(ActionEvent event) throws IOException { // displays landing page

@@ -11,12 +11,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.cinrc.CCSInteractionHandler;
 import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParser;
+import org.cinrc.parser.CCSParserException;
 import org.cinrc.parser.LTTNode;
 import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
+import org.cinrc.process.process.Process;
 import org.cinrc.util.RCCSFlag;
 
 import java.awt.*;
@@ -26,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class GUIController implements Initializable {
@@ -74,7 +78,46 @@ public class GUIController implements Initializable {
     }
 
     private void equivalence() {
-        //does not do anything yet
+        outputField.setText(""); // clears outfield from previous text
+        ArrayList<Process> processes = new ArrayList<>();
+        String[] formula = inputBox.getText().split(",");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < formula.length; i++) {
+            try {
+                Process p = CCSParser.parseLine(formula[i]).export();
+                sb.append(String.format("[%d] %s => Parsed Successfully.\n", i, p.represent()));
+                processes.add(p);
+            } catch (CCSParserException e) {
+                outputField.setText(formula[i] + " is not properly formatted! Please check formatting guidelines.");
+            }
+        }
+        sb.append("\n\n");
+        List<Pair<String, String>> simulates = new ArrayList<>();
+        for (Process p : processes) {
+            for (Process p2 : processes) {
+                if (p == p2) {
+                    continue;
+                }
+                if (p2.simulates(p)) {
+                    simulates.add(new Pair(p2.represent(), p.represent()));
+                }
+            }
+        }
+        sb.append("Simulations and Bisimulations: \n ------------\n");
+        for (Pair<String, String> e : simulates) { //Print simulations
+            sb.append(String.format("%s %s %s\n", e.getValue(), "≲", e.getKey()));
+
+            for (Pair<String, String> pair : simulates) {
+                if (pair == e) {
+                    continue;
+                }
+
+                if (pair.getKey().equals(e.getValue()) && e.getKey().equals(pair.getValue())) {
+                    sb.append(String.format("%s %s %s\n", pair.getKey(), "≈", pair.getValue()));
+                }
+            }
+        }
+        outputField.setText(outputField.getText() + sb);
     }
 
     public void enumerate(){

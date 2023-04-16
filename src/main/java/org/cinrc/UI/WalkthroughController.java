@@ -68,16 +68,22 @@ public class WalkthroughController {
                 ProcessTemplate template = CCSParser.parseLine(process); // parses the initial input
                 exported = new CCSInteractionHandler(template.export());
                 actionable = exported.getActionableLabels(); // gets all labels of exported process
-                outputField.setText(exported.getProcessRepresentation() +
-                        "\n----------------\nPlease input the index of the label you'd like to act on:");
-                int i = 0;
-                for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
-                    outputField.setText(outputField.getText() +
-                            "\n[" + i++ + "] " + la);
+                if(actionable.size() == 0){
+                    outputField.setText(exported.getProcessRepresentation() +
+                            "\n----------------\nThere are no lables to act on!");
                 }
+                else{
+                    outputField.setText(exported.getProcessRepresentation() +
+                            "\n----------------\nPlease input the index of the label you'd like to act on:");
+                    int i = 0;
+                    for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
+                        outputField.setText(outputField.getText() +
+                                "\n[" + i++ + "] " + la);
+                    }
 
-                firstTime = false; // all input following will now be in the else block
-                actInput.setText("");
+                    firstTime = false; // all input following will now be in the else block
+                    actInput.setText("");
+                }
             }
             else{
                 // now takes indexes as input

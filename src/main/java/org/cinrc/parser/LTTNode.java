@@ -10,6 +10,7 @@ import org.cinrc.IRDC;
 import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.process.Process;
 import org.cinrc.process.process.ProcessImpl;
 import org.cinrc.util.RCCSFlag;
@@ -18,7 +19,7 @@ public class LTTNode {
 
   public HashMap<Label, LTTNode> children;
   public Process internalProcess;
-  public HashMap<LTTNode, Label> parents;
+  public HashMap<Label, LTTNode> parents;
   private int currentDepth;
 
   private int maxDepth;
@@ -35,13 +36,13 @@ public class LTTNode {
   }
 
   public void setParent(Label key, LTTNode n) {
-    this.parents.put(n, key);
+    this.parents.put(key, n);
     this.currentDepth = n.getCurrentDepth() + 1;
   }
 
   public void addChild(Label l, Process pr) {
     LTTNode node = new LTTNode(pr);
-    node.setParent(l, this);
+    node.setParent(new LabelKey(l), this);
     node.setCurrentDepth(currentDepth + 1);
     node.echoDepth(0);
     children.put(l, node);
@@ -106,7 +107,7 @@ public class LTTNode {
       maxDepth = depth;
     }
     if (!parents.isEmpty()) {
-      for (LTTNode n : parents.keySet()) {
+      for (LTTNode n : parents.values()) {
         n.echoDepth(++depth);
       }
     }
@@ -119,7 +120,9 @@ public class LTTNode {
   /**
    * Enumerate all actionable labels on the parent process, and
    * extend the tree by adding new nodes as children to this node from each label,
-   * and recursively call this function on all child nodes if recurse is true.
+   * and recursively call this function on all child nodes if recurse is true. This method does not enumerate
+   * backwards. That is to say, given a process [k1]a.[k2]b.P, it will not regenerate a.b.P.
+   * See LTTNode#regenerate for that.
    *
    * @param recurse Whether or not to enumerate children as well
    */
@@ -129,7 +132,7 @@ public class LTTNode {
     //For every actionable label in current node,
     for (Label l : pc.getActionableLabels()) {
       if (!(l instanceof LabelKey)) {
-        if (debug) {
+      if (debug) {
           System.out.println("Before acting: " + pc.prettyString());
         }
         pc.act(l); //Act on that label and make a new node with that child process (clone)
@@ -144,26 +147,34 @@ public class LTTNode {
         }
 
 
-      } else { //This should be all we need to implement reversibility
-                /*Label originalLabel = ((LabelKey) l).from;
-                pc.act(l);
-                for (LTTNode n : parents)
+      }/* else { //This should be all we need to implement reversibility
+                Label originalLabel = ((LabelKey) l).from;
+                pc.act(l); //Reverse along actionable key
+                for (Map.Entry<Label, LTTNode> n : parents.entrySet())
                 //TODO: Check pc.p already exists in parents, else add it.
                 {
-                    continue;
+                  if ()
                 }
                 if (originalLabel instanceof TauLabelNode) {
                     ((TauLabelNode) originalLabel).consumeLeft = false;
                     ((TauLabelNode) originalLabel).consumeRight = false;
                 }
-                pc.act(originalLabel);*/
-      }
+                pc.act(originalLabel); //Revert back
+      }*/
     }
     if (recurse) {
       for (LTTNode child : children.values()) {
         child.enumerate(true);
       }
     }
+  }
+
+  /**
+   * TODO: Enumerate, but backwards
+   * @return
+   */
+  public LTTNode regenerate(){
+    return null;
   }
 
   public boolean isLeafNode() {
@@ -197,12 +208,30 @@ public class LTTNode {
    */
   public ArrayList<Label> calculatePath() {
     ArrayList<Label> al = new ArrayList<>();
-    for (Map.Entry<LTTNode, Label> n : parents.entrySet()) {
-      al.addAll(n.getKey().calculatePath());
-      al.add(n.getValue());
+    for (Map.Entry<Label, LTTNode> n : parents.entrySet()) {
+      al.addAll(n.getValue().calculatePath());
+      al.add(n.getKey());
       break; //TODO: What do we do if parents size is bigger than one?
     }
     return al;
+  }
+
+  public void manageHistory(){
+    //TODO: CHeck all nodes. If any two are equal, create one single node and create union of parents
+    // a|b
+    // a -> b -> [a]|[b]
+    // b -> a -> [a]|[b]
+    //   a|b             a|b
+    //  /   \            /   \
+    //[a]|b a|[b]  <--  [a]|b a|[b]
+    //  \   /            /       \
+    // [a]|[b]          [a]|[b]   [a]|[b]
+    /*
+    node a is equal node b
+    create node c.
+    set node c new Parents(a.parents, b.parents)
+    manage children and grandparents
+     */
   }
 
   public String toString() {
@@ -232,6 +261,22 @@ public class LTTNode {
       }
     }
     return buffer.toString();
+  }
+
+  /**
+   * //TODO: Basically, check if the given node is EQUIVALENT, not BISIMILAR
+   * @param node
+   * @return
+   */
+  public boolean equals(LTTNode node, boolean hpb){
+    return internalProcess.equals(node.internalProcess, hpb);
+  }
+
+  @Override
+  public boolean equals(Object o){
+    if (!(o instanceof LTTNode))
+      return false;
+    return equals((LTTNode)o, false);
   }
 
 }

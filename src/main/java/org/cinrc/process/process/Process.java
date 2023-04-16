@@ -360,7 +360,27 @@ public abstract class Process extends ProgramNode {
 
   public abstract String origin();
 
-  public boolean equals(Object o) {
+  public boolean hasSameHistory(Process p){
+    int keys = 0;
+    if (p.hasKey())
+      keys++;
+    if (hasKey())
+      keys++;
+    if (keys == 0)
+      return true; //No history
+    if (keys != 2)
+      return false; //One has history, other does not
+
+    return previousLife.hasSameHistory(p);
+  }
+
+  public boolean equals(Object o){
+    if (!(o instanceof Process))
+      return false;
+    return equals(o,false);
+  }
+
+  public boolean equals(Object o, boolean hpb) {
     if (!getClass().equals(o.getClass())) {
       return false;
     }
@@ -369,6 +389,13 @@ public abstract class Process extends ProgramNode {
     }
 
     if (o instanceof Process p) {
+
+      if (!IRDC.config.contains(RCCSFlag.PROCESS_NAMES_EQUIVALENT)){
+        if (!hasSameProcess(p)) {
+          return false;
+        }
+      }
+
       //Check if prefixes are the same
       if (!SetUtil.labelsEqual(new HashSet<Label>(p.getPrefixes())
           , new HashSet<Label>(getPrefixes()))) {
@@ -394,11 +421,21 @@ public abstract class Process extends ProgramNode {
         if (!getKey().isEquivalent(p.getKey())) {
           return false;
         }
+        if (hpb) {
+          if (!hasSameHistory(p)) {
+            return false;
+          }
+        }
       }
 
       if (hasPrefixKey() && p.hasPrefixKey()) {
         if (!getPrefixKey().isEquivalent(p.getPrefixKey())) {
           return false;
+        }
+        if (hpb) {
+          if (!hasSameHistory(p)) {
+            return false;
+          }
         }
       }
 

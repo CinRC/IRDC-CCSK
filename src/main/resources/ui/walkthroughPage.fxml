@@ -51,7 +51,7 @@
                      </content>
                   </ScrollPane>
                   <Button fx:id="act" layoutX="391.0" layoutY="75.0" mnemonicParsing="false" onAction="#act" text="Act" />
-                  <Button fx:id="closeBtn" layoutX="512.0" layoutY="322.0" mnemonicParsing="false" onAction="#close" text="Close" />
+                  <Button fx:id="closeBtn" layoutX="485.0" layoutY="324.0" mnemonicParsing="false" onAction="#close" text="Previous Page" />
                   <Button fx:id="resetBtn" layoutX="458.0" layoutY="75.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
                   <Button fx:id="genRandomProcess" layoutX="48.0" layoutY="75.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
                </children>

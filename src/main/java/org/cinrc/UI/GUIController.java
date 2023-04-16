@@ -117,7 +117,9 @@ public class GUIController implements Initializable {
                 }
             }
         }
-        outputField.setText(outputField.getText() + sb);
+        if(outputField.getText().length() == 0) {
+            outputField.setText(sb.toString());
+        }
     }
 
     public void enumerate(){

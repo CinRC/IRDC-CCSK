@@ -64,7 +64,7 @@ public class GUIController implements Initializable {
         inputBox.setText(rProcesses[randomNum]);
     }
 
-    public void evaluate(ActionEvent event) throws IOException {
+    public void evaluate(ActionEvent event) throws IOException { // acts based on dropdown menu input
         String action = myChoiceBox.getValue();
         if(action.equals("Enumerate")){
             enumerate();
@@ -77,7 +77,7 @@ public class GUIController implements Initializable {
         }
     }
 
-    private void equivalence() {
+    private void equivalence() { // same function in IRDC apart from a few changes
         outputField.setText(""); // clears outfield from previous text
         ArrayList<Process> processes = new ArrayList<>();
         String[] formula = inputBox.getText().split(",");

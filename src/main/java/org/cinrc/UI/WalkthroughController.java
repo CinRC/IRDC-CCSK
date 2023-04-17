@@ -83,6 +83,7 @@ public class WalkthroughController {
 
                     firstTime = false; // all input following will now be in the else block
                     actInput.setText("");
+                    actInput.setFloatText("Action");
                 }
             }
             else{
@@ -118,6 +119,7 @@ public class WalkthroughController {
 
     public void reset() { // resets page, clears input and sets first to true to allow a process to be taken as input
         outputField.setText("");
+        actInput.setFloatText("Process");
         firstTime = true;
     }
     public void close(ActionEvent event) throws IOException { // displays landing page

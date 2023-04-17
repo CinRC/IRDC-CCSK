@@ -105,4 +105,26 @@ public class EnumerationTest {
 
 
   }
+
+  @Test
+  public void regenerationTest(){
+    IRDC.config.clear();
+
+    Process p = CCSParser.parseLine("a.b.P").export();
+    Process p2 = p.clone();
+    p.act(LabelFactory.createDebugLabel("a"));
+    p.act(LabelFactory.createDebugLabel("b"));
+
+    LTTNode node = new LTTNode(p);
+    LTTNode node2 = new LTTNode(p2);
+    node.enumerate(true);
+    try {
+      node.regenerate();
+      LTTNode parent = node.getAncestor();
+      assert parent.canSimulate(node2);
+      System.out.println(parent + " successfully regenerated from " + node);
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+  }
 }

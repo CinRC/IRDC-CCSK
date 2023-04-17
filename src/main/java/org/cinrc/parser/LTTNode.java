@@ -35,14 +35,18 @@ public class LTTNode {
     return (HashMap<Label, LTTNode>) children.clone();
   }
 
-  public void setParent(Label key, LTTNode n) {
-    this.parents.put(key, n);
+  public void setParent(Label label, LTTNode n) {
+    this.parents.put(label, n);
     this.currentDepth = n.getCurrentDepth() + 1;
   }
 
   public void addChild(Label l, Process pr) {
     LTTNode node = new LTTNode(pr);
-    node.setParent(new LabelKey(l), this);
+    addChild(l, node);
+  }
+
+  public void addChild(Label l, LTTNode node){
+    node.setParent(l, this);
     node.setCurrentDepth(currentDepth + 1);
     node.echoDepth(0);
     children.put(l, node);
@@ -113,6 +117,17 @@ public class LTTNode {
     }
   }
 
+  public LTTNode getAncestor() throws Exception {
+    if (parents.keySet().size() > 1)
+      throw new Exception("Process has more than one parent!");
+    else if (parents.keySet().size() == 0)
+      return this;
+    for (LTTNode node : parents.values())
+      return node.getAncestor();
+
+    return this;
+  }
+
   public int getMaxDepth() {
     return maxDepth;
   }
@@ -174,7 +189,18 @@ public class LTTNode {
    * @return
    */
   public LTTNode regenerate(){
-    return null;
+    if (internalProcess.hasKey()){
+      Process p = internalProcess.clone();
+      Process p2 = p.act(internalProcess.getKey());
+      LTTNode node = new LTTNode(p2);
+      node.addChild(internalProcess.getKey().from, this);
+
+    }
+    for (Map.Entry<Label, LTTNode> entry : parents.entrySet()){
+      entry.getValue().regenerate();
+    }
+
+    return this;
   }
 
   public boolean isLeafNode() {
@@ -235,7 +261,8 @@ public class LTTNode {
   }
 
   public String toString() {
-    return print(new StringBuilder(500), "", "");
+    //return print(new StringBuilder(500), "", "");
+    return internalProcess.represent();
   }
 
 
@@ -244,9 +271,10 @@ public class LTTNode {
                        final String childrenPrefix) {
     buffer.append(prefix);
     buffer.append(
-        String.format("%s (Depth: %d), [%s]",
+        String.format("%s (Depth: %d), %s",
             internalProcess.represent(),
-            this.currentDepth, calculatePath()));
+            this.currentDepth,
+            calculatePath()));
     buffer.append('\n');
     for (Iterator<Map.Entry<Label, LTTNode>> it = children.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<Label, LTTNode> entry = it.next();

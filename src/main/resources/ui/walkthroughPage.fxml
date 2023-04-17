@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cinrc.UI.WalkthroughController">
+<AnchorPane prefHeight="238.0" prefWidth="484.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cinrc.UI.WalkthroughController">
    <children>
-      <VBox layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+      <VBox layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
             <MenuBar prefHeight="21.0" prefWidth="575.0">
                <menus>
@@ -27,7 +27,7 @@
                   </Menu>
                </menus>
             </MenuBar>
-            <AnchorPane prefHeight="375.0" prefWidth="600.0" style="-fx-background-color: grey;">
+            <AnchorPane prefHeight="516.0" prefWidth="600.0" style="-fx-background-color: grey;">
                <children>
                   <TextField fx:id="actInput" floatText="Process" layoutX="205.0" layoutY="65.0" />
                   <Label alignment="CENTER" layoutX="213.0" layoutY="7.0" prefHeight="40.0" prefWidth="158.0" text="RCCS Parser">

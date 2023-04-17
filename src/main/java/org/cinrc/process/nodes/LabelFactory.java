@@ -2,7 +2,9 @@ package org.cinrc.process.nodes;
 
 import java.util.regex.Matcher;
 import org.cinrc.parser.CCSGrammar;
+import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.CCSParserException;
+import org.cinrc.parser.StringWalker;
 
 public class LabelFactory {
 
@@ -14,14 +16,25 @@ public class LabelFactory {
    */
   public static Label parseNode(String s) {
     //TODO: for future reference, can check if start with ', then everything = complement
-    Matcher m = CCSGrammar.OUT_LABEL.match(s);
+    Matcher m = CCSGrammar.TAU_LABEL.match(s);
+    if (m.find()){
+      String c = s.replace(CCSGrammar.TAU_START.pString, "");
+      m = CCSGrammar.LABEL.match(c);
+      if (!m.find()){
+        throw new CCSParserException("Cannot find label in tau " + s);
+      }
+      return new TauLabelNode(m.group());
+    }
+
+    m = CCSGrammar.OUT_LABEL.match(s);
     if (m.find()) {
-      return new ComplementLabelNode(m.group());
+      return new ComplementLabelNode(m.group().replace("'",""));
     }
     m = CCSGrammar.LABEL.match(s);
     if (m.find()) {
       return new LabelNode(m.group());
     }
+
 
     throw new CCSParserException(String.format("Could not parse %s into labels", s));
   }
@@ -41,6 +54,27 @@ public class LabelFactory {
     return c;
   }
 
+
+  public static LabelNode createLabelNode(String channel){
+    return new LabelNode(channel);
+  }
+
+  public static LabelNode createDebugLabelNode(String channel){
+    LabelNode n = new LabelNode(channel);
+    n.dupe = -1;
+    return n;
+  }
+
+  public static ComplementLabelNode createDebugComplementLabelNode(String channel){
+    ComplementLabelNode n = new ComplementLabelNode(channel);
+    n.dupe = -1;
+    return n;
+  }
+
+  public static ComplementLabelNode createComplementLabelNode(String channel){
+    return new ComplementLabelNode(channel);
+  }
+
   public static LabelKey createDebugLabelKey(Label label) {
     LabelKey c = new LabelKey(label);
     c.dupe = -1;
@@ -53,4 +87,5 @@ public class LabelFactory {
     c.dupe = dupe;
     return c;
   }
+
 }

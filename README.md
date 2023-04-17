@@ -131,6 +131,7 @@ This program can be configured by using command-line arguments, or flags. The fl
 | --enumerate  	                      | Run the program in enumeration mode (Default). In enumeration mode, the given process will be enumerated to completion, and the transition tree will be printed to stdout                                                                    	                                                                                      |
 | --validate  	                       | Run the program in validation mode. In validation mode, a user inputted file will be scanned for processes to parse. Processes in the file must be separated by newlines, with one process per line. Each process will be validated for syntax and formatting.                                                                    	 |
 | --equivalence  	                    | Run the program in equivalence mode. In equivalence mode, your input will be in the form of a *list* of processes separated by commas (,). All equivalence relationships between the given processes will be printed.                                                                    	                                          |
+| --regenerate  	                     | Run the program in regeneration mode. In regeneration mode, you may input a process that has already begun execution. It will then regenerate to its ancestor process and enumerate.                                                                    	                                                                           |
 
 ## Contributing
 

@@ -2,8 +2,10 @@ package org.cinrc.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.cinrc.IRDC;
 import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
@@ -44,6 +46,7 @@ public class CCSParser {
     LinkedList<Label> prefixes = new LinkedList<>();
     LinkedList<Label> restrictions = new LinkedList<>();
     LinkedList<LabelKey> keys = new LinkedList<>();
+    LabelKey tauKeyBuffer = null;
 
     do {
       walker.walk();
@@ -57,6 +60,18 @@ public class CCSParser {
         inParenthesis = true;
         continue;
       }
+      if (CCSGrammar.TAU_START.match(walker.read()
+          + walker.peek(CCSGrammar.TAU_START.pString.length())).find()){
+        walker.walkUntil(Pattern.compile(CCSGrammar.TAU_LABEL.pString));//Full label
+        //TauLabelNode t = (TauLabelNode) LabelFactory.parseNode(walker.readMemory());
+        if (!walker.peek().equals(CCSGrammar.OPEN_KEY_NOTATION.toString())){
+          throw new CCSParserException("Detected a tau node with no trailing key label!");
+        }
+        walker.walkUntil(Pattern.compile(CCSGrammar.LABEL_KEY_COMBINED.pString));
+        System.out.println(walker.readMemory());
+        inKeyNotation = true;
+      }
+
       if (inParenthesis) {
         if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
           counter--;
@@ -73,14 +88,11 @@ public class CCSParser {
         for (CCSGrammar g : Arrays.stream(CCSGrammar.values()).filter(c -> c.canBeParsed())
             .toList()) {
           Matcher m = g.match(walker.readMemory());
+
           if (!m.find()) {
             continue;
           }
-          /*//If grammar matches but does not match *everything* in memory
-          if (!g.match(walker.readMemory()).matches()) {
-            throw new CCSParserException(
-                "Unrecognized character(s): " + walker.readMemory().replace(m.group(), ""));
-          }*/
+
           IRDC.log("Found match: " + m.group() + " Grammar: " + g.name());
           if (inSetNotation) {
             if (g == CCSGrammar.LABEL_COMBINED) { //Is there a label here
@@ -102,15 +114,26 @@ public class CCSParser {
           }
 
           switch (g) {
-            case LABEL_KEY_COMBINED:
+            case LABEL_KEY_FULL: //[k0]
+              System.out.println(walker.readMemory());
               inKeyNotation = false;
               Matcher c = CCSGrammar.LABEL_COMBINED.match(walker.readMemory());
               if (!c.find())
                 throw new CCSParserException("Could not find label in key");
               Label l = LabelFactory.parseNode(c.group(0));
-              keys.add(new LabelKey(l));
+              if (l instanceof TauLabelNode t){
+                if (tauKeyBuffer == null){
+                  tauKeyBuffer = new LabelKey(t);
+                  keys.add(tauKeyBuffer);
+                }else{
+                  keys.add(tauKeyBuffer);
+                  tauKeyBuffer = null;
+                }
+              }else {
+                keys.add(new LabelKey(l));
+              }
               break;
-            case LABEL_COMBINED:
+            case LABEL_COMBINED: //a, 'a
               if (walker.peek().equals(CCSGrammar.OPEN_KEY_NOTATION.toString())){
                 inKeyNotation = true;
                 break;
@@ -134,6 +157,8 @@ public class CCSParser {
               }
               break;
             case PROCESS:
+              if (inKeyNotation)
+                break;
               template.add(generateProcess(walker.readMemory(), prefixes, keys));
               break;
             case NULL_PROCESS:
@@ -174,11 +199,11 @@ public class CCSParser {
       if (k.from instanceof TauLabelNode tau){
        if (tau.consumeLeft == false){
          l.add(tau.getA());
-         tau.consumeLeft = true;
        }else if (tau.consumeRight == false){
          l.add(tau.getB());
-         tau.consumeRight = true;
        }
+      }else {
+        l.add(k.from);
       }
     }
     return l;
@@ -186,9 +211,9 @@ public class CCSParser {
 
   public static Process generateProcess(String s, LinkedList<Label> prefixes, LinkedList<LabelKey> keys){
     Process p = null;
-    if (CCSGrammar.NULL_PROCESS.match(s).find()){
+    if (CCSGrammar.NULL_PROCESS.match(s).matches()){
       p = new NullProcess();
-    }else if (CCSGrammar.PROCESS.match(s).find()){
+    }else if (CCSGrammar.PROCESS.match(s).matches()){
       p = new ProcessImpl(s);
     }
     LinkedList<Label> parsedPrefixes = CCSParser.parseLabelsFromKeySet(keys);
@@ -196,12 +221,26 @@ public class CCSParser {
     p.addPrefixes(parsedPrefixes);
 
     for (LabelKey key : keys){
-      p.act(key.from);
+      /*if (key.from instanceof TauLabelNode t){
+        if (!t.consumeLeft){
+          p.act(t.getA());
+          t.consumeLeft = true;
+        }else if (!t.consumeRight){
+          p.act(t.getB());
+          t.consumeRight = true;
+        }else{
+          throw new CCSParserException("Something went wrong when trying to manage tau!");
+        }
+      }else */{
+        p.act(key.from);
+      }
     }
 
     prefixes.clear();
     keys.clear();
     return p;
   }
+
+
 
 }

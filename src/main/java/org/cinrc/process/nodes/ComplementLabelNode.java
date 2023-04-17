@@ -8,9 +8,9 @@ import org.cinrc.parser.CCSGrammar;
  */
 public class ComplementLabelNode extends Label {
 
-  public ComplementLabelNode(String s) {
+  public ComplementLabelNode(String channel) {
     //Remove the ' when applying channel
-    super(NodeIDGenerator.nextAvailable(), s.replaceFirst("'", ""));
+    super(NodeIDGenerator.nextAvailable(), channel);
     grammar = CCSGrammar.OUT_LABEL;
     isComplement = true;
     this.id = UUID.randomUUID();

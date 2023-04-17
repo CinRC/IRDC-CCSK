@@ -61,8 +61,8 @@ public class RestrictionTest {
     Label a, oa, ta, taswitch;
     a = LabelFactory.createDebugLabel("a");
     oa = LabelFactory.createDebugLabel("'a");
-    ta = new TauLabelNode(a, oa);
-    taswitch = new TauLabelNode(oa, a);
+    ta = new TauLabelNode("a");
+    taswitch = new TauLabelNode("a");
     Process p = CCSParser.parseLine("(a|'a)\\{a}").export();
 
     ProcessContainer pc = new ProcessContainer(p);

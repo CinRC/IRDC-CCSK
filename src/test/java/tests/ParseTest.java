@@ -1,7 +1,10 @@
 package tests;
 
+import java.util.regex.Pattern;
 import org.cinrc.IRDC;
+import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParser;
+import org.cinrc.parser.StringWalker;
 import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
@@ -129,6 +132,18 @@ public class ParseTest {
     }
     assert (isFailed);
 
+  }
+
+  @Test
+  public void testWalker(){
+    StringWalker walker = new StringWalker("helloTau{a}aa");
+    do{
+      walker.walk();
+      if (walker.read() == 'T'){
+        System.out.println(walker.peekUntil(Pattern.compile(CCSGrammar.TAU_LABEL.pString)));
+      }
+      walker.clearMemory();
+    }while(walker.canWalk());
   }
 
 }

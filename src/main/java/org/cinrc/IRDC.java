@@ -57,12 +57,29 @@ public class IRDC {
       interactive(args[args.length - 1]);
     } else if (config.contains(RCCSFlag.EQUIVALENCE)) {
       equivalence(args[args.length - 1]);
+    }else if (config.contains(RCCSFlag.REGENERATE)) {
+      regenerate(args[args.length - 1]);
     } else {
       enumerate(args[args.length - 1]);
     }
     System.exit(0);
 
 
+  }
+
+  private static void regenerate(String args) {
+    org.cinrc.process.process.Process p =
+        CCSParser.parseLine(args).export();
+    LTTNode node = new LTTNode(p);
+    node.regenerate();
+    try {
+      node = node.getAncestor();
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+    node.enumerate(true);
+    System.out.println(node);
+    System.exit(0);
   }
 
   private static void validate(String args) {

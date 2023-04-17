@@ -49,6 +49,14 @@ public abstract class Process extends ProgramNode {
     this.key = key;
   }
 
+  public void setGhost(boolean b){
+    isGhost = b;
+  }
+
+  public boolean isGhost(){
+    return isGhost;
+  }
+
   /**
    * Removes restrictions from given process. Because of the way label equality
    * checking works, the removeAll method in collection does not work.

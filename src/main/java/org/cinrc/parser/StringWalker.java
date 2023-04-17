@@ -109,7 +109,9 @@ public class StringWalker implements Iterable<Character>, CharSequence {
    * @return Next character in order
    */
   public String peek() {
-    return String.valueOf(charAt(curPos + getDirection().inc));
+    if (canWalk()) {
+      return String.valueOf(charAt(curPos + getDirection().inc));
+    }else return "";
   }
 
   /**

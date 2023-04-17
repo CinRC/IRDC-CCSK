@@ -261,8 +261,8 @@ public class LTTNode {
   }
 
   public String toString() {
-    //return print(new StringBuilder(500), "", "");
-    return internalProcess.represent();
+    return print(new StringBuilder(500), "", "");
+    //return internalProcess.represent();
   }
 
 

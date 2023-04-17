@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.cinrc.process.nodes.ComplementLabelNode;
 import org.cinrc.process.nodes.Label;
+import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.LabelNode;
 import org.cinrc.process.nodes.ProgramNode;
 import org.cinrc.process.process.ActionPrefixProcess;
@@ -34,9 +35,12 @@ public enum CCSGrammar {
       ActionPrefixProcess.class, null, false),
   OP_CONCURRENT("\\|", ConcurrentProcess.class, "|", true),
   OP_SUMMATION("\\+", SummationProcess.class, "+", true),
-  OPEN_RESTRICTION("\\\\\\{", null, null, true), //6 backslashes, LOL. \\{
-  CLOSE_RESTRICTION("\\}", null, null, true);
-
+  OPEN_RESTRICTION("\\\\\\{", null, "{", true), //6 backslashes, LOL. \\{
+  CLOSE_RESTRICTION("\\}", null, "}", true),
+  OPEN_KEY_NOTATION("\\[", null, "[", false),
+  CLOSE_KEY_NOTATION("\\]", null, "]", false),
+  LABEL_KEY(String.format("k[0-9]*"), LabelKey.class, null, false), // k0, k1
+  LABEL_KEY_COMBINED(String.format("%sk[0-9]*%s",OPEN_KEY_NOTATION.pString, CLOSE_KEY_NOTATION.pString), LabelKey.class, null, true); // a[k0], b[k1]
 
   public static final Pattern parenthesisRegex;
 

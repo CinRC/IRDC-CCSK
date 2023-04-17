@@ -8,6 +8,7 @@ import org.cinrc.parser.CCSParserException;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.process.ComplexProcess;
 import org.cinrc.process.process.Process;
+import org.cinrc.process.process.SummationProcess;
 
 
 public class ProcessTemplate {
@@ -51,6 +52,13 @@ public class ProcessTemplate {
           //Consume object to the right
           {
             p.right = tList.remove(tList.indexOf(p) + 1);
+          }
+          if (p instanceof SummationProcess s){
+            if (s.left.hasKey()){
+              s.right.setGhost(true);
+            }else if (s.right.hasKey()){
+              s.left.setGhost(true);
+            }
           }
         }
       }

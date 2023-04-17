@@ -7,6 +7,7 @@ import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.LabelNode;
 import org.cinrc.process.nodes.ProgramNode;
+import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.process.ActionPrefixProcess;
 import org.cinrc.process.process.ConcurrentProcess;
 import org.cinrc.process.process.NullProcess;
@@ -40,6 +41,8 @@ public enum CCSGrammar {
   OPEN_KEY_NOTATION("\\[", null, "[", false),
   CLOSE_KEY_NOTATION("\\]", null, "]", false),
   LABEL_KEY(String.format("k[0-9]*"), LabelKey.class, null, false), // k0, k1
+
+  TAU_LABEL(String.format("Tau{%s}",LABEL_COMBINED.pString), TauLabelNode.class, null, false), // k0, k1
   LABEL_KEY_COMBINED(String.format("%sk[0-9]*%s",OPEN_KEY_NOTATION.pString, CLOSE_KEY_NOTATION.pString), LabelKey.class, null, true); // a[k0], b[k1]
 
   public static final Pattern parenthesisRegex;

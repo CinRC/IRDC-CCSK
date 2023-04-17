@@ -9,6 +9,7 @@ import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelFactory;
 import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.process.ConcurrentProcess;
 import org.cinrc.process.process.NullProcess;
 import org.cinrc.process.process.Process;
@@ -170,7 +171,15 @@ public class CCSParser {
   public static LinkedList<Label> parseLabelsFromKeySet(LinkedList<LabelKey> keys){
     LinkedList<Label> l = new LinkedList<>();
     for (LabelKey k : keys){
-      l.add(k.from);
+      if (k.from instanceof TauLabelNode tau){
+       if (tau.consumeLeft == false){
+         l.add(tau.getA());
+         tau.consumeLeft = true;
+       }else if (tau.consumeRight == false){
+         l.add(tau.getB());
+         tau.consumeRight = true;
+       }
+      }
     }
     return l;
   }

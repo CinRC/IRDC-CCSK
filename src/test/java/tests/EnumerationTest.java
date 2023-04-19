@@ -23,7 +23,7 @@ public class EnumerationTest {
     IRDC.config.add(RCCSFlag.DISPLAY_NULL);
     IRDC.config.add(RCCSFlag.DIFFERENTIATE_LABELS);
     IRDC.config.add(RCCSFlag.DEBUG);
-    Process p = CCSParser.parseLine("a.b|c.d").export();
+    Process p = new CCSParser().parseLine("a.b|c.d").export();
     Process pc = p.clone();
     ProcessContainer p1 = new ProcessContainer(p);
     ProcessContainer p2 = new ProcessContainer(pc);
@@ -54,7 +54,7 @@ public class EnumerationTest {
 
     IRDC.config.add(RCCSFlag.DEBUG);
     IRDC.config.add(RCCSFlag.KEYS_MATCH_LABELS);
-    ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b|'a.c").export());
+    ProcessContainer p = new ProcessContainer(new CCSParser().parseLine("a.b|'a.c").export());
     Label a, aa, b, c;
     a = LabelFactory.createDebugLabel("a");
     aa = LabelFactory.createDebugLabel("'a");
@@ -79,7 +79,7 @@ public class EnumerationTest {
   @Test
   public void testTree() {
     IRDC.config.clear();
-    Process p = CCSParser.parseLine("(a|b)|('a+'b)").export();
+    Process p = new CCSParser().parseLine("(a|b)|('a+'b)").export();
     System.out.printf("Testing enumeration of %s...\n", p.represent());
     LTTNode node = new LTTNode(p);
     node.enumerate(true);
@@ -87,7 +87,7 @@ public class EnumerationTest {
     System.out.printf("Max depth: %d\n\n\n", node.getMaxDepth());
     assert (node.getMaxDepth() == 3);
 
-    p = CCSParser.parseLine("a.(c|d)").export();
+    p = new CCSParser().parseLine("a.(c|d)").export();
     System.out.printf("Testing enumeration of %s...\n", p.represent());
     node = new LTTNode(p);
     node.enumerate(true);
@@ -95,7 +95,7 @@ public class EnumerationTest {
     System.out.printf("Max depth: %d\n\n\n", node.getMaxDepth());
     assert (node.getMaxDepth() == 3);
 
-        /*p = CCSParser.parseLine("(d.(a+c)) | ('a.( (c|b)|'b) | (a+'b) )").export();
+        /*p = new CCSParser().parseLine("(d.(a+c)) | ('a.( (c|b)|'b) | (a+'b) )").export();
         System.out.printf("Testing enumeration of %s...\n", p.represent());
         node = new LTTNode(p);
         node.enumerate();
@@ -110,7 +110,7 @@ public class EnumerationTest {
   public void regenerationTest(){
     IRDC.config.clear();
 
-    Process p = CCSParser.parseLine("a.b.P").export();
+    Process p = new CCSParser().parseLine("a.b.P").export();
     Process p2 = p.clone();
     p.act(LabelFactory.createDebugLabel("a"));
     p.act(LabelFactory.createDebugLabel("b"));

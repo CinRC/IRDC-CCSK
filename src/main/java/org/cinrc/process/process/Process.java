@@ -12,6 +12,7 @@ import org.cinrc.IRDC;
 import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSTransitionException;
 import org.cinrc.parser.LTTNode;
+import org.cinrc.process.nodes.IRDCObject;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.ProgramNode;
@@ -20,7 +21,7 @@ import org.cinrc.util.RCCSFlag;
 import org.cinrc.util.SetUtil;
 import org.cinrc.util.StringUtil;
 
-public abstract class Process extends ProgramNode {
+public abstract class Process extends ProgramNode implements IRDCObject {
 
   public boolean displayKey = !IRDC.config.contains(RCCSFlag.HIDE_KEYS);
   //Passthru key for summation processes

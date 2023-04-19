@@ -1,16 +1,20 @@
 package org.cinrc.parser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.cinrc.IRDC;
 import org.cinrc.process.ProcessTemplate;
+import org.cinrc.process.nodes.KnownIRDCToken;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelFactory;
 import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.NestedIRDCToken;
 import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.process.ConcurrentProcess;
 import org.cinrc.process.process.NullProcess;
@@ -22,7 +26,28 @@ import org.cinrc.util.SetUtil;
 
 public class CCSParser {
 
+  HashMap<Integer, LabelKey> tauMap;
+  int counter;
+  boolean inParenthesis, inKeyNotation, inSetNotation;
+  LinkedList<Label> prefixes, restrictions;
+  LinkedList<LabelKey> keys;
+
+  Collection<RCCSFlag> config;
   public CCSParser() {
+    tauMap = new HashMap<Integer, LabelKey>();
+    config = new HashSet<>(IRDC.config);
+    counter = 0;
+    inParenthesis = false;
+    inKeyNotation = false;
+    inSetNotation = false;
+    prefixes = new LinkedList<>();
+    restrictions = new LinkedList<>();
+    keys = new LinkedList<>();
+  }
+
+  public CCSParser(HashMap<Integer, LabelKey> tauMap){
+    CCSParser p = new CCSParser();
+    p.tauMap = tauMap;
   }
 
   /**
@@ -33,27 +58,14 @@ public class CCSParser {
    * @param line String representing process in proper format
    * @return ProcessTemplate representing that string
    */
-  public static ProcessTemplate parseLine(String line) {
+  public ProcessTemplate parseLine(String line) {
     IRDC.log("Starting parsing of " + line);
     StringWalker walker = new StringWalker(line);
     walker.setIgnore(' ');
-
     ProcessTemplate template = new ProcessTemplate();
-    int counter = 0;
-    boolean inParenthesis = false;
-    boolean inKeyNotation = false;
-    boolean inSetNotation = false;
-    LinkedList<Label> prefixes = new LinkedList<>();
-    LinkedList<Label> restrictions = new LinkedList<>();
-    LinkedList<LabelKey> keys = new LinkedList<>();
-    LabelKey tauKeyBuffer = null;
 
     do {
       walker.walk();
-      IRDC.log(
-          String.format("Begin matching with memory %s, counter: %d, set: %b", walker.readMemory(),
-              counter, inSetNotation));
-
       //If parenthesis
       if (CCSGrammar.OPEN_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
         counter++; //Increment counter to adjust parenthesis depth
@@ -61,22 +73,29 @@ public class CCSParser {
         continue;
       }
       if (CCSGrammar.TAU_START.match(walker.read()
-          + walker.peek(CCSGrammar.TAU_START.pString.length())).find()){
+          + walker.peek(CCSGrammar.TAU_START.pString.length())).find()){ //Tau in process can only be key
         walker.walkUntil(Pattern.compile(CCSGrammar.TAU_LABEL.pString));//Full label
         //TauLabelNode t = (TauLabelNode) LabelFactory.parseNode(walker.readMemory());
-        if (!walker.peek().equals(CCSGrammar.OPEN_KEY_NOTATION.toString())){
+        if (!CCSGrammar.OPEN_KEY_NOTATION.match(walker.peek()).matches()){
           throw new CCSParserException("Detected a tau node with no trailing key label!");
         }
-        walker.walkUntil(Pattern.compile(CCSGrammar.LABEL_KEY_COMBINED.pString));
+        walker.walkUntil(Pattern.compile(CCSGrammar.LABEL_KEY_WITH_BRACKET.pString));
         System.out.println(walker.readMemory());
         inKeyNotation = true;
+      }else if (CCSGrammar.LABELS_BASIC.match(String.valueOf(walker.read())).matches()){
+
+        if (CCSGrammar.OPEN_KEY_NOTATION.match(walker.peek()).matches()){
+          walker.walkUntil(Pattern.compile(CCSGrammar.LABEL_KEY_WITH_BRACKET.pString));
+          System.out.println(walker.readMemory());
+          inKeyNotation = true;
+        }
       }
 
       if (inParenthesis) {
         if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
           counter--;
           if (counter == 0) {
-            Process dp = CCSParser.parseLine(
+            Process dp = new CCSParser().parseLine(
                 walker.readMemory().substring(1, walker.readMemory().length() - 1)).export();
             dp.addPrefixes(prefixes);
             template.add(dp);
@@ -93,7 +112,6 @@ public class CCSParser {
             continue;
           }
 
-          IRDC.log("Found match: " + m.group() + " Grammar: " + g.name());
           if (inSetNotation) {
             if (g == CCSGrammar.LABEL_COMBINED) { //Is there a label here
               restrictions.add(LabelFactory.parseNode(m.group())); //Add restriction to list
@@ -115,13 +133,13 @@ public class CCSParser {
 
           switch (g) {
             case LABEL_KEY_FULL: //[k0]
-              System.out.println(walker.readMemory());
+              System.out.println("Found key "+walker.readMemory());
               inKeyNotation = false;
               Matcher c = CCSGrammar.LABEL_COMBINED.match(walker.readMemory());
               if (!c.find())
                 throw new CCSParserException("Could not find label in key");
               Label l = LabelFactory.parseNode(c.group(0));
-              if (l instanceof TauLabelNode t){
+              /*if (l instanceof TauLabelNode t){
                 if (tauKeyBuffer == null){
                   tauKeyBuffer = new LabelKey(t);
                   keys.add(tauKeyBuffer);
@@ -131,7 +149,7 @@ public class CCSParser {
                 }
               }else {
                 keys.add(new LabelKey(l));
-              }
+              }*/
               break;
             case LABEL_COMBINED: //a, 'a
               if (walker.peek().equals(CCSGrammar.OPEN_KEY_NOTATION.toString())){
@@ -191,6 +209,22 @@ public class CCSParser {
     } while (walker.canWalk());
 
     return template;
+  }
+
+  public Process debugParse(String line){
+    System.out.println("Begin " + line);
+    ProcessBuilder b = new ProcessBuilder(line);
+    b.tokenize();
+    //List<List<KnownIRDCToken>> o = b.groupByParentheses();
+    NestedIRDCToken o = b.handleParentheses();
+    String s = "";
+    for (KnownIRDCToken token : o.getTokens()){
+      System.out.println(token.represent());
+    }
+    System.out.println(s);
+
+
+    return b.export();
   }
 
   public static LinkedList<Label> parseLabelsFromKeySet(LinkedList<LabelKey> keys){

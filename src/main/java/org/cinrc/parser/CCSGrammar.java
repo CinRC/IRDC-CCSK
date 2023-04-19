@@ -8,7 +8,6 @@ import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.LabelNode;
 import org.cinrc.process.nodes.ProgramNode;
 import org.cinrc.process.nodes.TauLabelNode;
-import org.cinrc.process.process.ActionPrefixProcess;
 import org.cinrc.process.process.ConcurrentProcess;
 import org.cinrc.process.process.NullProcess;
 import org.cinrc.process.process.ProcessImpl;
@@ -39,12 +38,13 @@ public enum CCSGrammar {
   CLOSE_RESTRICTION("\\}", null, "}", true),
   OPEN_KEY_NOTATION("\\[", null, "[", false),
   CLOSE_KEY_NOTATION("\\]", null, "]", false),
-  LABEL_KEY(String.format("k[0-9]*"), LabelKey.class, null, false), // k0, k1
-  LABEL_KEY_COMBINED(String.format("%s%s%s"
+  DIGITS("[0-9]*", null, null, false),
+  LABEL_KEY(String.format("k%s", DIGITS.pString), LabelKey.class, null, false), // k0, k1
+  LABEL_KEY_WITH_BRACKET(String.format("%s%s%s"
       ,OPEN_KEY_NOTATION.pString, LABEL_KEY.pString, CLOSE_KEY_NOTATION.pString)
       , LabelKey.class, null, false), //[k4]
   LABEL_KEY_FULL(String.format("(%s|%s)%s",
-      TAU_LABEL.pString, LABEL_COMBINED.pString, LABEL_KEY_COMBINED.pString),
+      TAU_LABEL.pString, LABEL_COMBINED.pString, LABEL_KEY_WITH_BRACKET.pString),
       LabelKey.class, null, true);
 
   public static final Pattern parenthesisRegex;

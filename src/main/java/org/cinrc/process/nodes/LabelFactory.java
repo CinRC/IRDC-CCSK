@@ -1,10 +1,9 @@
 package org.cinrc.process.nodes;
 
 import java.util.regex.Matcher;
+import org.cinrc.IRDC;
 import org.cinrc.parser.CCSGrammar;
-import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.CCSParserException;
-import org.cinrc.parser.StringWalker;
 
 public class LabelFactory {
 
@@ -15,8 +14,21 @@ public class LabelFactory {
    * @return Label parsed from the given strings
    */
   public static Label parseNode(String s) {
-    //TODO: for future reference, can check if start with ', then everything = complement
-    Matcher m = CCSGrammar.TAU_LABEL.match(s);
+    IRDC.log("Beginning parse of node %s", s);
+    Matcher m = CCSGrammar.LABEL_KEY_WITH_BRACKET.match(s);
+    if (m.find()){ //Is this a key?
+      IRDC.log("Detected key in %s", s);
+      Label l = LabelFactory.parseNode(
+          s.replaceAll(CCSGrammar.LABEL_KEY_WITH_BRACKET.pString, "")); //Just label
+      m = CCSGrammar.DIGITS.match(s);
+      if (!m.find()){
+        throw new CCSParserException("Could not find key dupe in key " + s);
+      }
+      IRDC.log("Generated new key from %s", s);
+      return new LabelKey(l, Integer.parseInt(m.group()));
+    }
+
+    m = CCSGrammar.TAU_LABEL.match(s);
     if (m.find()){
       String c = s.replace(CCSGrammar.TAU_START.pString, "");
       m = CCSGrammar.LABEL.match(c);

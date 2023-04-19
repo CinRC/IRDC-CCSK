@@ -7,7 +7,7 @@ import org.cinrc.IRDC;
 import org.cinrc.parser.CCSGrammar;
 import org.cinrc.util.RCCSFlag;
 
-public abstract class Label extends ProgramNode {
+public abstract class Label extends ProgramNode implements IRDCObject {
 
   private final String channel;
   public CCSGrammar grammar;

@@ -130,6 +130,8 @@ public class CCSParser {
                   tauKeyBuffer = null;
                 }
               }else {
+                if (!prefixes.isEmpty())
+                  throw new CCSParserException("Unreachable process detected! Keys cannot be in between labels.");
                 keys.add(new LabelKey(l));
               }
               break;

@@ -134,6 +134,20 @@ public class CCSParser {
                   throw new CCSParserException("Unreachable process detected! Keys cannot be in between labels.");
                 keys.add(new LabelKey(l));
               }
+
+              if (!walker.canWalk()) {
+                template.add(generateProcess(CCSGrammar.NULL_PROCESS.toString(), prefixes,keys));
+                //If there is a . after label, then skip over it and continue.
+              } else if (walker.peek().equals(CCSGrammar.OP_SEQUENTIAL.toString())) {
+                walker.walk(false);
+                //If there is no ., then treat it as an implicit "0" process
+              } else if (!IRDC.config.contains(RCCSFlag.REQUIRE_EXPLICIT_NULL)) {
+                template.add(generateProcess(CCSGrammar.NULL_PROCESS.toString(),prefixes,keys));
+              } else {
+                throw new CCSParserException(
+                    String.format("Could not find process for prefixes: %s",
+                        SetUtil.csvSet(prefixes)));
+              }
               break;
             case LABEL_COMBINED: //a, 'a
               if (walker.peek().equals(CCSGrammar.OPEN_KEY_NOTATION.toString())){

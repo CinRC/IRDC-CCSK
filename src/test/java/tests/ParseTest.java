@@ -157,7 +157,7 @@ public class ParseTest {
 //    parser.debugParse("a.b.P + (Tau{z}[k0]|Tau{z}[k0])");
 //    parser.debugParse("(a.b)|( (c.d)+(e.f) )");
     //parser.debugParse("((a.b)|(c.d))");
-    parser.debugParse("a.b.c");
+    parser.debugParse("a|(b+c)");
   }
 
 }

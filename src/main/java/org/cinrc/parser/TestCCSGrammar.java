@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum TestCCSGrammar {
-  LABEL_IN("[a-z]", false, 0),
+  LABEL_IN("[a-z]", false, -1),
   LABEL_OUT("'" + LABEL_IN.pString, false, -1),
   LABEL_TAU("Tau\\{"+LABEL_IN.pString+"\\}", true, 2),
 

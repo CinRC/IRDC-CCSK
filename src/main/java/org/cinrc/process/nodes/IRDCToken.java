@@ -4,7 +4,6 @@ import org.cinrc.parser.ProcessBuilder;
 
 public abstract class IRDCToken {
   private String representation;
-  private ProcessBuilder parent;
   public IRDCToken(String representation){
     this.representation = representation;
   }

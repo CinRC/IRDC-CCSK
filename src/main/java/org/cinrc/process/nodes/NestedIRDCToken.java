@@ -33,15 +33,6 @@ public class NestedIRDCToken extends KnownIRDCToken{
     return s;
   }
 
-  public void handleLabels(){
-    List<Label> labels = new ArrayList<>();
-    for (KnownIRDCToken token : getTokens()){
-      if (token.getGrammar() == TestCCSGrammar.LABEL_ANY){
-        labels.add(LabelFactory.parseNode(token.represent()));
-      }
-    }
-  }
-
   public void addToken(KnownIRDCToken token){
     this.tokens.add(token);
   }

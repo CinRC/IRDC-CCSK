@@ -12,6 +12,14 @@ public class KnownIRDCToken extends IRDCToken{
     this.tokenGrammar = tokenGrammar;
   }
 
+  public IRDCObject getData(){
+    return data;
+  }
+
+  public void setData(IRDCObject o){
+    this.data = o;
+  }
+
   public TestCCSGrammar getGrammar(){
     return tokenGrammar;
   }

@@ -216,9 +216,9 @@ public class CCSParser {
     ProcessBuilder b = new ProcessBuilder(line);
     b.tokenize();
     //List<List<KnownIRDCToken>> o = b.groupByParentheses();
-    NestedIRDCToken o = b.handleParentheses();
+    b.handleParentheses();
     String s = "";
-    for (KnownIRDCToken token : o.getTokens()){
+    for (KnownIRDCToken token : b.getKnownTokens()){
       System.out.println(token.represent());
     }
     System.out.println(s);

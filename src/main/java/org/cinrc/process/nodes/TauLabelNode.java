@@ -1,9 +1,6 @@
 package org.cinrc.process.nodes;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.cinrc.parser.CCSGrammar;
 
 public class TauLabelNode extends Label {
 
@@ -42,9 +39,13 @@ public class TauLabelNode extends Label {
 
   @Override
   public String toString() {
-    return CCSGrammar.TAU_LABEL.pString
-        .replace("\\","")
-        .replace(CCSGrammar.LABEL.pString,getChannel());
+    return "Tau{"+getChannel()+"}";
+    //TODO: modularize
+
+  }
+
+  public String represent(){
+    return toString();
   }
 
   public Label getA() {

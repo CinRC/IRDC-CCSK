@@ -1,10 +1,11 @@
 package org.cinrc.process;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParserException;
+import org.cinrc.parser.CCSGrammar;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.process.ComplexProcess;
 import org.cinrc.process.process.Process;
@@ -23,6 +24,10 @@ public class ProcessTemplate {
     tList.add(node);
   }
 
+  public Process getLast(){
+    return tList.getLast();
+  }
+
   /**
    * Initialize the template into a working process. This method will cycle through all complex
    * processes, consuming simple processes to make up each part. Complex processes
@@ -37,11 +42,13 @@ public class ProcessTemplate {
       }
     }
 
-
+    ArrayList<CCSGrammar> combineOrder = new ArrayList<>();
+    combineOrder.add(CCSGrammar.OP_PAR);
+    combineOrder.add(CCSGrammar.OP_SUM);
     //We rely on descending binding order in the CCSGrammar class
-    for (CCSGrammar g : CCSGrammar.values()) {
+    for (CCSGrammar g : combineOrder) {
       for (ComplexProcess p : complex) {
-        if (p.getClass() == g.getClassObject()) {
+        if (p.operator == g) {
           if (p.left == null)
           //Consume object to the left
           {

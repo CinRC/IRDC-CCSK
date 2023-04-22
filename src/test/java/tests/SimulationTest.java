@@ -1,8 +1,10 @@
 package tests;
 
+import java.util.Collections;
 import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParser;
 import org.cinrc.parser.LTTNode;
+import org.cinrc.process.nodes.Label;
 import org.cinrc.process.process.Process;
 import org.junit.jupiter.api.Test;
 
@@ -17,25 +19,23 @@ public class SimulationTest {
     // q simulates p, but p cannot simulate q
 
     Process p, q;
-    p = new CCSParser().parseLine("a.b + a.c").export();
-    q = new CCSParser().parseLine("a.(b + c)").export();
+    p = new CCSParser().parseLine("a.b + a.c");
+    q = new CCSParser().parseLine("a.(b + c)");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
     node_q.enumerate(true);
     // The following is simply to help visualizing the process enumerations:
-    /*
-    System.out.println(node_p.toString());
+    System.out.println(node_p);
     for (Label l : Collections.unmodifiableSet(node_p.children.keySet())) {
       System.out.printf("%s, ", l);
     }
     System.out.println();
-    System.out.println(node_q.toString());
+    System.out.println(node_q);
     for (Label l : Collections.unmodifiableSet(node_q.children.keySet())) {
       System.out.printf("%s, ", l);
     }
     System.out.println("\n\n\n");
-    */
     assert (node_q.canSimulate(node_p));
     assert (!node_p.canSimulate(node_q));
   }
@@ -49,8 +49,8 @@ public class SimulationTest {
     // q simulates p, and p can simulate q
 
     Process p, q;
-    p = new CCSParser().parseLine("(a | 'a)\\{a}").export();
-    q = new CCSParser().parseLine("(b | 'b)\\{b}").export();
+    p = new CCSParser().parseLine("(a | 'a)\\{a}");
+    q = new CCSParser().parseLine("(b | 'b)\\{b}");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
@@ -69,8 +69,8 @@ public class SimulationTest {
     // q simulates p, and p can simulate q
 
     Process p, q;
-    p = new CCSParser().parseLine("(a.c | 'a)\\{a}").export();
-    q = new CCSParser().parseLine("(b | 'b.c)\\{b}").export();
+    p = new CCSParser().parseLine("(a.c | 'a)\\{a}");
+    q = new CCSParser().parseLine("(b | 'b.c)\\{b}");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
@@ -86,8 +86,8 @@ public class SimulationTest {
     // q simulates p, and p can simulate q
 
     Process p, q;
-    p = new CCSParser().parseLine("(a.b + b.a)").export();
-    q = new CCSParser().parseLine("(a | b)").export();
+    p = new CCSParser().parseLine("(a.b + b.a)");
+    q = new CCSParser().parseLine("(a | b)");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
@@ -103,8 +103,8 @@ public class SimulationTest {
     // q simulates p, and p cannot simulate q
 
     Process p, q;
-    p = new CCSParser().parseLine("(a.b)").export();
-    q = new CCSParser().parseLine("(a | b)").export();
+    p = new CCSParser().parseLine("(a.b)");
+    q = new CCSParser().parseLine("(a | b)");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
@@ -120,8 +120,8 @@ public class SimulationTest {
     // q simulates p, and p can simulate q
 
     Process p, q;
-    p = new CCSParser().parseLine("(a.b)").export();
-    q = new CCSParser().parseLine("(a | b)").export();
+    p = new CCSParser().parseLine("(a.b)");
+    q = new CCSParser().parseLine("(a | b)");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
@@ -137,8 +137,8 @@ public class SimulationTest {
     // q simulates p, and p cannot simulate q
 
     Process p, q;
-    p = new CCSParser().parseLine("a.((b.c)+(b.d))").export();
-    q = new CCSParser().parseLine("a.b.(c+d)").export();
+    p = new CCSParser().parseLine("a.((b.c)+(b.d))");
+    q = new CCSParser().parseLine("a.b.(c+d)");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
@@ -156,8 +156,8 @@ public class SimulationTest {
     // Cf. https://github.com/CinRC/IRDC-CCSK/issues/55
 
     Process p, q;
-    p = new CCSParser().parseLine("P").export();
-    q = new CCSParser().parseLine("Q").export();
+    p = new CCSParser().parseLine("P");
+    q = new CCSParser().parseLine("Q");
     LTTNode node_p = new LTTNode(p);
     node_p.enumerate(true);
     LTTNode node_q = new LTTNode(q);
@@ -190,8 +190,8 @@ public class SimulationTest {
   public void simulationIsStructural() {
     IRDC.config.clear();
     Process p, q;
-    p = new CCSParser().parseLine("(a + b) | c").export();
-    q = new CCSParser().parseLine("c | (a + b)").export();
+    p = new CCSParser().parseLine("(a + b) | c");
+    q = new CCSParser().parseLine("c | (a + b)");
     // Of course, those processes are too simple, but I don't know if / how I can
     // - declare two processes, p and q,
     // - make p1 be p | q and p2 be q | p

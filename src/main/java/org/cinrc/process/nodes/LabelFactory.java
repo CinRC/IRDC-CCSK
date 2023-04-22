@@ -2,8 +2,8 @@ package org.cinrc.process.nodes;
 
 import java.util.regex.Matcher;
 import org.cinrc.IRDC;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParserException;
+import org.cinrc.parser.CCSGrammar;
 
 public class LabelFactory {
 
@@ -15,11 +15,11 @@ public class LabelFactory {
    */
   public static Label parseNode(String s) {
     IRDC.log("Beginning parse of node %s", s);
-    Matcher m = CCSGrammar.LABEL_KEY_WITH_BRACKET.match(s);
+    Matcher m = CCSGrammar.LABEL_KEY.match(s);
     if (m.find()){ //Is this a key?
       IRDC.log("Detected key in %s", s);
       Label l = LabelFactory.parseNode(
-          s.replaceAll(CCSGrammar.LABEL_KEY_WITH_BRACKET.pString, "")); //Just label
+          s.replaceAll(CCSGrammar.LABEL_SUFFIX.pString, "")); //Just label
       m = CCSGrammar.DIGITS.match(s);
       if (!m.find()){
         throw new CCSParserException("Could not find key dupe in key " + s);
@@ -28,21 +28,21 @@ public class LabelFactory {
       return new LabelKey(l, Integer.parseInt(m.group()));
     }
 
-    m = CCSGrammar.TAU_LABEL.match(s);
+    m = CCSGrammar.LABEL_TAU.match(s);
     if (m.find()){
-      String c = s.replace(CCSGrammar.TAU_START.pString, "");
-      m = CCSGrammar.LABEL.match(c);
+      String c = stripTau(s);
+      m = CCSGrammar.LABEL_IN.match(c);
       if (!m.find()){
         throw new CCSParserException("Cannot find label in tau " + s);
       }
       return new TauLabelNode(m.group());
     }
 
-    m = CCSGrammar.OUT_LABEL.match(s);
+    m = CCSGrammar.LABEL_OUT.match(s);
     if (m.find()) {
       return new ComplementLabelNode(m.group().replace("'",""));
     }
-    m = CCSGrammar.LABEL.match(s);
+    m = CCSGrammar.LABEL_IN.match(s);
     if (m.find()) {
       return new LabelNode(m.group());
     }
@@ -100,4 +100,13 @@ public class LabelFactory {
     return c;
   }
 
+
+  public static String stripTau(String s){
+    //Tau{a...}
+    //Strips first 4 and last 1 characters
+    Matcher m = CCSGrammar.LABEL_TAU.match(s);
+    if (!m.find())
+      throw new CCSParserException("Attempted to strip tau from " + s + " but found no tau.");
+    return m.group(1);
+  }
 }

@@ -1,13 +1,12 @@
 package org.cinrc.process.nodes;
 
-import org.cinrc.parser.TestCCSGrammar;
-import org.cinrc.process.process.ConcurrentProcess;
+import org.cinrc.parser.CCSGrammar;
 
 public class KnownIRDCToken extends IRDCToken{
-  protected TestCCSGrammar tokenGrammar;
+  protected CCSGrammar tokenGrammar;
   protected IRDCObject data;
 
-  public KnownIRDCToken(String representation, TestCCSGrammar tokenGrammar){
+  public KnownIRDCToken(String representation, CCSGrammar tokenGrammar){
     super(representation);
     this.tokenGrammar = tokenGrammar;
   }
@@ -20,7 +19,7 @@ public class KnownIRDCToken extends IRDCToken{
     this.data = o;
   }
 
-  public TestCCSGrammar getGrammar(){
+  public CCSGrammar getGrammar(){
     return tokenGrammar;
   }
 

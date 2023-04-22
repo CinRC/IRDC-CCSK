@@ -65,7 +65,13 @@ public class LabelKey extends Label {
     }
   }
 
+  public String represent(){
+    return toString();
+  }
+
   public LabelKey clone() {
     return new LabelKey(this);
   }
+
+
 }

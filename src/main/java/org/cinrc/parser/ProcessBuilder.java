@@ -1,17 +1,12 @@
 package org.cinrc.parser;
 
-import java.lang.reflect.AnnotatedArrayType;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import org.cinrc.IRDC;
 import org.cinrc.process.ProcessTemplate;
-import org.cinrc.process.nodes.IRDCObject;
 import org.cinrc.process.nodes.IRDCToken;
 import org.cinrc.process.nodes.KnownIRDCToken;
 import org.cinrc.process.nodes.Label;
@@ -19,33 +14,26 @@ import org.cinrc.process.nodes.LabelFactory;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.LabelNode;
 import org.cinrc.process.nodes.NestedIRDCToken;
-import org.cinrc.process.nodes.RestrictionPlaceholder;
 import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.nodes.UnknownIRDCToken;
 import org.cinrc.process.process.ConcurrentProcess;
-import org.cinrc.process.process.NullProcess;
 import org.cinrc.process.process.Process;
-import org.cinrc.process.process.ProcessImpl;
 import org.cinrc.process.process.SummationProcess;
+import org.cinrc.util.RCCSFlag;
 
 public class ProcessBuilder {
 
   public List<IRDCToken> template;
   public boolean isTokenized = false;
 
-  private LinkedList<Label> prefixes;
-
-  private LinkedList<LabelKey> keys;
-
-  private List<TauLabelNode> taus;
+  private final List<TauLabelNode> taus;
 
   private NestedIRDCToken parent;
 
   public ProcessBuilder(String base){
     template = new ArrayList<>();
     insert(new UnknownIRDCToken(base), 0);
-    prefixes = new LinkedList<>();
-    keys = new LinkedList<>();
+
     taus = new LinkedList<>();
   }
 
@@ -59,18 +47,18 @@ public class ProcessBuilder {
     int counter = 0;
     List<KnownIRDCToken> tmp = new ArrayList<>();
     NestedIRDCToken oa = new NestedIRDCToken(new ArrayList<>());
-    String s = "";
+    StringBuilder sb = new StringBuilder();
     for (KnownIRDCToken token : knownTokens)
-      s+=token.represent();
-    System.out.println("Recursing into " + s);
+      sb.append(token.represent());
+    IRDC.log("Recursing into " + sb);
 
 
     boolean inPar = false;
     for (KnownIRDCToken token : knownTokens){ //for every token
-      if (token.getGrammar() == TestCCSGrammar.OPEN_PAR){ //if open parenthesis, increment counter
+      if (token.getGrammar() == CCSGrammar.OPEN_PAR){ //if open parenthesis, increment counter
         counter++;
         inPar = true;
-      }else if (token.getGrammar() == TestCCSGrammar.CLOSE_PAR){// if close parenthesis, decrement counter
+      }else if (token.getGrammar() == CCSGrammar.CLOSE_PAR){// if close parenthesis, decrement counter
         counter--;
         if (counter < 0)
           throw new CCSParserException("Mismatched parentheses!");
@@ -96,83 +84,63 @@ public class ProcessBuilder {
   public Process export(){ // process;
     tokenize();
     handleParentheses();
-
-    return null;
+    return export(parent);
   }
+  private Process export(NestedIRDCToken nest){
+    return export(nest, null);
+  }
+  private Process export(NestedIRDCToken nest, LinkedList<LabelKey> key){
+    LinkedList<LabelKey> keys = key == null ? new LinkedList<>() : key;
+    LinkedList<Label> prefixes = null == null ? new LinkedList<>() : null;
 
-  private Process export(List<KnownIRDCToken> tokens){
-
-    while(!tokens.isEmpty()){
-      KnownIRDCToken token = tokens.remove(0);
-
-      if (token instanceof NestedIRDCToken nest){
-        return export(nest.getTokens());
+    ProcessTemplate template = new ProcessTemplate();
+    for (KnownIRDCToken token : nest.getTokens()){
+      if (token instanceof NestedIRDCToken n){
+        template.add(CCSParser.generateProcess(export(n),prefixes,keys));
+        continue;
       }
-
+      List<KnownIRDCToken> nestList = nest.getTokens();
+      int index = nestList.indexOf(token);
       switch(token.getGrammar()){
         case LABEL_ANY:
-          prefixes.add((Label) token.getData());
+          prefixes.add(LabelFactory.parseNode(token.represent()));
+          determineNextSequence(template, token, nestList, index, keys, prefixes);
+          break;
         case LABEL_KEY:
-          keys.add((LabelKey) token.getData());
+          keys.add((LabelKey) LabelFactory.parseNode(token.represent()));
+          determineNextSequence(template, token, nestList, index, keys, prefixes);
+          break;
+        case OP_PAR:
+          template.add(new ConcurrentProcess(null, null));
+          break;
+        case OP_SUM:
+          template.add(new SummationProcess(null, null));
+          break;
+        case OP_SEQ:
+          break; //do nothing
+        case RESTRICTION:
+          template.addRestrictionToLastProcess(parseLabelsFromRestriction(token.represent()));
+          break;
+        case PROC_NUL:
         case PROC_NAM:
-
-
-
+          template.add(CCSParser.generateProcess(token.represent(),prefixes,keys));
+          break;
       }
-
     }
+    template.initComplex();
+    return template.export();
   }
 
-
-  public KnownIRDCToken flatten(NestedIRDCToken nest){
-    for (KnownIRDCToken token : nest.getTokens()){
-      if (token.getData() == null) {
-        initializeToken(token);
+  private void determineNextSequence(ProcessTemplate template, KnownIRDCToken token,
+                                     List<KnownIRDCToken> nestList, int index,
+                                     LinkedList<LabelKey> keys, LinkedList<Label> prefixes) {
+    if (index+1 == nestList.size()
+        || nestList.get(index+1).getGrammar() != CCSGrammar.OP_SEQ){
+      if (IRDC.config.contains(RCCSFlag.REQUIRE_EXPLICIT_NULL)){
+        throw new CCSParserException("Did not find a process after label " + token.represent());
       }
-
-
+      template.add(CCSParser.generateProcess("0",prefixes, keys));
     }
-  }
-
-  private KnownIRDCToken initializeToken(KnownIRDCToken token){
-    if (token.getData() != null){
-      throw new CCSParserException("Tried to process token " + token.represent()
-          + " , but found pre-existing data."); //not needed. just want to know when it happens
-    }else if (token instanceof NestedIRDCToken nest){
-      for (KnownIRDCToken inside : nest.getTokens()){
-        initializeToken(inside);
-      }//all members of nest are initialized
-      KnownIRDCToken t = new KnownIRDCToken(nest.represent(), null);
-      t.setData(combine(nest));
-      return t;
-
-    }
-    switch (token.getGrammar()){
-      case LABEL_KEY:
-      case LABEL_ANY:
-        token.setData(LabelFactory.parseNode(token.represent()));
-        break;
-      case OP_PAR:
-        token.setData(new ConcurrentProcess(null, null));
-        break;
-      case OP_SUM:
-        token.setData(new SummationProcess(null, null));
-        break;
-      case PROC_NAM:
-        token.setData(new ProcessImpl(token.represent()));
-        break;
-      case PROC_NUL:
-        token.setData(new NullProcess());
-        break;
-      case OP_SEQ:
-        break;//do nothing
-      case RESTRICTION:
-        token.setData(parseLabelsFromRestriction(token.represent()));
-      default:
-        throw new CCSParserException("Could not process token " + token.represent());
-
-    }
-    return token;
   }
 
 
@@ -190,7 +158,7 @@ public class ProcessBuilder {
 
   public void tokenize(){
     String initial = template.get(0).represent();
-    for (TestCCSGrammar grammar : TestCCSGrammar.sort()){
+    for (CCSGrammar grammar : CCSGrammar.sort()){
       for (IRDCToken token : getUnkownTokens()){
         List<IRDCToken> tok = tokenize(grammar, token);
         int index = template.indexOf(token);
@@ -199,24 +167,24 @@ public class ProcessBuilder {
       }
     }
     if (template.stream().anyMatch(token -> token instanceof UnknownIRDCToken)){
-      String error = "";
+      StringBuilder sb = new StringBuilder();
       for (IRDCToken ta : template){
         if (ta instanceof UnknownIRDCToken){
-          error += ta.represent() + ",";
+          sb.append(ta.represent());
+          sb.append(",");
         }
       }
       throw new CCSParserException("Attempted to parse " + initial + " but was left with unrecognized characters: " +
-          "\n " + error);
+          "\n " + sb);
     }
     isTokenized = true;
   }
 
-  private List<IRDCToken> tokenize(TestCCSGrammar grammar, IRDCToken token){
+  private List<IRDCToken> tokenize(CCSGrammar grammar, IRDCToken token){
     ArrayList<IRDCToken> tok = new ArrayList<>();
     Matcher m = grammar.match(token.represent());
-    if (!m.find())
-      return Arrays.asList(token);
-    else {
+    if (!m.find()) {
+      return List.of(token);
     }
       String[] split = token.represent().split(grammar.pString, 2);
       String a = split[0];
@@ -229,6 +197,7 @@ public class ProcessBuilder {
       if (!c.isBlank()){
         tok.addAll(tokenize(grammar,new UnknownIRDCToken(c)));
       }
+    System.out.println("Parsed " + grammar.name() + ":" + token.represent());
       return tok;
   }
 
@@ -256,16 +225,16 @@ public class ProcessBuilder {
   }
 
   //TODO: Improve-- check if unmatch
-  public RestrictionPlaceholder parseLabelsFromRestriction(String st){
+  public List<Label> parseLabelsFromRestriction(String st){
     List<Label> labels = new ArrayList<>();
-    Matcher m = TestCCSGrammar.LABEL_IN.match(st);
+    Matcher m = CCSGrammar.LABEL_IN.match(st);
     while (m.find()){
       labels.add(LabelFactory.parseNode(m.group()));
     }
     if (labels.stream().noneMatch(LabelNode.class::isInstance)){
       throw new CCSParserException("Found an unexpected token inside restriction: " + st);
     }
-    return new RestrictionPlaceholder(labels);
+    return labels;
   }
 
 

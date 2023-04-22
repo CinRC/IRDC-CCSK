@@ -1,15 +1,9 @@
 package org.cinrc.process.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import org.cinrc.parser.CCSParser;
-import org.cinrc.parser.CCSParserException;
-import org.cinrc.parser.TestCCSGrammar;
 
 public class NestedIRDCToken extends KnownIRDCToken{
-  private List<KnownIRDCToken> tokens;
+  private final List<KnownIRDCToken> tokens;
   public NestedIRDCToken(List<KnownIRDCToken> tokens){
     super("<Nested Object>", null);
     this.tokens = tokens;
@@ -20,17 +14,17 @@ public class NestedIRDCToken extends KnownIRDCToken{
   }
 
   public String represent(){
-    String s = "";
+    StringBuilder sb = new StringBuilder();
     for (KnownIRDCToken token : tokens) {
       if (!(token instanceof NestedIRDCToken)){
-        s += token.represent();
+        sb.append(token.represent());
         continue;
       }
-      s += "(";
-      s += token.represent();
-      s += ")";
+      sb.append("(");
+      sb.append(token.represent());
+      sb.append(")");
     }
-    return s;
+    return sb.toString();
   }
 
   public void addToken(KnownIRDCToken token){

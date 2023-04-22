@@ -65,11 +65,15 @@ public abstract class Label extends ProgramNode implements IRDCObject {
 
   public String toString() {
     String s = "";
-    s += isComplement() ? CCSGrammar.COMPLEMENT_SIG.pString : "";
+    s += isComplement() ? CCSGrammar.COMPLEMENT_MARKER.pString : "";
     s += getChannel();
     s += IRDC.config.contains(RCCSFlag.DIFFERENTIATE_LABELS)
         ? String.valueOf(dupe) : "";
     return s;
+  }
+
+  public String represent(){
+    return toString();
   }
 
 

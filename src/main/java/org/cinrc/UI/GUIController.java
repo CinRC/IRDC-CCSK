@@ -1,5 +1,7 @@
 package org.cinrc.UI;
 import com.gluonhq.charm.glisten.control.TextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,10 +51,12 @@ public class GUIController implements Initializable {
     Button genRandomProcess;
 
     private String[] choices = {"Walkthrough", "Enumerate", "Equivalence"}; // values for dropdown box
-                                                              // populated in initailize
+                                                                            // populated in initailize
+
+
 
     public void genRandom() {
-        String action = myChoiceBox.getValue();
+        String action = myChoiceBox.getValue(); // generates different equations based on dropdown selected
         if(action.equals("Enumerate") || action.equals("Walkthrough")){
             genRandomEnum();
         }
@@ -63,7 +67,8 @@ public class GUIController implements Initializable {
 
     private void genRandomEquivalence() {
         outputField.setText("");
-        String[] eProcesses = {"a.a,b|c,c.d,a.a"};
+        String[] eProcesses = {"a.a,b|c,c.d,a.a", "a.b.c|d,b+c", "a.a,a.a", "a.b + c, d.e|a"}; // list of equivalence
+                                                                                                // proccess examples
         inputBox.setFloatText("");
         int random = (int) Math.floor(Math.random() * eProcesses.length);
         inputBox.setText(eProcesses[random]);
@@ -191,9 +196,17 @@ public class GUIController implements Initializable {
     public void openProcessExamples(ActionEvent event) throws URISyntaxException, IOException {
         Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md"));
     };
+
+    public void onChoiceBoxChange() {
+        inputBox.setText("");
+        inputBox.setFloatText("Process");
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         myChoiceBox.getItems().addAll(choices);
         myChoiceBox.setValue("Walkthrough");
+
+        myChoiceBox.valueProperty().addListener((observableValue, s, t1) ->
+                onChoiceBoxChange());
     }
 }

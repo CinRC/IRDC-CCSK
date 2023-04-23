@@ -52,6 +52,24 @@ public class GUIController implements Initializable {
                                                               // populated in initailize
 
     public void genRandom() {
+        String action = myChoiceBox.getValue();
+        if(action.equals("Enumerate") || action.equals("Walkthrough")){
+            genRandomEnum();
+        }
+        if(action.equals("Equivalence")){
+            genRandomEquivalence();
+        }
+    }
+
+    private void genRandomEquivalence() {
+        outputField.setText("");
+        String[] eProcesses = {"a.a,b|c,c.d,a.a"};
+        inputBox.setFloatText("");
+        int random = (int) Math.floor(Math.random() * eProcesses.length);
+        inputBox.setText(eProcesses[random]);
+    }
+
+    public void genRandomEnum() {
         outputField.setText("");
         // processes taken from https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md
         String[] rProcesses = {"((a)|('a))+((a)|('a))", "(a|'a)\\{a}", "a.b.c.d | 'a.'b.'c.'d", // generic processes

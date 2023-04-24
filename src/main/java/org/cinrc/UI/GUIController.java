@@ -198,8 +198,20 @@ public class GUIController implements Initializable {
     };
 
     public void onChoiceBoxChange() {
-        inputBox.setText("");
-        inputBox.setFloatText("Process");
+        if(myChoiceBox.getValue().equals("Equivalence")){
+            outputField.setText("Enter processes separated by commas to view their equivalences.");
+            inputBox.setText("");
+            inputBox.setFloatText("Processes");
+        }
+        else if(myChoiceBox.getValue().equals("Enumerate")){
+            outputField.setText("Enter a process to view it broken down in a tree format.");
+            inputBox.setText("");
+            inputBox.setFloatText("Process");
+        }
+        else{
+            inputBox.setText("");
+            inputBox.setFloatText("Process");
+        }
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -207,6 +219,6 @@ public class GUIController implements Initializable {
         myChoiceBox.setValue("Walkthrough");
 
         myChoiceBox.valueProperty().addListener((observableValue, s, t1) ->
-                onChoiceBoxChange());
+                onChoiceBoxChange()); // resets input box when choice is chosen. e.g. walkthrough > equivalence
     }
 }

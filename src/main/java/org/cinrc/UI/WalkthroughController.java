@@ -34,7 +34,7 @@ public class WalkthroughController {
     @FXML
     Button genRandomProcess;
 
-    private boolean firstTime = true; // takes the process as initial input and then indexs for the act on
+    private boolean firstTime = true; // takes the process as initial input and then indexes for the act on
     private CCSInteractionHandler exported = null;
     private ArrayList<Label> actionable = null;
 

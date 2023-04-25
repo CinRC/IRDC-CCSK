@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Set;
 import javafx.util.Pair;
 import org.cinrc.IRDC;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSTransitionException;
 import org.cinrc.parser.LTTNode;
+import org.cinrc.parser.CCSGrammar;
+import org.cinrc.process.nodes.IRDCObject;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.ProgramNode;
@@ -20,7 +21,7 @@ import org.cinrc.util.RCCSFlag;
 import org.cinrc.util.SetUtil;
 import org.cinrc.util.StringUtil;
 
-public abstract class Process extends ProgramNode {
+public abstract class Process extends ProgramNode implements IRDCObject {
 
   public boolean displayKey = !IRDC.config.contains(RCCSFlag.HIDE_KEYS);
   //Passthru key for summation processes
@@ -286,8 +287,8 @@ public abstract class Process extends ProgramNode {
     s.append(getRestriction().isEmpty() ? "" :
         String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
     if (IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-      return s.toString().replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
-          .replaceAll(String.format("\\%s", CCSGrammar.CLOSE_PARENTHESIS), "");
+      return s.toString().replaceAll(CCSGrammar.OPEN_PAR.pString, "")
+          .replaceAll(CCSGrammar.CLOSE_PAR.pString, "");
     } else {
       return s.toString();
     }

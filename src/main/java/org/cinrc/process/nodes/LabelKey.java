@@ -11,10 +11,11 @@ public class LabelKey extends Label {
 
   public Instant time;
 
+  public boolean isComplement = false;
+
   public LabelKey(Label node) {
     super(node.dupe, node.getChannel());
     this.id = UUID.randomUUID();
-    isComplement = false;
     this.from = node;
     if (node instanceof TauLabelNode) {
       this.dupe = ((TauLabelNode) node).saveDupe;
@@ -22,7 +23,14 @@ public class LabelKey extends Label {
       this.dupe = NodeIDGenerator.nextAvailableKey();
     }
     time = Instant.now();
+  }
 
+  public LabelKey(Label node, int dupe) {
+    super(node.dupe, node.getChannel());
+    this.id = UUID.randomUUID();
+    this.from = node;
+    this.dupe = dupe;
+    time = Instant.now();
   }
 
   /**
@@ -57,7 +65,13 @@ public class LabelKey extends Label {
     }
   }
 
+  public String represent(){
+    return toString();
+  }
+
   public LabelKey clone() {
     return new LabelKey(this);
   }
+
+
 }

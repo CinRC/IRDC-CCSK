@@ -1,99 +1,74 @@
 package org.cinrc.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.cinrc.process.nodes.ComplementLabelNode;
-import org.cinrc.process.nodes.Label;
-import org.cinrc.process.nodes.LabelKey;
-import org.cinrc.process.nodes.LabelNode;
-import org.cinrc.process.nodes.ProgramNode;
-import org.cinrc.process.nodes.TauLabelNode;
-import org.cinrc.process.process.ActionPrefixProcess;
-import org.cinrc.process.process.ConcurrentProcess;
-import org.cinrc.process.process.NullProcess;
-import org.cinrc.process.process.ProcessImpl;
-import org.cinrc.process.process.SummationProcess;
 
 public enum CCSGrammar {
+  COMPLEMENT_MARKER("'", false, -1),
+  LABEL_IN("[a-z]", false, -1),
+  LABEL_OUT(COMPLEMENT_MARKER.pString + LABEL_IN.pString, false, -1),
+  LABEL_TAU("Tau\\{("+LABEL_IN.pString+")\\}", false, 2),
 
-  LABEL("[a-z]", LabelNode.class, null, false),
-  WHITESPACE(" ", null, " ", false),
-  OPEN_PARENTHESIS("\\(", null, "(", true),
-  CLOSE_PARENTHESIS("\\)", null, ")", true),
-  OUT_LABEL(String.format("'%s", LABEL.pString), ComplementLabelNode.class, null, false),
-  LABELS_BASIC(String.format("((%s)|(%s))",LABEL.pString,OUT_LABEL.pString), null, null, false),
+  LABEL_ANY(either(LABEL_IN, LABEL_OUT, LABEL_TAU), true, 1),
+  DIGITS("\\d+", false, -1),
 
-  TAU_START("Tau", TauLabelNode.class, null, true), // k0, k1
-  TAU_LABEL(String.format("%s\\{%s\\}",TAU_START.pString, LABEL.pString),
-      TauLabelNode.class, null, true),
-  LABEL_COMBINED(String.format("((%s)|(%s)|(%s))",
-      LABEL.pString, OUT_LABEL.pString, TAU_LABEL.pString), Label.class, null, true),
+  OPEN_PAR("\\(", true, 0),
+  CLOSE_PAR("\\)", true, 0),
+  LABEL_SUFFIX("\\[k" + DIGITS.pString + "\\]", false, -1), //Must be found before labels
+  LABEL_KEY(LABEL_ANY.pString+ LABEL_SUFFIX.pString, true, 3),
+  OP_SEQ("\\.", true, 0),
+  OP_PAR("\\|", true, 0),
+  OP_SUM("\\+", true, 0),
+  PROC_NUL("0", true, 0),
+  PROC_NAM("[A-Z]", true, 0),
+  RESTRICTION(String.format("\\\\\\{(%s+)(,\\s*%s+)*\\}", LABEL_IN.pString, LABEL_IN.pString), true, 2);
 
-  PROCESS("[A-Z]", ProcessImpl.class, null, true),
-  NULL_PROCESS("[0]", NullProcess.class, "0", true),
-  OP_SEQUENTIAL("\\.", null, ".", true),
-  COMPLEMENT_SIG("'", null, "'", false),
-  OP_CONCURRENT("\\|", ConcurrentProcess.class, "|", true),
-  OP_SUMMATION("\\+", SummationProcess.class, "+", true),
-  OPEN_RESTRICTION("\\\\\\{", null, "{", true), //6 backslashes, LOL. \\{
-  CLOSE_RESTRICTION("\\}", null, "}", true),
-  OPEN_KEY_NOTATION("\\[", null, "[", false),
-  CLOSE_KEY_NOTATION("\\]", null, "]", false),
-  LABEL_KEY(String.format("k[0-9]*"), LabelKey.class, null, false), // k0, k1
-  LABEL_KEY_COMBINED(String.format("%s%s%s"
-      ,OPEN_KEY_NOTATION.pString, LABEL_KEY.pString, CLOSE_KEY_NOTATION.pString)
-      , LabelKey.class, null, false), //[k4]
-  LABEL_KEY_FULL(String.format("(%s|%s)%s",
-      TAU_LABEL.pString, LABEL_COMBINED.pString, LABEL_KEY_COMBINED.pString),
-      LabelKey.class, null, true);
 
-  public static final Pattern parenthesisRegex;
-
-  static {
-    parenthesisRegex =
-        Pattern.compile(String.format("([\\%s\\%s])", OPEN_PARENTHESIS, CLOSE_PARENTHESIS));
-  }
-
-  public final String pString, rep;
-  private final Class<? extends ProgramNode> classObject;
+  public String pString;
   private final boolean canParse;
 
-  /**
-   * @param s        Regex to match against
-   * @param c        Instantiatable class representation
-   * @param rep      Human readable constant
-   * @param canParse Should this be parseable
-   */
-  CCSGrammar(String s, Class<? extends ProgramNode> c, String rep, boolean canParse) {
-    this.pString = s;
-    this.classObject = c;
-    this.rep = rep;
-    this.canParse = canParse;
-  }
+  private final int priority;
 
-  public Class<? extends ProgramNode> getClassObject() {
-    return classObject;
+  CCSGrammar(String s, boolean canParse, int priority) {
+    this.pString = s;
+    this.canParse = canParse;
+    this.priority = priority;
   }
 
   public boolean canBeParsed() {
     return this.canParse;
   }
 
-  /***
-   * Returns pattern object from stored string, caching it if first access.
-   * @return Pattern object
-   */
-  Pattern getPattern() {
-    return Pattern.compile(this.pString);
+  public int getPriority(){
+    return priority;
   }
 
   public Matcher match(CharSequence c) {
-    return getPattern().matcher(c);
+    return Pattern.compile(pString).matcher(c);
   }
 
-  public String toString() {
-    return rep == null ? "" : rep;
+
+  static String either(CCSGrammar... grammars){
+    String s = "(";
+    String[] collect = new String[grammars.length];
+    for (int i = 0; i < grammars.length; i++){
+      collect[i] = "("+grammars[i].pString+")";
+    }
+    s += String.join("|", collect);
+    s += ")";
+    return s;
   }
 
+  public static List<CCSGrammar> sort(){
+    CCSGrammar[] grammars = CCSGrammar.values();
+    Arrays.sort(grammars, Comparator.comparing(CCSGrammar::getPriority).reversed());
+    List<CCSGrammar> l = new ArrayList<CCSGrammar>(Arrays.asList(grammars));
+    l.removeIf(c -> !c.canParse);
+    return l;
+  }
 
 }

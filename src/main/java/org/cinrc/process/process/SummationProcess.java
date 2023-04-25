@@ -2,16 +2,17 @@ package org.cinrc.process.process;
 
 import java.util.Collection;
 import java.util.Collections;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParserException;
 import org.cinrc.parser.CCSTransitionException;
+import org.cinrc.parser.CCSGrammar;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 
 public class SummationProcess extends ComplexProcess {
 
   public SummationProcess(Process left, Process right) {
-    super(left, right, CCSGrammar.OP_SUMMATION);
+    super(left, right, CCSGrammar.OP_SUM);
+    opString = "+";
   }
 
   /**

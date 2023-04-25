@@ -18,7 +18,9 @@ public abstract class ComplexProcess extends Process {
   public Process left;
 
   public Process right;
-  CCSGrammar operator;
+  public CCSGrammar operator;
+
+  protected String opString;
 
 
   public ComplexProcess(Process left, Process right, CCSGrammar operator) {
@@ -83,12 +85,10 @@ public abstract class ComplexProcess extends Process {
     if (ghostKey != null) {
       if (IRDC.config.contains(RCCSFlag.SUMMATION_STYLE_1)) {
         s = represent(String.format(
-            "%s%s%s%s%s",
-            CCSGrammar.OPEN_PARENTHESIS,
+            "(%s%s%s)",
             left == null ? "" : left.represent(),
-            operator.toString(),
-            right == null ? "" : right.represent(),
-            CCSGrammar.CLOSE_PARENTHESIS
+            opString,
+            right == null ? "" : right.represent()
         ));
       } else if (IRDC.config.contains(RCCSFlag.SUMMATION_STYLE_3)) {
         if (left.isGhost) {
@@ -105,21 +105,17 @@ public abstract class ComplexProcess extends Process {
       } else { //default style
         if (left.isGhost) {
           s = represent(String.format(
-              "%s{%s} %s %s%s%s",
+              "%s{%s} %s %s",
               ghostKey,
               left == null ? "" : left.represent(),
-              operator.toString(),
-              CCSGrammar.OPEN_PARENTHESIS,
-              right == null ? "" : right.represent(),
-              CCSGrammar.CLOSE_PARENTHESIS
+              opString,
+              right == null ? "" : right.represent()
           ));
         } else {
           s = represent(String.format(
-              "%s%s%s %s %s{%s}",
-              CCSGrammar.OPEN_PARENTHESIS,
+              "%s %s %s{%s}",
               left == null ? "" : left.represent(),
-              CCSGrammar.CLOSE_PARENTHESIS,
-              operator.toString(),
+              opString,
               ghostKey,
               right == null ? "" : right.represent()
           ));
@@ -127,17 +123,15 @@ public abstract class ComplexProcess extends Process {
       }
     }
     s = super.represent(String.format(
-        "%s%s%s%s%s",
-        CCSGrammar.OPEN_PARENTHESIS,
+        "(%s%s%s)",
         left == null ? "" : left.represent(),
-        operator.toString(),
-        right == null ? "" : right.represent(),
-        CCSGrammar.CLOSE_PARENTHESIS
+        opString,
+        right == null ? "" : right.represent()
     ));
 
     if (IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-      return s.replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
-          .replaceAll(String.format("\\%s", CCSGrammar.CLOSE_PARENTHESIS), "");
+      return s.replaceAll(CCSGrammar.OPEN_PAR.pString, "")
+          .replaceAll(CCSGrammar.CLOSE_PAR.pString, "");
 
     } else {
       return s;
@@ -154,7 +148,7 @@ public abstract class ComplexProcess extends Process {
   public String origin() {
     StringBuilder b = new StringBuilder();
     if (!IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-      b.append(CCSGrammar.OPEN_PARENTHESIS);
+      b.append("(");
     }
     if (left != null) {
       b.append(left.origin());
@@ -164,7 +158,7 @@ public abstract class ComplexProcess extends Process {
       b.append(right.origin());
     }
     if (!IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-      b.append(CCSGrammar.CLOSE_PARENTHESIS);
+      b.append(")");
     }
 
     return b.toString();

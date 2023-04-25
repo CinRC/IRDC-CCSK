@@ -2,9 +2,9 @@ package org.cinrc.process.process;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParserException;
 import org.cinrc.parser.CCSTransitionException;
+import org.cinrc.parser.CCSGrammar;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.util.SetUtil;
@@ -17,11 +17,12 @@ public class ConcurrentProcess extends ComplexProcess {
    */
 
   public ConcurrentProcess(Process left, Process right) {
-    super(left, right, CCSGrammar.OP_CONCURRENT);
+    super(left, right, CCSGrammar.OP_PAR);
+    opString = "|";
   }
 
   public ConcurrentProcess(Process left, Process right, LinkedList<Label> pfix) {
-    super(left, right, CCSGrammar.OP_CONCURRENT);
+    super(left, right, CCSGrammar.OP_PAR);
     prefixes = pfix;
   }
 

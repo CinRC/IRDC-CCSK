@@ -69,7 +69,7 @@ public class IRDC {
 
   private static void regenerate(String args) {
     org.cinrc.process.process.Process p =
-        CCSParser.parseLine(args).export();
+        new CCSParser().parseLine(args);
     LTTNode node = new LTTNode(p);
     node.regenerate();
     try {
@@ -89,13 +89,13 @@ public class IRDC {
       List<String> allLines = Files.readAllLines(path);
       for (String line : allLines) {
         try {
-          ProcessTemplate pt = CCSParser.parseLine(line);
+          Process p = new CCSParser().parseLine(line);
           System.out.printf("%s is properly formatted. Parsed as %s\n", line,
-              pt.prettyString());
+              p.represent());
         } catch (Exception e) {
           System.out.printf("%s is improperly formatted\n", line);
           if (config.contains(RCCSFlag.DEBUG)) {
-            System.out.println(e.getStackTrace());
+            e.printStackTrace();
           }
         }
       }
@@ -107,7 +107,7 @@ public class IRDC {
 
   private static void enumerate(String args) {
     org.cinrc.process.process.Process p =
-        CCSParser.parseLine(args).export();
+        new CCSParser().parseLine(args);
     LTTNode node = new LTTNode(p);
     node.enumerate(true);
     System.out.println(node);
@@ -116,14 +116,8 @@ public class IRDC {
 
   private static void interactive(String args) {
     try {
-      ProcessTemplate template = CCSParser.parseLine(args);
-      log(String.format("Formula before complex init and minimization: %s",
-          template.prettyString()));
-      log("\nMinimizing and initializing function...");
-      template.initComplex();
-      log(String.format("Formula after complex init and minimization: %s",
-          template.prettyString()));
-      new CCSInteractionHandler(template.export()).startInteraction();
+      Process p = new CCSParser().parseLine(args);
+      new CCSInteractionHandler(p).startInteraction();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -136,7 +130,7 @@ public class IRDC {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < formula.length; i++) {
       try {
-        Process p = CCSParser.parseLine(formula[i]).export();
+        Process p = new CCSParser().parseLine(formula[i]);
         sb.append(String.format("[%d] %s => Parsed Successfully.\n", i, p.represent()));
         processes.add(p);
       } catch (CCSParserException e) {
@@ -179,9 +173,9 @@ public class IRDC {
     Application.launch(RCCS_FX.class);
   }
 
-  public static void log(String s) {
+  public static void log(String s, Object... objects) {
     if (IRDC.config.contains(RCCSFlag.DEBUG)) {
-      System.out.println("[debug] " + s);
+      System.out.printf("[debug] " + s + "%n", objects);
     }
   }
 

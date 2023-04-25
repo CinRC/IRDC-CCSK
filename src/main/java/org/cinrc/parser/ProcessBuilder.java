@@ -197,7 +197,6 @@ public class ProcessBuilder {
       if (!c.isBlank()){
         tok.addAll(tokenize(grammar,new UnknownIRDCToken(c)));
       }
-    System.out.println("Parsed " + grammar.name() + ":" + token.represent());
       return tok;
   }
 

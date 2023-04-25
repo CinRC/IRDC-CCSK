@@ -147,20 +147,12 @@ public class LTTNode {
     //For every actionable label in current node,
     for (Label l : pc.getActionableLabels()) {
       if (!(l instanceof LabelKey)) {
-      if (debug) {
-          System.out.println("Before acting: " + pc.prettyString());
-        }
+
         pc.act(l); //Act on that label and make a new node with that child process (clone)
-        if (debug) {
-          System.out.println("After acting: " + pc.prettyString());
-        }
+
         Process z = pc.getProcess().clone();
         addChild(l, z);
         pc.reverseLastAction(); //Then reverse and next label.
-        if (debug) {
-          System.out.println("After reversal: " + pc.prettyString());
-        }
-
 
       }/* else { //This should be all we need to implement reversibility
                 Label originalLabel = ((LabelKey) l).from;

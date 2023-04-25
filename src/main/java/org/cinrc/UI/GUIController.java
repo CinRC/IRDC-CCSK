@@ -93,55 +93,61 @@ public class GUIController implements Initializable {
             enumerate();
         }
         if(action.equals("Walkthrough")){
-            walkthroughPage(event, inputBox.getText());
+            walkthroughPage(event);
         }
         if(action.equals("Equivalence")){
             equivalence();
         }
     }
 
-    private void equivalence() { // same function in IRDC apart from a few changes
-        outputField.setText(""); // clears outfield from previous text
-        ArrayList<Process> processes = new ArrayList<>();
-        String[] formula = inputBox.getText().split(",");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < formula.length; i++) {
-            try {
-                Process p = CCSParser.parseLine(formula[i]).export();
-                sb.append(String.format("[%d] %s => Parsed Successfully.\n", i, p.represent()));
-                processes.add(p);
-            } catch (CCSParserException e) {
-                outputField.setText(formula[i] + " is not properly formatted! Please check formatting guidelines.");
-            }
-        }
-        sb.append("\n\n");
-        List<Pair<String, String>> simulates = new ArrayList<>();
-        for (Process p : processes) {
-            for (Process p2 : processes) {
-                if (p == p2) {
-                    continue;
-                }
-                if (p2.simulates(p)) {
-                    simulates.add(new Pair(p2.represent(), p.represent()));
-                }
-            }
-        }
-        sb.append("Simulations and Bisimulations: \n ------------\n");
-        for (Pair<String, String> e : simulates) { //Print simulations
-            sb.append(String.format("%s %s %s\n", e.getValue(), "≲", e.getKey()));
+    private void equivalence() {
+        try{
 
-            for (Pair<String, String> pair : simulates) {
-                if (pair == e) {
-                    continue;
-                }
-
-                if (pair.getKey().equals(e.getValue()) && e.getKey().equals(pair.getValue())) {
-                    sb.append(String.format("%s %s %s\n", pair.getKey(), "≈", pair.getValue()));
+            outputField.setText(""); // clears outfield from previous text
+            ArrayList<Process> processes = new ArrayList<>();
+            String[] formula = inputBox.getText().split(",");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < formula.length; i++) {
+                try {
+                    Process p = CCSParser.parseLine(formula[i]).export();
+                    sb.append(String.format("[%d] %s => Parsed Successfully.\n", i, p.represent()));
+                    processes.add(p);
+                } catch (CCSParserException e) {
+                    outputField.setText(formula[i] + " is not properly formatted! Please check formatting guidelines.");
                 }
             }
-        }
-        if(outputField.getText().length() == 0) {
-            outputField.setText(sb.toString());
+            sb.append("\n\n");
+            List<Pair<String, String>> simulates = new ArrayList<>();
+            for (Process p : processes) {
+                for (Process p2 : processes) {
+                    if (p == p2) {
+                        continue;
+                    }
+                    if (p2.simulates(p)) {
+                        simulates.add(new Pair(p2.represent(), p.represent()));
+                    }
+                }
+            }
+            sb.append("Simulations and Bisimulations: \n ------------\n");
+            for (Pair<String, String> e : simulates) { //Print simulations
+                sb.append(String.format("%s %s %s\n", e.getValue(), "≲", e.getKey()));
+
+                for (Pair<String, String> pair : simulates) {
+                    if (pair == e) {
+                        continue;
+                    }
+
+                    if (pair.getKey().equals(e.getValue()) && e.getKey().equals(pair.getValue())) {
+                        sb.append(String.format("%s %s %s\n", pair.getKey(), "≈", pair.getValue()));
+                    }
+                }
+            }
+            if(outputField.getText().length() == 0) {
+                outputField.setText(sb.toString());
+            }
+        }// same function in IRDC apart from a few changes
+        catch(Exception e){
+            outputField.setText(e.toString());
         }
     }
 
@@ -168,12 +174,16 @@ public class GUIController implements Initializable {
             outputField.setText(String.valueOf(e));
         }
     }
-    public void walkthroughPage(ActionEvent event, String proccess) throws IOException{
+    public void walkthroughPage(ActionEvent event) throws IOException{
+        if(inputBox != null){
+            WalkthroughController.walkthroughInput = inputBox.getText();
+        }
         Parent root = FXMLLoader.load(getClass().getResource("/ui/walkthroughPage.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene (root);
         stage.setScene(scene);
         stage.setResizable(false);
+
         stage.show();
 
     }

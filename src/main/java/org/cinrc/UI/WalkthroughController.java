@@ -20,9 +20,13 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class WalkthroughController {
+
+    public static String walkthroughInput;
 
     @FXML
     TextArea outputField;
@@ -37,6 +41,7 @@ public class WalkthroughController {
     private boolean firstTime = true; // takes the process as initial input and then indexes for the act on
     private CCSInteractionHandler exported = null;
     private ArrayList<Label> actionable = null;
+
 
     public void genRandom() {
         reset();
@@ -88,6 +93,7 @@ public class WalkthroughController {
             }
             else{
                 // now takes indexes as input
+                String process = actInput.getText();
                 Label n = null;
                 int index = Integer.parseInt(actInput.getText()); // takes user input in form of index, e.g. 0,1,2,3..
                 try {
@@ -112,13 +118,14 @@ public class WalkthroughController {
             }
         }
         catch(Exception e){
-            actInput.setText("");
-            outputField.setText(outputField.getText() + "\n----------------\n" + e); // displays errors if encountered
+            outputField.setText(outputField.getText() + "\n----------------\nThe process entered does not follow proper" +
+                    " syntax. Please check it and try again!"); // displays errors if encountered
         }
     }
 
     public void reset() { // resets page, clears input and sets first to true to allow a process to be taken as input
         outputField.setText("");
+        actInput.setText("");
         actInput.setFloatText("Process");
         firstTime = true;
     }
@@ -136,4 +143,5 @@ public class WalkthroughController {
                                                                                                 // containing process info
         Desktop.getDesktop().browse(new URI("https://github.com/CinRC/IRDC-CCSK/blob/dev/docs/example_processes.md"));
     };
+
 }

@@ -159,7 +159,6 @@ public class LTTNode {
           throw new CCSParserException(tmp.represent() + " -"+ l.represent() +"-> " + z.represent() + ", but found key "
               + z.getKey());
         }
-         System.out.println(SetUtil.csvSet(pc.getActionableLabels()));
         pc.reverseLastAction(); //Then reverse and next label.
 
       }/* else { //This should be all we need to implement reversibility

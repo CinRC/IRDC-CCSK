@@ -87,7 +87,7 @@ public class SummationProcess extends ComplexProcess {
     else if (l.size() > 1) {
       for (Label label : l)//otherwise, lets find which one happened last
       {
-        if (k == null || ((LabelKey) label).time.isAfter(k.time)) {
+        if (k == null || ((LabelKey) label).time > k.time) {
           k = (LabelKey) label;
         }
       }

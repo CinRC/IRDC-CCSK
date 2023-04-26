@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import org.cinrc.IRDC;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.NodeIDGenerator;
 import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.process.NullProcess;
 import org.cinrc.process.process.Process;

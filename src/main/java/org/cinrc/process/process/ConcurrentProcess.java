@@ -67,7 +67,7 @@ public class ConcurrentProcess extends ComplexProcess {
     //If more than one key, find latest
     else if (l.size() > 1) {
       for (Label label : l) { //find which happened most recently
-        if (k == null || ((LabelKey) label).time.isAfter(k.time)) {
+        if (k == null || ((LabelKey) label).time > k.time) {
           k = (LabelKey) label;
         }
       }
@@ -80,7 +80,7 @@ public class ConcurrentProcess extends ComplexProcess {
     Collection<Label> l = getActionableLabelsStrict();
     l.removeIf(x -> !(x instanceof LabelKey)); //remove all non-labelkeys
     for (Label label : l) {
-      if (key == null || ((LabelKey) label).time.isAfter(key.time)) {
+      if (key == null || ((LabelKey) label).time > key.time) {
         key = (LabelKey) label;
       }
     }

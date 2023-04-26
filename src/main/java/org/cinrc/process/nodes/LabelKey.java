@@ -9,7 +9,7 @@ public class LabelKey extends Label {
 
   public Label from;
 
-  public Instant time;
+  public long time;
 
   public boolean isComplement = false;
 
@@ -22,7 +22,7 @@ public class LabelKey extends Label {
     } else {
       this.dupe = NodeIDGenerator.nextAvailableKey();
     }
-    time = Instant.now();
+    time = System.nanoTime();
   }
 
   public LabelKey(Label node, int dupe) {
@@ -30,7 +30,7 @@ public class LabelKey extends Label {
     this.id = UUID.randomUUID();
     this.from = node;
     this.dupe = dupe;
-    time = Instant.now();
+    time = System.nanoTime();
   }
 
   /**

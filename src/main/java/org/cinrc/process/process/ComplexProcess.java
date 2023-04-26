@@ -176,7 +176,6 @@ public abstract class ComplexProcess extends Process {
 
   @Override
   public boolean canAct(Label label) {
-    IRDC.log(String.format("Checking if %s can act on %s", represent(), label));
     Collection<Label> l = getActionableLabels();
     return SetUtil.containsOrTau(l, label);
 

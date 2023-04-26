@@ -14,17 +14,14 @@ public class LabelFactory {
    * @return Label parsed from the given strings
    */
   public static Label parseNode(String s) {
-    IRDC.log("Beginning parse of node %s", s);
     Matcher m = CCSGrammar.LABEL_KEY.match(s);
     if (m.find()){ //Is this a key?
-      IRDC.log("Detected key in %s", s);
       Label l = LabelFactory.parseNode(
           s.replaceAll(CCSGrammar.LABEL_SUFFIX.pString, "")); //Just label
       m = CCSGrammar.DIGITS.match(s);
       if (!m.find()){
         throw new CCSParserException("Could not find key dupe in key " + s);
       }
-      IRDC.log("Generated new key from %s", s);
       return new LabelKey(l, Integer.parseInt(m.group()));
     }
 

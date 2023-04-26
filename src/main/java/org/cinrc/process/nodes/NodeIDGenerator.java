@@ -26,4 +26,9 @@ public class NodeIDGenerator {
     k--;
   }
 
+  public static void reset(){
+    k = 0;
+    c = 0;
+  }
+
 }

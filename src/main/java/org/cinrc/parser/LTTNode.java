@@ -10,10 +10,12 @@ import org.cinrc.IRDC;
 import org.cinrc.process.ProcessContainer;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.NodeIDGenerator;
 import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.process.Process;
 import org.cinrc.process.process.ProcessImpl;
 import org.cinrc.util.RCCSFlag;
+import org.cinrc.util.SetUtil;
 
 public class LTTNode {
 
@@ -84,13 +86,13 @@ public class LTTNode {
       Label compareLabel = entry.getKey();
       for (Label ourLabel : keySet) { //iterate through our edges
         if (ourLabel.isEquivalent(compareLabel)) { //can our edge do what compared edge can?
-          if (!children.get(ourLabel).canSimulate(node.children.get(compareLabel))) {
-            return false; //If cant simulate, end the investigation and return false
+          if (children.get(ourLabel).canSimulate(node.children.get(compareLabel))) {
+            match = 1;
           }
-          match = 1;
         }
       }
       if (match == 0) {
+        IRDC.log("%s no match %s",internalProcess.represent(), entry.getValue().internalProcess.represent() );
         return false; //If at the end and turns out cant simulate return false
       }
     }
@@ -142,16 +144,22 @@ public class LTTNode {
    * @param recurse Whether or not to enumerate children as well
    */
   public void enumerate(boolean recurse) {
-    boolean debug = IRDC.config.contains(RCCSFlag.DEBUG);
     ProcessContainer pc = new ProcessContainer(internalProcess.clone());
     //For every actionable label in current node,
     for (Label l : pc.getActionableLabels()) {
       if (!(l instanceof LabelKey)) {
+        Process tmp = pc.getProcess().clone();
 
         pc.act(l); //Act on that label and make a new node with that child process (clone)
-
         Process z = pc.getProcess().clone();
         addChild(l, z);
+
+        if (!z.getKey().from.isEquivalent(l)){
+
+          throw new CCSParserException(tmp.represent() + " -"+ l.represent() +"-> " + z.represent() + ", but found key "
+              + z.getKey());
+        }
+         System.out.println(SetUtil.csvSet(pc.getActionableLabels()));
         pc.reverseLastAction(); //Then reverse and next label.
 
       }/* else { //This should be all we need to implement reversibility

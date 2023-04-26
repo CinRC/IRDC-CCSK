@@ -121,7 +121,7 @@ public abstract class Label extends ProgramNode implements IRDCObject {
       return false;
     }
     return (l.getChannel().equals(getChannel())
-        && l.isRestricted == isRestricted());
+        && l.isRestricted() == isRestricted());
   }
 
   public String getChannel() {

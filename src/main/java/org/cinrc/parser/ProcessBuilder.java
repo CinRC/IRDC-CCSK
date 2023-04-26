@@ -14,6 +14,7 @@ import org.cinrc.process.nodes.LabelFactory;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.LabelNode;
 import org.cinrc.process.nodes.NestedIRDCToken;
+import org.cinrc.process.nodes.NodeIDGenerator;
 import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.nodes.UnknownIRDCToken;
 import org.cinrc.process.process.ConcurrentProcess;
@@ -33,8 +34,8 @@ public class ProcessBuilder {
   public ProcessBuilder(String base){
     template = new ArrayList<>();
     insert(new UnknownIRDCToken(base), 0);
-
-    taus = new LinkedList<>();
+    NodeIDGenerator.reset();
+    taus = new LinkedList<>();//TODO: matching
   }
 
   public void handleParentheses(){

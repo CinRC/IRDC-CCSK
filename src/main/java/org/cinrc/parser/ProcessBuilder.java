@@ -118,6 +118,7 @@ public class ProcessBuilder {
             if (taus.isEmpty()) {
               taus.add(k);
               keys.add(k);
+              break;
             } else {
               for (LabelKey tt : taus) {
                 if (tt.dupe == k.dupe) { //same channel
@@ -131,6 +132,8 @@ public class ProcessBuilder {
                 }
               }
             }
+          }else{
+            keys.add(k);
           }
 
           determineNextSequence(template, token, nestList, index, keys, prefixes);

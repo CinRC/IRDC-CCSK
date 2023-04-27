@@ -19,6 +19,7 @@ import org.cinrc.util.RCCSFlag;
 
 public class IRDC {
   public static List<RCCSFlag> config = new ArrayList<>();
+  public static List<String> proofNonSimulation = new ArrayList<>();
 
   public static void main(String[] args) {
     if (args.length == 0) {
@@ -163,6 +164,13 @@ public class IRDC {
 
     }
     System.out.println(sb);
+
+    if (!proofNonSimulation.isEmpty()){
+      System.out.println("Proof of non-simulation:");
+      for (String s : proofNonSimulation){
+        System.out.println(s);
+      }
+    }
 
   }
 

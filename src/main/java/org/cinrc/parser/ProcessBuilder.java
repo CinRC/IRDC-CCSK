@@ -37,7 +37,7 @@ public class ProcessBuilder {
     template = new ArrayList<>();
     insert(new UnknownIRDCToken(base), 0);
     NodeIDGenerator.reset();
-    taus = new ArrayList<>();//TODO: matching
+    taus = new ArrayList<>();
   }
 
   public void handleParentheses(){
@@ -254,7 +254,6 @@ public class ProcessBuilder {
     return s;
   }
 
-  //TODO: Improve-- check if unmatch
   public List<Label> parseLabelsFromRestriction(String st){
     List<Label> labels = new ArrayList<>();
     Matcher m = CCSGrammar.LABEL_IN.match(st);

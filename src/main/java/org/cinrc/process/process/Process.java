@@ -154,7 +154,6 @@ public abstract class Process extends ProgramNode implements IRDCObject {
 
 
     if (prefixes.isEmpty())
-    //TODO: Throw error?
     {
       return this.actOn(label);
     } else {
@@ -309,7 +308,6 @@ public abstract class Process extends ProgramNode implements IRDCObject {
     LTTNode tq = new LTTNode(q);
     tq.enumerate(true);
     return tp.canSimulate(tq);
-    //TODO: recurse
   }
 
   public abstract Collection<Process> getChildren();

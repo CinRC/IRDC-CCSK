@@ -1,8 +1,9 @@
 package org.cinrc.process.nodes;
 
 import java.util.regex.Matcher;
-import org.cinrc.parser.CCSGrammar;
+import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParserException;
+import org.cinrc.parser.CCSGrammar;
 
 public class LabelFactory {
 
@@ -13,15 +14,36 @@ public class LabelFactory {
    * @return Label parsed from the given strings
    */
   public static Label parseNode(String s) {
-    //TODO: for future reference, can check if start with ', then everything = complement
-    Matcher m = CCSGrammar.OUT_LABEL.match(s);
-    if (m.find()) {
-      return new ComplementLabelNode(m.group());
+    Matcher m = CCSGrammar.LABEL_KEY.match(s);
+    if (m.find()){ //Is this a key?
+      Label l = LabelFactory.parseNode(
+          s.replaceAll(CCSGrammar.LABEL_SUFFIX.pString, "")); //Just label
+      m = CCSGrammar.DIGITS.match(s);
+      if (!m.find()){
+        throw new CCSParserException("Could not find key dupe in key " + s);
+      }
+      return new LabelKey(l, Integer.parseInt(m.group()));
     }
-    m = CCSGrammar.LABEL.match(s);
+
+    m = CCSGrammar.LABEL_TAU.match(s);
+    if (m.find()){
+      String c = stripTau(s);
+      m = CCSGrammar.LABEL_IN.match(c);
+      if (!m.find()){
+        throw new CCSParserException("Cannot find label in tau " + s);
+      }
+      return new TauLabelNode(m.group());
+    }
+
+    m = CCSGrammar.LABEL_OUT.match(s);
+    if (m.find()) {
+      return new ComplementLabelNode(m.group().replace("'",""));
+    }
+    m = CCSGrammar.LABEL_IN.match(s);
     if (m.find()) {
       return new LabelNode(m.group());
     }
+
 
     throw new CCSParserException(String.format("Could not parse %s into labels", s));
   }
@@ -41,6 +63,27 @@ public class LabelFactory {
     return c;
   }
 
+
+  public static LabelNode createLabelNode(String channel){
+    return new LabelNode(channel);
+  }
+
+  public static LabelNode createDebugLabelNode(String channel){
+    LabelNode n = new LabelNode(channel);
+    n.dupe = -1;
+    return n;
+  }
+
+  public static ComplementLabelNode createDebugComplementLabelNode(String channel){
+    ComplementLabelNode n = new ComplementLabelNode(channel);
+    n.dupe = -1;
+    return n;
+  }
+
+  public static ComplementLabelNode createComplementLabelNode(String channel){
+    return new ComplementLabelNode(channel);
+  }
+
   public static LabelKey createDebugLabelKey(Label label) {
     LabelKey c = new LabelKey(label);
     c.dupe = -1;
@@ -52,5 +95,15 @@ public class LabelFactory {
     Label c = parseNode(channel);
     c.dupe = dupe;
     return c;
+  }
+
+
+  public static String stripTau(String s){
+    //Tau{a...}
+    //Strips first 4 and last 1 characters
+    Matcher m = CCSGrammar.LABEL_TAU.match(s);
+    if (!m.find())
+      throw new CCSParserException("Attempted to strip tau from " + s + " but found no tau.");
+    return m.group(1);
   }
 }

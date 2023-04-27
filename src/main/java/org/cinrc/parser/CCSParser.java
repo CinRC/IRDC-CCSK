@@ -1,161 +1,107 @@
 package org.cinrc.parser;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-
 import org.cinrc.IRDC;
 import org.cinrc.process.nodes.Label;
-import org.cinrc.process.nodes.LabelFactory;
-import org.cinrc.process.process.ConcurrentProcess;
+import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.NodeIDGenerator;
+import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.process.process.NullProcess;
 import org.cinrc.process.process.Process;
 import org.cinrc.process.process.ProcessImpl;
-import org.cinrc.process.process.SummationProcess;
-import org.cinrc.process.ProcessTemplate;
 import org.cinrc.util.RCCSFlag;
-import org.cinrc.util.SetUtil;
 
 public class CCSParser {
 
+  HashMap<Integer, LabelKey> tauMap;
+  int counter;
+  boolean inParenthesis, inKeyNotation, inSetNotation;
+  LinkedList<Label> prefixes, restrictions;
+  LinkedList<LabelKey> keys;
+
+  Collection<RCCSFlag> config;
   public CCSParser() {
+    tauMap = new HashMap<Integer, LabelKey>();
+    config = new HashSet<>(IRDC.config);
+    counter = 0;
+    inParenthesis = false;
+    inKeyNotation = false;
+    inSetNotation = false;
+    prefixes = new LinkedList<>();
+    restrictions = new LinkedList<>();
+    keys = new LinkedList<>();
   }
 
-  public static ProcessTemplate parseLine(String line) {
-    org.cinrc.IRDC.log("Starting parsing of " + line);
-    StringWalker walker = new StringWalker(line);
-    walker.setIgnore(' ');
-
-    ProcessTemplate template = new ProcessTemplate();
-    int counter = 0;
-    boolean inParenthesis = false;
-    boolean inSetNotation = false;
-    LinkedList<Label> prefixes = new LinkedList<>();
-    LinkedList<Label> restrictions = new LinkedList<>();
-
-    do {
-      walker.walk();
-      org.cinrc.IRDC.log(
-          String.format("Begin matching with memory %s, counter: %d, set: %b", walker.readMemory(),
-              counter, inSetNotation));
-
-      //If parenthesis
-      if (CCSGrammar.OPEN_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
-        counter++; //Increment counter to adjust parenthesis depth
-        inParenthesis = true;
-        continue;
-      }
-
-      if (inParenthesis) {
-        if (CCSGrammar.CLOSE_PARENTHESIS.match(String.valueOf(walker.read())).find()) {
-          counter--;
-          if (counter == 0) {
-            Process dp = CCSParser.parseLine(
-                walker.readMemory()
-                    .substring(1, walker.readMemory().length() - 1)).export();
-            dp.addPrefixes(prefixes);
-            template.add(dp);
-            inParenthesis = false;
-            walker.clearMemory();
-          }
-        }
-      } else {
-        for (CCSGrammar g : Arrays.stream(CCSGrammar.values())
-            .filter(c -> c.canBeParsed()).toList()) {
-          Matcher m = g.match(walker.readMemory());
-          if (!m.find()) //Grammar doesn't match, next one!
-          {
-            continue;
-          }
-
-          if (!g.match(walker.readMemory())
-              .matches()) //If grammar matches but does not match *everything* in memory
-          {
-            throw new CCSParserException(
-                "Unrecognized character(s): " + walker.readMemory().replace(m.group(), ""));
-          }
-
-          IRDC.log("Found match: " + m.group() + " Grammar: " + g.name());
-
-          if (inSetNotation) {
-            if (g == CCSGrammar.LABEL_COMBINED) { //Is there a label here
-              restrictions.add(
-                  LabelFactory.parseNode(m.group())); //Add restriction to list
-              if (walker.peek()
-                  .equals(",")) { //If the next symbol is a comma, just skip and forget about it
-                walker.walk(false);
-              }
-            } else if (g == CCSGrammar.CLOSE_RESTRICTION) {
-              inSetNotation = false;
-              template.addRestrictionToLastProcess(restrictions);
-              restrictions.clear();
-            } else {
-              throw new CCSParserException(
-                  "Found unrecognized character(s) inside restriction: " + walker.readMemory());
-            }
-            walker.clearMemory();
-            continue;
-          }
-
-          switch (g) {
-            case LABEL_COMBINED:
-              org.cinrc.IRDC.log("Adding prefix: " + m.group());
-              prefixes.add(LabelFactory.parseNode(m.group()));
-              if (!walker.canWalk()) {
-                template.add(new NullProcess(prefixes));
-                prefixes.clear();
-              } else if (walker.peek().equals(
-                  CCSGrammar.OP_SEQUENTIAL.toString())) { //If there is a . after label, then skip over it and continue.
-                walker.walk(false);
-                //If there is no ., then treat it as an implicit "0" process
-              } else if (!org.cinrc.IRDC.config.contains(RCCSFlag.REQUIRE_EXPLICIT_NULL)) {
-                template.add(new NullProcess(prefixes));
-                prefixes.clear();
-              } else {
-                throw new CCSParserException(
-                    "Could not find process for prefixes: " +
-                        SetUtil.csvSet(prefixes));
-              }
-              break;
-
-            case PROCESS:
-              if (prefixes.isEmpty()) {
-                template.add(new ProcessImpl(walker.readMemory()));
-              } else {
-                template.add(new ProcessImpl(walker.readMemory(), prefixes));
-                prefixes.clear();
-              }
-              break;
-            case NULL_PROCESS:
-              if (prefixes.isEmpty()) {
-                template.add(new NullProcess());
-              } else {
-                template.add(new NullProcess(prefixes));
-                prefixes.clear();
-              }
-              break;
-            case OP_CONCURRENT:
-              template.add(new ConcurrentProcess(null, null));
-              break;
-            case OP_SUMMATION:
-              template.add(new SummationProcess(null, null));
-              break;
-            case OPEN_RESTRICTION:
-              if (!inSetNotation) {
-                inSetNotation = true;
-              } else {
-                throw new CCSParserException(
-                    "Unexpected token: " + walker.readMemory());
-              }
-              break;
-          }
-
-          walker.clearMemory();
-        }
-      }
-
-    } while (walker.canWalk());
-
-    return template;
+  public CCSParser(HashMap<Integer, LabelKey> tauMap){
+    CCSParser p = new CCSParser();
+    p.tauMap = tauMap;
   }
+
+
+
+  public Process parseLine(String s ){
+    return new ProcessBuilder(s).export();
+  }
+
+
+
+  public static LinkedList<Label> parseLabelsFromKeySet(LinkedList<LabelKey> keys){
+    LinkedList<Label> l = new LinkedList<>();
+    for (LabelKey k : keys){
+      if (k.from instanceof TauLabelNode tau){
+       if (!tau.consumeLeft){
+         l.add(tau.getA());
+       }else if (!tau.consumeRight){
+         l.add(tau.getB());
+       }
+      }else {
+        l.add(k.from);
+      }
+    }
+    return l;
+  }
+
+  public static Process generateProcess(String s, LinkedList<Label> prefixes, LinkedList<LabelKey> keys){
+    Process p = null;
+    if (CCSGrammar.PROC_NUL.match(s).matches()){
+      p = new NullProcess();
+    }else if (CCSGrammar.PROC_NAM.match(s).matches()){
+      p = new ProcessImpl(s);
+    }
+    return generateProcess(p, prefixes, keys);
+  }
+
+
+  public static Process generateProcess(Process p, LinkedList<Label> prefixes, LinkedList<LabelKey> keys){
+
+    LinkedList<Label> parsedPrefixes = CCSParser.parseLabelsFromKeySet(keys);
+    parsedPrefixes.addAll(prefixes);
+    p.addPrefixes(parsedPrefixes);
+
+    for (LabelKey key : keys){
+      /*if (key.from instanceof TauLabelNode t){
+        if (!t.consumeLeft){
+          p.act(t.getA());
+          t.consumeLeft = true;
+        }else if (!t.consumeRight){
+          p.act(t.getB());
+          t.consumeRight = true;
+        }else{
+          throw new CCSParserException("Something went wrong when trying to manage tau!");
+        }
+      }else */{
+        p.act(key.from);
+      }
+    }
+
+    prefixes.clear();
+    keys.clear();
+    return p;
+  }
+
+
+
 }

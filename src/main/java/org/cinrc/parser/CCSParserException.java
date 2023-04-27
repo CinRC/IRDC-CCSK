@@ -14,7 +14,7 @@ public class CCSParserException extends RuntimeException {
   }
 
   /**
-   * Constructs an exception from a failed string match and pattern
+   * Constructs an exception from a failed string match and pattern.
    *
    * @param s - String that failed to match
    * @param g - Grammar that attempted to match

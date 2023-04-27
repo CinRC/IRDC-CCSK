@@ -5,25 +5,23 @@ import org.cinrc.parser.CCSGrammar;
 
 public class LabelNode extends Label {
 
-  public CCSGrammar grammar;
+
 
   public LabelNode(String s) {
     super(NodeIDGenerator.nextAvailable(), s);
     isComplement = false;
-    grammar = CCSGrammar.LABEL;
+    grammar = CCSGrammar.LABEL_IN;
     this.id = UUID.randomUUID();
   }
 
   public LabelNode(LabelNode node) {
     super(node.dupe, node.getChannel());
-    grammar = CCSGrammar.LABEL;
+    grammar = CCSGrammar.LABEL_IN;
     id = node.getId();
     setRestricted(node.isRestricted);
 
   }
 
-  //Basically, check if given node is '[this] or [this] is '[given node]
-  //TODO: fix
   @Override
   public LabelNode clone() {
     return new LabelNode(this);

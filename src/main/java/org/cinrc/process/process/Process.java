@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Set;
 import javafx.util.Pair;
 import org.cinrc.IRDC;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSTransitionException;
 import org.cinrc.parser.LTTNode;
+import org.cinrc.parser.CCSGrammar;
+import org.cinrc.process.nodes.IRDCObject;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.ProgramNode;
@@ -20,7 +21,7 @@ import org.cinrc.util.RCCSFlag;
 import org.cinrc.util.SetUtil;
 import org.cinrc.util.StringUtil;
 
-public abstract class Process extends ProgramNode {
+public abstract class Process extends ProgramNode implements IRDCObject {
 
   public boolean displayKey = !IRDC.config.contains(RCCSFlag.HIDE_KEYS);
   //Passthru key for summation processes
@@ -47,6 +48,14 @@ public abstract class Process extends ProgramNode {
     this.restrictions.addAll(restrictions);
     this.previousLife = previousLife;
     this.key = key;
+  }
+
+  public void setGhost(boolean b){
+    isGhost = b;
+  }
+
+  public boolean isGhost(){
+    return isGhost;
   }
 
   /**
@@ -228,6 +237,7 @@ public abstract class Process extends ProgramNode {
 
   /**
    * Set CCSK key to provided LabelKey
+   *
    * @param key key to set
    */
   protected void setKey(LabelKey key) {
@@ -276,9 +286,9 @@ public abstract class Process extends ProgramNode {
     }
     s.append(getRestriction().isEmpty() ? "" :
         String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
-    if (org.cinrc.IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-      return s.toString().replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
-          .replaceAll(String.format("\\%s", CCSGrammar.CLOSE_PARENTHESIS), "");
+    if (IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
+      return s.toString().replaceAll(CCSGrammar.OPEN_PAR.pString, "")
+          .replaceAll(CCSGrammar.CLOSE_PAR.pString, "");
     } else {
       return s.toString();
     }
@@ -297,7 +307,7 @@ public abstract class Process extends ProgramNode {
     LTTNode tp = new LTTNode(this);
     tp.enumerate(true);
     LTTNode tq = new LTTNode(q);
-    tp.enumerate(true);
+    tq.enumerate(true);
     return tp.canSimulate(tq);
     //TODO: recurse
   }
@@ -330,6 +340,10 @@ public abstract class Process extends ProgramNode {
     return s;
   }
 
+  public boolean hasSameProcess(Process p) {
+    //If the process is both a real process (P,Q)
+    return (p.origin().equals(origin()));
+  }
 
   public List<Pair<Label, LabelKey>> getLabelKeyPairs() {
     List<Pair<Label, LabelKey>> l = new ArrayList<Pair<Label, LabelKey>>();
@@ -355,7 +369,27 @@ public abstract class Process extends ProgramNode {
 
   public abstract String origin();
 
-  public boolean equals(Object o) {
+  public boolean hasSameHistory(Process p){
+    int keys = 0;
+    if (p.hasKey())
+      keys++;
+    if (hasKey())
+      keys++;
+    if (keys == 0)
+      return true; //No history
+    if (keys != 2)
+      return false; //One has history, other does not
+
+    return previousLife.hasSameHistory(p);
+  }
+
+  public boolean equals(Object o){
+    if (!(o instanceof Process))
+      return false;
+    return equals(o,false);
+  }
+
+  public boolean equals(Object o, boolean hpb) {
     if (!getClass().equals(o.getClass())) {
       return false;
     }
@@ -364,6 +398,13 @@ public abstract class Process extends ProgramNode {
     }
 
     if (o instanceof Process p) {
+
+      if (!IRDC.config.contains(RCCSFlag.PROCESS_NAMES_EQUIVALENT)){
+        if (!hasSameProcess(p)) {
+          return false;
+        }
+      }
+
       //Check if prefixes are the same
       if (!SetUtil.labelsEqual(new HashSet<Label>(p.getPrefixes())
           , new HashSet<Label>(getPrefixes()))) {
@@ -389,15 +430,26 @@ public abstract class Process extends ProgramNode {
         if (!getKey().isEquivalent(p.getKey())) {
           return false;
         }
+        if (hpb) {
+          if (!hasSameHistory(p)) {
+            return false;
+          }
+        }
       }
 
       if (hasPrefixKey() && p.hasPrefixKey()) {
         if (!getPrefixKey().isEquivalent(p.getPrefixKey())) {
           return false;
         }
+        if (hpb) {
+          if (!hasSameHistory(p)) {
+            return false;
+          }
+        }
       }
 
       if (this instanceof ComplexProcess c && o instanceof ComplexProcess c2) {
+        //If only one is instantiated
         if (c.isPacked() && c2.isPacked()) {//If they are both instantiated
           if (!c.left.equals(c2.left)) {
             return false;
@@ -405,12 +457,9 @@ public abstract class Process extends ProgramNode {
           if (!c.right.equals(c2.right)) {
             return false;
           }
-          if (c.operator != c2.operator) {
-            return false;
-          }
-        } else if (c.isPacked() || c2.isPacked()) //If only one is instantiated
-        {
-          return false;
+          return c.operator == c2.operator;
+        } else {
+          return !c.isPacked() && !c2.isPacked();
         }
       }
     }

@@ -210,17 +210,23 @@ public class GUIController implements Initializable {
     public void onChoiceBoxChange() {
         if(myChoiceBox.getValue().equals("Equivalence")){
             outputField.setText("Enter processes separated by commas to view their equivalences.");
-            inputBox.setText("");
-            inputBox.setFloatText("Processes");
+            if(inputBox.getText().length() == 0){
+                inputBox.setText("");
+                inputBox.setFloatText("Processes");
+            }
         }
         else if(myChoiceBox.getValue().equals("Enumerate")){
             outputField.setText("Enter a process to view it broken down in a tree format.");
-            inputBox.setText("");
-            inputBox.setFloatText("Process");
+            if(inputBox.getText().length() == 0){
+                inputBox.setText("");
+                inputBox.setFloatText("Process");
+            }
         }
         else{
-            inputBox.setText("");
-            inputBox.setFloatText("Process");
+            if(inputBox.getText().length() == 0){
+                inputBox.setText("");
+                inputBox.setFloatText("Process");
+            }
         }
     }
     @Override

@@ -79,13 +79,13 @@ public class WalkthroughController {
                 actionable = exported.getActionableLabels(); // gets all labels of exported process
                 if(actionable.size() == 0){
                     outputField.setText(exported.getProcessRepresentation() +
-                            "\n----------------\nThere are no lables to act on!");
+                            "\n----------------\nThere are no labels to act on!");
                 }
                 else{
                     outputField.setText(exported.getProcessRepresentation() +
                             "\n----------------\nPlease input the index of the label you'd like to act on:");
                     int i = 0;
-                    for(Label la : actionable){ // displays all actionable lables in "[i] "label format"
+                    for(Label la : actionable){ // displays all actionable labels in "[i] "label format"
                         outputField.setText(outputField.getText() +
                                 "\n[" + i++ + "] " + la);
                     }

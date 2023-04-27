@@ -18,6 +18,7 @@
    <children>
       <VBox layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
+            <Label alignment="CENTER" prefHeight="18.0" prefWidth="621.0" text="RCCS Parser" />
             <MenuBar prefHeight="21.0" prefWidth="575.0">
                <menus>
                   <Menu mnemonicParsing="false" text="Processes">
@@ -29,15 +30,10 @@
             </MenuBar>
             <AnchorPane prefHeight="516.0" prefWidth="600.0" style="-fx-background-color: grey;">
                <children>
-                  <TextField fx:id="actInput" floatText="Process" layoutX="197.0" layoutY="33.0" />
-                  <Label alignment="CENTER" layoutX="213.0" layoutY="7.0" prefHeight="21.0" prefWidth="158.0" text="RCCS Parser">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
+                  <TextField fx:id="actInput" floatText="Process" layoutX="223.0" layoutY="20.0" />
                   <ScrollPane layoutX="40.0" layoutY="96.0" prefHeight="218.0" prefWidth="528.0">
                      <content>
-                        <TextArea fx:id="outputField" editable="false" prefHeight="211.0" prefWidth="525.0">
+                        <TextArea fx:id="outputField" editable="false" prefHeight="216.0" prefWidth="525.0">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
@@ -50,10 +46,10 @@
                         </TextArea>
                      </content>
                   </ScrollPane>
-                  <Button fx:id="act" layoutX="388.0" layoutY="45.0" mnemonicParsing="false" onAction="#act" text="Act" />
-                  <Button fx:id="closeBtn" layoutX="474.0" layoutY="334.0" mnemonicParsing="false" onAction="#close" text="Previous Page" />
-                  <Button fx:id="resetBtn" layoutX="470.0" layoutY="45.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
-                  <Button fx:id="genRandomProcess" layoutX="24.0" layoutY="45.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
+                  <Button fx:id="act" layoutX="414.0" layoutY="32.0" mnemonicParsing="false" onAction="#act" text="Act" />
+                  <Button fx:id="closeBtn" layoutX="473.0" layoutY="320.0" mnemonicParsing="false" onAction="#close" text="Previous Page" />
+                  <Button fx:id="resetBtn" layoutX="496.0" layoutY="32.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
+                  <Button fx:id="genRandomProcess" layoutX="50.0" layoutY="32.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
                </children>
             </AnchorPane>
          </children>

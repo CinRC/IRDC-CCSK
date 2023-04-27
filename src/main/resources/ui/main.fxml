@@ -55,9 +55,9 @@
                         </TextArea>
                     </content>
                 </ScrollPane>
-            <ChoiceBox fx:id="myChoiceBox" layoutX="382.0" layoutY="29.0" prefHeight="26.0" prefWidth="114.0" />
-            <Button fx:id="evaluate" layoutX="522.0" layoutY="27.0" mnemonicParsing="false" onAction="#evaluate" text="Run" />
-            <Button fx:id="genRandomProcess" layoutX="42.0" layoutY="27.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
+            <ChoiceBox fx:id="myChoiceBox" layoutX="381.0" layoutY="31.0" prefHeight="26.0" prefWidth="114.0" />
+            <Button fx:id="evaluate" layoutX="518.0" layoutY="29.0" mnemonicParsing="false" onAction="#evaluate" text="Run" />
+            <Button fx:id="genRandomProcess" layoutX="44.0" layoutY="31.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
             </children>
         </AnchorPane>
     </children>

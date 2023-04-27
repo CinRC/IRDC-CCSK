@@ -50,10 +50,10 @@
                         </TextArea>
                      </content>
                   </ScrollPane>
-                  <Button fx:id="act" layoutX="388.0" layoutY="36.0" mnemonicParsing="false" onAction="#act" text="Act" />
+                  <Button fx:id="act" layoutX="388.0" layoutY="45.0" mnemonicParsing="false" onAction="#act" text="Act" />
                   <Button fx:id="closeBtn" layoutX="474.0" layoutY="334.0" mnemonicParsing="false" onAction="#close" text="Previous Page" />
-                  <Button fx:id="resetBtn" layoutX="469.0" layoutY="36.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
-                  <Button fx:id="genRandomProcess" layoutX="23.0" layoutY="36.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
+                  <Button fx:id="resetBtn" layoutX="470.0" layoutY="45.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
+                  <Button fx:id="genRandomProcess" layoutX="24.0" layoutY="45.0" mnemonicParsing="false" onAction="#genRandom" text="Random Process" />
                </children>
             </AnchorPane>
          </children>

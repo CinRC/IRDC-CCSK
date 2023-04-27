@@ -4,6 +4,7 @@ import java.util.Collection;
 import org.cinrc.parser.CCSTransitionException;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.NodeIDGenerator;
 import org.cinrc.process.process.Process;
 
 public class ProcessContainer {
@@ -45,6 +46,7 @@ public class ProcessContainer {
       } else {
         throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
       }
+
     } catch (Exception e) {
       e.printStackTrace();
       System.exit(1);

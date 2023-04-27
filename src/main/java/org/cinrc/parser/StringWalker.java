@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An implementation of an iterable char stream. Self contained
@@ -35,7 +37,11 @@ public class StringWalker implements Iterable<Character>, CharSequence {
     length = s.length();
     this.curPos = pos;
     setDirection(Direction.FORWARDS);
-    memory = new LinkedList<>(Collections.singleton(s.charAt(curPos)));
+    if (pos != -1) {
+      memory = new LinkedList<>(Collections.singleton(s.charAt(curPos)));
+    }else {
+      memory = new LinkedList<>();
+    }
   }
 
 
@@ -44,11 +50,19 @@ public class StringWalker implements Iterable<Character>, CharSequence {
     length = s.length();
     this.curPos = pos;
     setDirection(dir);
-    memory = new LinkedList<>(Collections.singleton(s.charAt(curPos)));
+    if (pos != -1) {
+      memory = new LinkedList<>(Collections.singleton(s.charAt(curPos)));
+    }else {
+      memory = new LinkedList<>();
+    }
   }
 
   public void setIgnore(Character... ch) {
     this.ignore.addAll(List.of(ch));
+  }
+
+  public void setIgnore(Collection<Character> l){
+    ignore.addAll(l);
   }
 
   /**
@@ -109,7 +123,37 @@ public class StringWalker implements Iterable<Character>, CharSequence {
    * @return Next character in order
    */
   public String peek() {
-    return String.valueOf(charAt(curPos + getDirection().inc));
+    if (canWalk()) {
+      return String.valueOf(charAt(curPos + getDirection().inc));
+    }else return "";
+  }
+
+  public String peek(int spaces){
+      if (curPos + (spaces * direction.inc) > 0 && curPos + (spaces * direction.inc) <= length()){
+        return stringBase.substring(curPos+ direction.inc, curPos + spaces * direction.inc);
+      }else return "";
+  }
+
+  public void walkUntil(Pattern p){
+    do{
+      walk();
+      Matcher m = p.matcher(readMemory());
+      if (m.find()){
+        return;
+      }
+    }while (canWalk());
+  }
+
+  public String peekUntil(Pattern p){
+    StringWalker w = clone();
+    do{
+      w.walk();
+      Matcher m = p.matcher(w.readMemory());
+      if (m.find()){
+        return w.readMemory();
+      }
+    }while (w.canWalk());
+    return "";
   }
 
   /**
@@ -278,6 +322,12 @@ public class StringWalker implements Iterable<Character>, CharSequence {
     Direction reverse() {
       return this == FORWARDS ? BACKWARDS : FORWARDS;
     }
+  }
+
+  public StringWalker clone(){
+    StringWalker w = new StringWalker(stringBase, curPos, direction);
+    w.setIgnore(ignore);
+    return w;
   }
 
 }

@@ -7,7 +7,7 @@ import org.cinrc.IRDC;
 import org.cinrc.parser.CCSGrammar;
 import org.cinrc.util.RCCSFlag;
 
-public abstract class Label extends ProgramNode {
+public abstract class Label extends ProgramNode implements IRDCObject {
 
   private final String channel;
   public CCSGrammar grammar;
@@ -65,11 +65,15 @@ public abstract class Label extends ProgramNode {
 
   public String toString() {
     String s = "";
-    s += isComplement() ? CCSGrammar.COMPLEMENT_SIG.pString : "";
+    s += isComplement() ? CCSGrammar.COMPLEMENT_MARKER.pString : "";
     s += getChannel();
     s += IRDC.config.contains(RCCSFlag.DIFFERENTIATE_LABELS)
         ? String.valueOf(dupe) : "";
     return s;
+  }
+
+  public String represent(){
+    return toString();
   }
 
 
@@ -117,7 +121,7 @@ public abstract class Label extends ProgramNode {
       return false;
     }
     return (l.getChannel().equals(getChannel())
-        && l.isRestricted == isRestricted());
+        && l.isRestricted() == isRestricted());
   }
 
   public String getChannel() {

@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Set;
 import javafx.util.Pair;
 import org.cinrc.IRDC;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSTransitionException;
 import org.cinrc.parser.LTTNode;
+import org.cinrc.parser.CCSGrammar;
+import org.cinrc.process.nodes.IRDCObject;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.ProgramNode;
@@ -20,7 +21,7 @@ import org.cinrc.util.RCCSFlag;
 import org.cinrc.util.SetUtil;
 import org.cinrc.util.StringUtil;
 
-public abstract class Process extends ProgramNode {
+public abstract class Process extends ProgramNode implements IRDCObject {
 
   public boolean displayKey = !IRDC.config.contains(RCCSFlag.HIDE_KEYS);
   //Passthru key for summation processes
@@ -47,6 +48,14 @@ public abstract class Process extends ProgramNode {
     this.restrictions.addAll(restrictions);
     this.previousLife = previousLife;
     this.key = key;
+  }
+
+  public void setGhost(boolean b){
+    isGhost = b;
+  }
+
+  public boolean isGhost(){
+    return isGhost;
   }
 
   /**
@@ -278,8 +287,8 @@ public abstract class Process extends ProgramNode {
     s.append(getRestriction().isEmpty() ? "" :
         String.format("\\{%s}", SetUtil.csvSet(getRestriction())));
     if (IRDC.config.contains(RCCSFlag.HIDE_PARENTHESIS)) {
-      return s.toString().replaceAll(String.format("\\%s", CCSGrammar.OPEN_PARENTHESIS), "")
-          .replaceAll(String.format("\\%s", CCSGrammar.CLOSE_PARENTHESIS), "");
+      return s.toString().replaceAll(CCSGrammar.OPEN_PAR.pString, "")
+          .replaceAll(CCSGrammar.CLOSE_PAR.pString, "");
     } else {
       return s.toString();
     }
@@ -360,7 +369,27 @@ public abstract class Process extends ProgramNode {
 
   public abstract String origin();
 
-  public boolean equals(Object o) {
+  public boolean hasSameHistory(Process p){
+    int keys = 0;
+    if (p.hasKey())
+      keys++;
+    if (hasKey())
+      keys++;
+    if (keys == 0)
+      return true; //No history
+    if (keys != 2)
+      return false; //One has history, other does not
+
+    return previousLife.hasSameHistory(p);
+  }
+
+  public boolean equals(Object o){
+    if (!(o instanceof Process))
+      return false;
+    return equals(o,false);
+  }
+
+  public boolean equals(Object o, boolean hpb) {
     if (!getClass().equals(o.getClass())) {
       return false;
     }
@@ -369,6 +398,13 @@ public abstract class Process extends ProgramNode {
     }
 
     if (o instanceof Process p) {
+
+      if (!IRDC.config.contains(RCCSFlag.PROCESS_NAMES_EQUIVALENT)){
+        if (!hasSameProcess(p)) {
+          return false;
+        }
+      }
+
       //Check if prefixes are the same
       if (!SetUtil.labelsEqual(new HashSet<Label>(p.getPrefixes())
           , new HashSet<Label>(getPrefixes()))) {
@@ -394,11 +430,21 @@ public abstract class Process extends ProgramNode {
         if (!getKey().isEquivalent(p.getKey())) {
           return false;
         }
+        if (hpb) {
+          if (!hasSameHistory(p)) {
+            return false;
+          }
+        }
       }
 
       if (hasPrefixKey() && p.hasPrefixKey()) {
         if (!getPrefixKey().isEquivalent(p.getPrefixKey())) {
           return false;
+        }
+        if (hpb) {
+          if (!hasSameHistory(p)) {
+            return false;
+          }
         }
       }
 

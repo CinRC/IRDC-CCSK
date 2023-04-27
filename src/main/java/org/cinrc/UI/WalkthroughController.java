@@ -14,8 +14,10 @@ import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParser;
 import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
+import org.cinrc.process.process.Process;
 import org.cinrc.util.RCCSFlag;
 
+import javax.swing.text.html.CSS;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -57,6 +59,8 @@ public class WalkthroughController {
         actInput.setText(rProcesses[randomNum]); // sets input text to random number index of array
     }
 
+
+
     public void act(){
         //takes a proccess to start
         try{
@@ -70,8 +74,8 @@ public class WalkthroughController {
                 }
                 outputField.setText("");
                 IRDC.config.add(RCCSFlag.GUI);
-                ProcessTemplate template = CCSParser.parseLine(process); // parses the initial input
-                exported = new CCSInteractionHandler(template.export());
+                Process p = new CCSParser().parseLine(process);
+                exported = new CCSInteractionHandler(p);
                 actionable = exported.getActionableLabels(); // gets all labels of exported process
                 if(actionable.size() == 0){
                     outputField.setText(exported.getProcessRepresentation() +

@@ -109,7 +109,7 @@ public class GUIController implements Initializable {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < formula.length; i++) {
                 try {
-                    Process p = CCSParser.parseLine(formula[i]).export();
+                    Process p = new CCSParser().parseLine(formula[i]);
                     sb.append(String.format("[%d] %s => Parsed Successfully.\n", i, p.represent()));
                     processes.add(p);
                 } catch (CCSParserException e) {
@@ -161,8 +161,7 @@ public class GUIController implements Initializable {
             if(process.endsWith("\"")){
                 process = process.substring(0, process.length() - 1);
             }
-            CCSParser parser = new CCSParser();
-            org.cinrc.process.process.Process p = parser.parseLine(process).export(); // parses through user input
+            org.cinrc.process.process.Process p = new CCSParser().parseLine(process); // parses through user input
             LTTNode node = new LTTNode(p);
             node.enumerate(true); // enumerates through process
             outputField.setText(String.valueOf(node)); // outputs process

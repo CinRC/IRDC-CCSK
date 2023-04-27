@@ -21,7 +21,7 @@ public class RestrictionTest {
     Label a, oa;
     a = LabelFactory.createDebugLabel("a");
     oa = LabelFactory.createDebugLabel("'a");
-    Process p = CCSParser.parseLine("a\\{a}").export();
+    Process p = new CCSParser().parseLine("a\\{a}");
 
     ProcessContainer pc = new ProcessContainer(p);
 
@@ -40,7 +40,7 @@ public class RestrictionTest {
     a = LabelFactory.createDebugLabel("a");
     oa = LabelFactory.createDebugLabel("'a");
     b = LabelFactory.createDebugLabel("b");
-    Process p = CCSParser.parseLine("b\\{a}").export();
+    Process p = new CCSParser().parseLine("b\\{a}");
 
     ProcessContainer pc = new ProcessContainer(p);
 
@@ -61,9 +61,9 @@ public class RestrictionTest {
     Label a, oa, ta, taswitch;
     a = LabelFactory.createDebugLabel("a");
     oa = LabelFactory.createDebugLabel("'a");
-    ta = new TauLabelNode(a, oa);
-    taswitch = new TauLabelNode(oa, a);
-    Process p = CCSParser.parseLine("(a|'a)\\{a}").export();
+    ta = new TauLabelNode("a");
+    taswitch = new TauLabelNode("a");
+    Process p = new CCSParser().parseLine("(a|'a)\\{a}");
 
     ProcessContainer pc = new ProcessContainer(p);
 

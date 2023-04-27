@@ -2,9 +2,9 @@ package org.cinrc.process.process;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParserException;
 import org.cinrc.parser.CCSTransitionException;
+import org.cinrc.parser.CCSGrammar;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.util.SetUtil;
@@ -17,11 +17,12 @@ public class ConcurrentProcess extends ComplexProcess {
    */
 
   public ConcurrentProcess(Process left, Process right) {
-    super(left, right, CCSGrammar.OP_CONCURRENT);
+    super(left, right, CCSGrammar.OP_PAR);
+    opString = "|";
   }
 
   public ConcurrentProcess(Process left, Process right, LinkedList<Label> pfix) {
-    super(left, right, CCSGrammar.OP_CONCURRENT);
+    super(left, right, CCSGrammar.OP_PAR);
     prefixes = pfix;
   }
 
@@ -66,7 +67,7 @@ public class ConcurrentProcess extends ComplexProcess {
     //If more than one key, find latest
     else if (l.size() > 1) {
       for (Label label : l) { //find which happened most recently
-        if (k == null || ((LabelKey) label).time.isAfter(k.time)) {
+        if (k == null || ((LabelKey) label).time > k.time) {
           k = (LabelKey) label;
         }
       }
@@ -79,7 +80,7 @@ public class ConcurrentProcess extends ComplexProcess {
     Collection<Label> l = getActionableLabelsStrict();
     l.removeIf(x -> !(x instanceof LabelKey)); //remove all non-labelkeys
     for (Label label : l) {
-      if (key == null || ((LabelKey) label).time.isAfter(key.time)) {
+      if (key == null || ((LabelKey) label).time > key.time) {
         key = (LabelKey) label;
       }
     }

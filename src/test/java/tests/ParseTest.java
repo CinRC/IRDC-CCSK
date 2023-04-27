@@ -3,7 +3,6 @@ package tests;
 import org.cinrc.IRDC;
 import org.cinrc.parser.CCSParser;
 import org.cinrc.process.ProcessContainer;
-import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelFactory;
 import org.cinrc.process.process.Process;
@@ -24,11 +23,11 @@ public class ParseTest {
     Label b = LabelFactory.createDebugLabel("b");
     Label c = LabelFactory.createDebugLabel("c");
     //Make sure a + b | c is parsed as (a+(b|c))
-    Process p = CCSParser.parseLine("a+b|c").export();
+    Process p = new CCSParser().parseLine("a+b|c");
     ProcessContainer pc = new ProcessContainer(p);
     assert (pc.getProcess() instanceof SummationProcess);
     //Make sure a+b|c is parsed as (a+(b|c\abc))
-    p = CCSParser.parseLine("a+b|c\\{a,b,c}").export();
+    p = new CCSParser().parseLine("a+b|c\\{a,b,c}");
     pc = new ProcessContainer(p);
     assert (!pc.canAct(c));
     assert (pc.canAct(a));
@@ -49,7 +48,7 @@ public class ParseTest {
         "(a.P|(a+b))"
     };
     for (String s : matchTest) {
-      Process p = CCSParser.parseLine(s).export();
+      Process p = new CCSParser().parseLine(s);
       String a = p.represent();
       assert compare(a, s);
     }
@@ -66,7 +65,7 @@ public class ParseTest {
     };
 
     for (String s : matchTest) {
-      Process p = CCSParser.parseLine(s).export();
+      Process p = new CCSParser().parseLine(s);
       String a = p.represent();
       assert compare(a, s);
     }
@@ -87,11 +86,10 @@ public class ParseTest {
         "(a.b.'c.P|('c.b.'a.P+'a.b.Q))"
     };
     for (int i = 0; i < expected.length; i++) {
-      Process p = CCSParser.parseLine(given[i]).export();
+      Process p = new CCSParser().parseLine(given[i]);
       assert (
           compare(p.represent(), expected[i])
       );
-
     }
   }
 
@@ -104,31 +102,42 @@ public class ParseTest {
     IRDC.config.clear();
     boolean isFailed = false;
 
-    ProcessTemplate t = CCSParser.parseLine("ab");
     try {
-      t.export();
+      new CCSParser().parseLine("ab");
+
     } catch (Exception e) {
       isFailed = true;
     }
     assert (isFailed);
 
 
-    t = CCSParser.parseLine("a+b+");
     try {
-      t.export();
+      new CCSParser().parseLine("a+b+");
     } catch (Exception e) {
       isFailed = true;
     }
     assert (isFailed);
 
-    t = CCSParser.parseLine("a++");
     try {
-      t.export();
+      new CCSParser().parseLine("a++");
     } catch (Exception e) {
       isFailed = true;
     }
     assert (isFailed);
 
+  }
+
+  @Test
+  public void testNewEnum(){
+    CCSParser parser = new CCSParser();
+
+    parser.parseLine("a\\{a,b}");
+    /*parser.parseLine("Tau{a}[k0]");
+    parser.parseLine("a.b.P + (Tau{z}[k0]|Tau{z}[k0])");
+    parser.parseLine("(a.b)|( (c.d)+(e.f) )");
+    parser.parseLine("((a.b)|(c.d))");
+    parser.parseLine("a|(b+c)");
+    parser.parseLine("a.b.(c|d)");*/
   }
 
 }

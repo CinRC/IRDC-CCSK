@@ -17,6 +17,16 @@ public class TauLabelNode extends Label {
     isComplement = false;
     this.saveDupe = NodeIDGenerator.nextAvailableKey();
     this.id = UUID.randomUUID();
+}
+
+  public TauLabelNode(String channel){
+    super(-2, channel);
+    this.a = LabelFactory.createDebugLabelNode(channel);
+    this.b = LabelFactory.createDebugComplementLabelNode(channel);
+    consumeLeft = consumeRight = false;
+    isComplement = false;
+    this.saveDupe = NodeIDGenerator.nextAvailableKey();
+    this.id = UUID.randomUUID();
   }
 
   @Override
@@ -24,13 +34,18 @@ public class TauLabelNode extends Label {
     if (!(o instanceof TauLabelNode node)) {
       return false;
     }
-    return (node.getA().equals(getA()) && node.getB().equals(getB()))
-        || (node.getB().equals(getA()) && node.getA().equals(getB()));
+    return node.getChannel().equals(getChannel());
   }
 
   @Override
   public String toString() {
-    return String.format("Tau{%s, %s}", a, b);
+    return "Tau{"+getChannel()+"}";
+    //TODO: modularize
+
+  }
+
+  public String represent(){
+    return toString();
   }
 
   public Label getA() {

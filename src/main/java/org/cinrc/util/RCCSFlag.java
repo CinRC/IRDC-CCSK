@@ -39,6 +39,8 @@ public enum RCCSFlag {
       "--iU"),
   KEYS_MATCH_LABELS("Keys will be visibly similar to the label they represent",
       "--kL"),
+  REGENERATE("Given process that has already begun execution will be regenerated and enumerated.",
+      "--regenerate"),
   GUI("Start program with GUI",
       "--gui");
 

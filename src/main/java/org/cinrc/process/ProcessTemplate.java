@@ -1,13 +1,15 @@
 package org.cinrc.process;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import org.cinrc.parser.CCSGrammar;
 import org.cinrc.parser.CCSParserException;
+import org.cinrc.parser.CCSGrammar;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.process.ComplexProcess;
 import org.cinrc.process.process.Process;
+import org.cinrc.process.process.SummationProcess;
 
 
 public class ProcessTemplate {
@@ -20,6 +22,10 @@ public class ProcessTemplate {
 
   public void add(Process node) {
     tList.add(node);
+  }
+
+  public Process getLast(){
+    return tList.getLast();
   }
 
   /**
@@ -36,11 +42,13 @@ public class ProcessTemplate {
       }
     }
 
-
+    ArrayList<CCSGrammar> combineOrder = new ArrayList<>();
+    combineOrder.add(CCSGrammar.OP_PAR);
+    combineOrder.add(CCSGrammar.OP_SUM);
     //We rely on descending binding order in the CCSGrammar class
-    for (CCSGrammar g : CCSGrammar.values()) {
+    for (CCSGrammar g : combineOrder) {
       for (ComplexProcess p : complex) {
-        if (p.getClass() == g.getClassObject()) {
+        if (p.operator == g) {
           if (p.left == null)
           //Consume object to the left
           {
@@ -51,6 +59,13 @@ public class ProcessTemplate {
           //Consume object to the right
           {
             p.right = tList.remove(tList.indexOf(p) + 1);
+          }
+          if (p instanceof SummationProcess s){
+            if (s.left.hasKey()){
+              s.right.setGhost(true);
+            }else if (s.right.hasKey()){
+              s.left.setGhost(true);
+            }
           }
         }
       }

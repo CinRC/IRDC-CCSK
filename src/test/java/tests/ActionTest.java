@@ -16,7 +16,7 @@ public class ActionTest {
 
   @Test
   public void temporaryTest() {
-    Process p = CCSParser.parseLine("(a+b)|('a|'b)").export();
+    Process p = new CCSParser().parseLine("(a+b)|('a|'b)");
     ProcessContainer pc = new ProcessContainer(p);
     TauLabelNode n = new TauLabelNode(LabelFactory.createDebugLabel("a"),
         LabelFactory.createDebugLabel("'a"));
@@ -38,7 +38,7 @@ public class ActionTest {
     a = LabelFactory.createDebugLabel("a");
     b = LabelFactory.createDebugLabel("b");
     c = LabelFactory.createDebugLabel("c");
-    ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b").export());
+    ProcessContainer p = new ProcessContainer(new CCSParser().parseLine("a.b"));
     p.act(a);
     assert p.canAct(b);
   }
@@ -57,7 +57,7 @@ public class ActionTest {
     lb = LabelFactory.createDebugLabelKey(b);
     lc = LabelFactory.createDebugLabelKey(c);
     ld = LabelFactory.createDebugLabelKey(d);
-    ProcessContainer p = new ProcessContainer(CCSParser.parseLine("a.b+c.d").export());
+    ProcessContainer p = new ProcessContainer(new CCSParser().parseLine("a.b+c.d"));
     assert p.canAct(a) && p.canAct(c);
     assert !p.canAct(b) && !p.canAct(d);
     p.act(a); // a.b+c.d -a-> [k0]b

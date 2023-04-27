@@ -3,6 +3,7 @@ package org.cinrc.parser;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import org.cinrc.IRDC;
@@ -21,13 +22,14 @@ import org.cinrc.process.process.ConcurrentProcess;
 import org.cinrc.process.process.Process;
 import org.cinrc.process.process.SummationProcess;
 import org.cinrc.util.RCCSFlag;
+import org.cinrc.util.SetUtil;
 
 public class ProcessBuilder {
 
   public List<IRDCToken> template;
   public boolean isTokenized = false;
 
-  private final List<TauLabelNode> taus;
+  private final List<LabelKey> taus;
 
   private NestedIRDCToken parent;
 
@@ -35,7 +37,7 @@ public class ProcessBuilder {
     template = new ArrayList<>();
     insert(new UnknownIRDCToken(base), 0);
     NodeIDGenerator.reset();
-    taus = new LinkedList<>();//TODO: matching
+    taus = new ArrayList<>();//TODO: matching
   }
 
   public void handleParentheses(){
@@ -108,7 +110,29 @@ public class ProcessBuilder {
           determineNextSequence(template, token, nestList, index, keys, prefixes);
           break;
         case LABEL_KEY:
-          keys.add((LabelKey) LabelFactory.parseNode(token.represent()));
+          if (!prefixes.isEmpty())
+            throw new CCSParserException("Process is unreachable! Keys cannot be prefixed");
+
+          LabelKey k = ((LabelKey) LabelFactory.parseNode(token.represent()));
+          if (k.from instanceof TauLabelNode t) {
+            if (taus.isEmpty()) {
+              taus.add(k);
+              keys.add(k);
+            } else {
+              for (LabelKey tt : taus) {
+                if (tt.dupe == k.dupe) { //same channel
+                  if (!tt.from.getChannel().equals(t.getChannel())){
+                    throw new CCSParserException("Found two tau keys with identical keys but separate channels! " +
+                        SetUtil.csvSet(Set.of(tt,k)));
+                  }
+                  keys.add(tt);
+                  taus.remove(tt);
+                  break;
+                }
+              }
+            }
+          }
+
           determineNextSequence(template, token, nestList, index, keys, prefixes);
           break;
         case OP_PAR:
@@ -129,6 +153,9 @@ public class ProcessBuilder {
       }
     }
     template.initComplex();
+    if (!taus.isEmpty()){
+      throw new CCSParserException("Unmatched tau keys! " + SetUtil.csvSet(taus));
+    }
     return template.export();
   }
 

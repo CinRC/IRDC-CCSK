@@ -118,7 +118,6 @@ public class ProcessBuilder {
             if (taus.isEmpty()) {
               taus.add(k);
               keys.add(k);
-              break;
             } else {
               for (LabelKey tt : taus) {
                 if (tt.dupe == k.dupe) { //same channel

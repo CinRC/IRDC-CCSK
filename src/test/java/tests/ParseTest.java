@@ -98,6 +98,15 @@ public class ParseTest {
   public void testUnreachable() {
     IRDC.config.clear();
     boolean isFailed = false;
+
+    try {
+      new CCSParser().parseLine("Tau{a}[k0] | Tau{a}[k1]");
+      isFailed = false;
+    }catch (CCSParserException e){
+      isFailed = true;
+    }
+
+
     try {
       new CCSParser().parseLine("a.b.c[k0].P");
     }catch (CCSParserException e){
@@ -117,12 +126,7 @@ public class ParseTest {
       isFailed = true;
     }
 
-    try {
-      new CCSParser().parseLine("Tau{a}[k0] | Tau{a}[k1]");
-      isFailed = false;
-    }catch (CCSParserException e){
-      isFailed = true;
-    }
+
 
     assert (isFailed == true);
     }

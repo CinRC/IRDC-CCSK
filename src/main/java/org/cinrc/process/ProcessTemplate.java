@@ -52,7 +52,6 @@ public class ProcessTemplate {
           if (p.left == null)
           //Consume object to the left
           {
-            int i = tList.indexOf(p) - 1;
             p.left = tList.remove(tList.indexOf(p) - 1);
           }
           if (p.right == null)

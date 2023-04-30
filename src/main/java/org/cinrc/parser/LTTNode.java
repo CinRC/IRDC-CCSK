@@ -89,14 +89,22 @@ public class LTTNode {
           if (children.get(ourLabel).canSimulate(node.children.get(compareLabel))) {
             match = 1;
           }
-        }
+        }else{
+          //TODO: nonsim
+          /*IRDC.proofNonSimulation.add(
+              String.format("After performing %s, %s can act on %s, while %s cannot.",
+                  SetUtil.csvSet(calculatePath()), getAncestor().represent(), ourLabel, entry.getValue().getAncestor().represent()));
+       */ }
       }
       if (match == 0) {
-        IRDC.log("%s no match %s",internalProcess.represent(), entry.getValue().internalProcess.represent() );
         return false; //If at the end and turns out cant simulate return false
       }
     }
     return true;
+  }
+
+  public String represent(){
+    return internalProcess.represent();
   }
 
   /**
@@ -119,9 +127,9 @@ public class LTTNode {
     }
   }
 
-  public LTTNode getAncestor() throws Exception {
+  public LTTNode getAncestor()  {
     if (parents.keySet().size() > 1)
-      throw new Exception("Process has more than one parent!");
+      throw new CCSParserException("Process has more than one parent!");
     else if (parents.keySet().size() == 0)
       return this;
     for (LTTNode node : parents.values())
@@ -183,10 +191,7 @@ public class LTTNode {
     }
   }
 
-  /**
-   * TODO: Enumerate, but backwards
-   * @return
-   */
+
   public LTTNode regenerate(){
     if (internalProcess.hasKey()){
       Process p = internalProcess.clone();

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import org.cinrc.process.nodes.ComplementLabelNode;
+import org.cinrc.process.nodes.IRDCObject;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.process.nodes.LabelNode;
@@ -16,13 +17,13 @@ import org.cinrc.process.process.Process;
 public class SetUtil {
 
 
-  public static String csvSet(Collection<Label> set) {
+  public static <T extends Label & IRDCObject> String csvSet(Collection<T> set) {
     if (set.isEmpty()) {
       return "";
     }
     StringBuilder sb = new StringBuilder();
-    for (Label o : set) {
-      sb.append(o);
+    for (IRDCObject o : set) {
+      sb.append(o.represent());
       sb.append(",");
     }
     sb.deleteCharAt(sb.length() - 1);

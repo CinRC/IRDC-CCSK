@@ -1,6 +1,7 @@
 package org.cinrc.parser;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -56,6 +57,8 @@ public class CCSParser {
          l.add(tau.getA());
        }else if (!tau.consumeRight){
          l.add(tau.getB());
+       }else{
+         throw new CCSParserException("Tau has been consumed");
        }
       }else {
         l.add(k.from);
@@ -66,6 +69,15 @@ public class CCSParser {
 
   public static Process generateProcess(String s, LinkedList<Label> prefixes, LinkedList<LabelKey> keys){
     Process p = null;
+    Collection<Integer> dupes = new HashSet<>();
+    for (LabelKey key : keys){ //so we cant have things like Tau{a}[k0].Tau{a}[k0].P
+      if (dupes.contains(key.dupe)){
+        throw new CCSParserException("Unreachable process! Processes cannot have multiple keys of the same value");
+      }else{
+        dupes.add(key.dupe);
+      }
+    }
+
     if (CCSGrammar.PROC_NUL.match(s).matches()){
       p = new NullProcess();
     }else if (CCSGrammar.PROC_NAM.match(s).matches()){

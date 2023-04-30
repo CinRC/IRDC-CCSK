@@ -52,7 +52,6 @@ public class ProcessTemplate {
           if (p.left == null)
           //Consume object to the left
           {
-            int i = tList.indexOf(p) - 1;
             p.left = tList.remove(tList.indexOf(p) - 1);
           }
           if (p.right == null)
@@ -61,6 +60,9 @@ public class ProcessTemplate {
             p.right = tList.remove(tList.indexOf(p) + 1);
           }
           if (p instanceof SummationProcess s){
+            if (s.left.hasKey() && s.right.hasKey()){
+              throw new CCSParserException("Unreachable processes detected! Summation processes cannot have execution on both sides");
+            }
             if (s.left.hasKey()){
               s.right.setGhost(true);
             }else if (s.right.hasKey()){

@@ -39,6 +39,8 @@ public class SetUtil {
   public static Collection<TauLabelNode> getTauMatches(Collection<Label> nodes) {
     Set<TauLabelNode> tau = new HashSet<>();
     for (Label node : nodes) {
+      if (node.isRestricted())
+        continue;
       if (node instanceof ComplementLabelNode) {
         //Cool, there is a complement in the set. Let's see if any matches
         for (Label innerNode : nodes) {

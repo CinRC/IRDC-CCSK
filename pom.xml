@@ -6,7 +6,7 @@
 
     <groupId>org.cinrc</groupId>
     <artifactId>IRDC</artifactId>
-    <version>4.2.4.1</version>
+    <version>4.3.4.1</version>
 
     <packaging>jar</packaging>
     <properties>

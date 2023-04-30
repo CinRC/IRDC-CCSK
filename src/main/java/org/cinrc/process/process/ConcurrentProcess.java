@@ -1,12 +1,15 @@
 package org.cinrc.process.process;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import org.cinrc.parser.CCSParserException;
 import org.cinrc.parser.CCSTransitionException;
 import org.cinrc.parser.CCSGrammar;
 import org.cinrc.process.nodes.Label;
 import org.cinrc.process.nodes.LabelKey;
+import org.cinrc.process.nodes.TauLabelNode;
 import org.cinrc.util.SetUtil;
 
 
@@ -109,13 +112,29 @@ public class ConcurrentProcess extends ComplexProcess {
   public Collection<Label> getActionableLabels() {
     Collection<Label> l = super.getActionableLabels();
     if (!prefixes.isEmpty()) {
-      l.add(prefixes.peek());
-      return withdrawRestrictions(l);
+      return l;
     }
     l.addAll(getActionableLabelsStrict());
-    l.addAll(SetUtil.getTauMatches(l));
-    l = withdrawRestrictions(l);
+    l.addAll(collectSynchronizations(l));
+    l = removeRestrictions(l);
     return l;
+  }
+
+
+  protected List<TauLabelNode> collectSynchronizations(Collection<Label> labels){
+    List<TauLabelNode> n = new ArrayList<>();
+    for (Label l : labels){
+      for(Label l2 : labels){
+        if (l.canSynchronize(l2) && l2.canSynchronize(l)){
+
+          TauLabelNode node = new TauLabelNode(l, l2);
+          if (!n.contains(node)){
+            n.add(node);
+          }
+        }
+      }
+    }
+    return n;
   }
 
   public Process attemptRewind(LabelKey key) {

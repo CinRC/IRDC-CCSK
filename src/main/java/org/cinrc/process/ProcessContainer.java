@@ -21,7 +21,6 @@ public class ProcessContainer {
 
   public Collection<Label> getActionableLabels() {
     Collection<Label> labels = process.getActionableLabels();
-    labels.removeIf(Label::isRestricted);
 
     return labels;
   }
@@ -43,6 +42,7 @@ public class ProcessContainer {
     try {
       if (process.hasKey()) {
         process = process.act(process.getKey());
+
       } else {
         throw new CCSTransitionException(process, "Attempted to reverse, but found no key");
       }

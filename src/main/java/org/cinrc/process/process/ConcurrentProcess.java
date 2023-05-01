@@ -1,7 +1,10 @@
 package org.cinrc.process.process;
 
+import static org.cinrc.util.SetUtil.removeUnsyncableKeys;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.cinrc.parser.CCSParserException;
@@ -114,6 +117,7 @@ public class ConcurrentProcess extends ComplexProcess {
     if (!prefixes.isEmpty()) {
       return l;
     }
+
     l.addAll(getActionableLabelsStrict());
     l.addAll(collectSynchronizations(l));
     l = removeRestrictions(l);
@@ -136,6 +140,7 @@ public class ConcurrentProcess extends ComplexProcess {
     }
     return n;
   }
+
 
   public Process attemptRewind(LabelKey key) {
     if (getLeftRightLabels().stream().noneMatch(LabelKey.class::isInstance))//no keys left/right?

@@ -99,7 +99,7 @@ public class LabelFactory {
   }
 
 
-  public static String stripTau(String s){
+  private static String stripTau(String s){
     //Tau{a...}
     //Strips first 4 and last 1 characters
     Matcher m = CCSGrammar.LABEL_TAU.match(s);

@@ -65,7 +65,6 @@ public class SetUtil {
   }
 
   //Not sure why, but this no longer is feasible.
-  @Deprecated
   public static Collection<Label> removeUnsyncableKeys(ComplexProcess p, Collection<Label> labels) {
     Iterator<Label> iter = labels.iterator();
     while (iter.hasNext()) {

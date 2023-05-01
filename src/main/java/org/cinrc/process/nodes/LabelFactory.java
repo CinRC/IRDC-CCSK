@@ -22,7 +22,8 @@ public class LabelFactory {
       if (!m.find()){
         throw new CCSParserException("Could not find key dupe in key " + s);
       }
-      return new LabelKey(l, Integer.parseInt(m.group()));
+      int dig = Integer.parseInt(m.group());
+      return new LabelKey(l, dig);
     }
 
     m = CCSGrammar.LABEL_TAU.match(s);

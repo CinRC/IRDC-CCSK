@@ -191,6 +191,7 @@ public abstract class Process extends ProgramNode implements IRDCObject {
     return this.actOn(label);
   }
 
+
   public Process actInternal(Label l) {
     setPastLife(clone());
     getPrefixes().removeFirst();
@@ -247,13 +248,11 @@ public abstract class Process extends ProgramNode implements IRDCObject {
    *
    * @param key key to set
    */
-  protected void setKey(LabelKey key) {
+  public void setKey(LabelKey key) {
     this.key = key;
   }
 
   public abstract Process attemptRewind(LabelKey l);
-
-
 
   /**
    * A formatted version of this process to be printed. This is the only method that

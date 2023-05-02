@@ -157,7 +157,6 @@ public class LTTNode {
     for (Label l : pc.getActionableLabels()) {
       if (!(l instanceof LabelKey)) {
         Process tmp = pc.getProcess().clone();
-
         pc.act(l); //Act on that label and make a new node with that child process (clone)
         Process z = pc.getProcess().clone();
         addChild(l, z);

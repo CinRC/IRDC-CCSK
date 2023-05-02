@@ -146,7 +146,8 @@ public class SummationProcess extends ComplexProcess {
       }
       //Otherwise nope
     }
-    return withdrawRestrictions(s);
+    s = removeRestrictions(s);
+    return s;
   }
 
   @Override
@@ -187,6 +188,7 @@ public class SummationProcess extends ComplexProcess {
     }
     s.addAll(l);
     s.addAll(r);
+    s = removeRestrictions(s);
     return s;
   }
 

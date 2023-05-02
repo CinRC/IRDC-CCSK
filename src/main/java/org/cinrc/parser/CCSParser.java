@@ -106,6 +106,7 @@ public class CCSParser {
         }
       }else */{
         p.act(key.from);
+        p.setKey(key);
       }
     }
 

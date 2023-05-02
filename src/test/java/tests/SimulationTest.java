@@ -179,6 +179,19 @@ public class SimulationTest {
 
     assert (node_q.canSimulate(node_p));
     assert (node_p.canSimulate(node_q));
+
+    p = new CCSParser().parseLine("(a.c | 'a)\\{a}");
+    q = new CCSParser().parseLine("(b|'b.c)\\{b}");
+
+    node_p = new LTTNode(p);
+    node_p.enumerate(true);
+    System.out.println(node_p);
+    node_q = new LTTNode(q);
+    node_q.enumerate(true);
+    System.out.println(node_q);
+
+    assert (node_q.canSimulate(node_p));
+    assert (node_p.canSimulate(node_q));
   }
 
 

@@ -26,10 +26,9 @@ public class LabelKey extends Label {
   }
 
   public LabelKey(Label node, int dupe) {
-    super(node.dupe, node.getChannel());
+    super(dupe, node.getChannel());
     this.id = UUID.randomUUID();
     this.from = node;
-    this.dupe = dupe;
     time = System.nanoTime();
   }
 

@@ -87,19 +87,19 @@ public class ProcessBuilder {
   public Process export(){ // process;
     tokenize();
     handleParentheses();
-    return export(parent);
+    return export(parent, true);
   }
-  private Process export(NestedIRDCToken nest){
-    return export(nest, null);
+  private Process export(NestedIRDCToken nest, boolean parent){
+    return export(nest, null, parent);
   }
-  private Process export(NestedIRDCToken nest, LinkedList<LabelKey> key){
+  private Process export(NestedIRDCToken nest, LinkedList<LabelKey> key, boolean parent){
     LinkedList<LabelKey> keys = key == null ? new LinkedList<>() : key;
     LinkedList<Label> prefixes = null == null ? new LinkedList<>() : null;
 
     ProcessTemplate template = new ProcessTemplate();
     for (KnownIRDCToken token : nest.getTokens()){
       if (token instanceof NestedIRDCToken n){
-        template.add(CCSParser.generateProcess(export(n),prefixes,keys));
+        template.add(CCSParser.generateProcess(export(n, false),prefixes,keys));
         continue;
       }
       List<KnownIRDCToken> nestList = nest.getTokens();
@@ -155,7 +155,7 @@ public class ProcessBuilder {
       }
     }
     template.initComplex();
-    if (!taus.isEmpty()){
+    if (!taus.isEmpty() && parent){
       throw new CCSParserException("Unmatched tau keys! " + SetUtil.csvSet(taus));
     }
     return template.export();

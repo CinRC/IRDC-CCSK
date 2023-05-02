@@ -78,4 +78,17 @@ public class ActionTest {
     assert !p.canAct(b) && !p.canAct(d);
   }
 
+  @Test
+  public void tauTest1(){
+    Process p = new CCSParser().parseLine("Tau{a}[k1] | Tau{a}[k1].Tau{b}[k2] | Tau{b}[k2]");
+    Label key2 = LabelFactory.createDebugLabel("Tau{b}[k2]");
+    Label key1 = LabelFactory.createDebugLabel("Tau{a}[k1]");
+    ProcessContainer pc = new ProcessContainer(p);
+    assert (pc.canAct(key2));
+    assert !(pc.canAct(key1));
+    pc.act(key2);
+    assert pc.canAct(key1);
+
+  }
+
 }

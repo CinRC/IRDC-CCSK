@@ -65,16 +65,24 @@ public abstract class Process extends ProgramNode implements IRDCObject {
    * @param labels Base set of labels to apply restrictions to
    * @return Collection of labels with restrictions removed
    */
-  protected Collection<Label> withdrawRestrictions(Collection<Label> labels) {
+  protected Collection<Label> annotateRestrictions(Collection<Label> labels) {
     for (Label l : labels) {
       for (Label r : getRestriction()) {
         //if (r.isComplement() == l.isComplement())
         if (r.getChannel().equals(l.getChannel())
-            && SetUtil.isRestrictable(l)) {
+            /*&& SetUtil.isRestrictable(l)*/) {
           l.setRestricted(true);
         }
       }
     }
+    return labels;
+  }
+
+  protected Collection<Label> removeRestrictions(Collection<Label> labels){
+    labels.removeIf(z -> SetUtil.isRestrictable(z)
+        && restrictions.stream().anyMatch(z2 ->
+        z2.getChannel().equals(z.getChannel()))
+    );
     return labels;
   }
 
@@ -183,6 +191,7 @@ public abstract class Process extends ProgramNode implements IRDCObject {
     return this.actOn(label);
   }
 
+
   public Process actInternal(Label l) {
     setPastLife(clone());
     getPrefixes().removeFirst();
@@ -239,12 +248,11 @@ public abstract class Process extends ProgramNode implements IRDCObject {
    *
    * @param key key to set
    */
-  protected void setKey(LabelKey key) {
+  public void setKey(LabelKey key) {
     this.key = key;
   }
 
   public abstract Process attemptRewind(LabelKey l);
-
 
   /**
    * A formatted version of this process to be printed. This is the only method that
@@ -326,7 +334,7 @@ public abstract class Process extends ProgramNode implements IRDCObject {
     {
       l.add(getKey());
     }
-
+    l = (Set<Label>) removeRestrictions(l);
     return l;
   }
 

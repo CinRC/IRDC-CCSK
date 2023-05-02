@@ -48,7 +48,11 @@ public abstract class Label extends ProgramNode implements IRDCObject {
    * @return Returns true if the provided label is not in the sync-lock array
    */
   public boolean canSynchronize(Label l) {
-    return !synchronizeLock.contains(l);
+    return !(synchronizeLock.contains(l))
+        && !(l instanceof LabelKey)
+        && !(l instanceof TauLabelNode)
+        && getChannel().equals(l.getChannel())
+        && this != l;
   }
 
   /**

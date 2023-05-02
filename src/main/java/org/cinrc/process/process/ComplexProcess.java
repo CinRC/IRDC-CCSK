@@ -6,6 +6,7 @@ import java.util.Set;
 import org.cinrc.IRDC;
 import org.cinrc.parser.CCSGrammar;
 import org.cinrc.process.nodes.Label;
+import org.cinrc.process.nodes.LabelKey;
 import org.cinrc.util.RCCSFlag;
 import org.cinrc.util.SetUtil;
 
@@ -162,6 +163,21 @@ public abstract class ComplexProcess extends Process {
     }
 
     return b.toString();
+  }
+
+  public boolean recursiveIsSyncable(LabelKey key){
+    if (left.canAct(key) && right.canAct(key)){
+      return true;
+    }
+    if (left instanceof ComplexProcess cp)
+      if (cp.recursiveIsSyncable(key))
+        return true;
+    if (right instanceof ComplexProcess cp)
+      if (cp.recursiveIsSyncable(key))
+        return true;
+
+    return false;
+
   }
 
   public boolean hasKey() {

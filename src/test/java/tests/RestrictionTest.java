@@ -67,13 +67,13 @@ public class RestrictionTest {
 
     ProcessContainer pc = new ProcessContainer(p);
 
-    //System.out.printf("Asserting that %s cannot act on %s...\n", pc.prettyString(), a);
+    System.out.printf("Asserting that %s cannot act on %s...\n", pc.prettyString(), a);
     assert (!pc.canAct(a)); // (a|'a)\{a} cannot do a
-    //System.out.printf("Asserting that %s cannot act on %s...\n", pc.prettyString(), oa);
+    System.out.printf("Asserting that %s cannot act on %s...\n", pc.prettyString(), oa);
     assert (!pc.canAct(oa)); // (a|'a)\{a} cannot do 'a
-    //System.out.printf("Asserting that %s can act on %s...\n", pc.prettyString(), ta);
+    System.out.printf("Asserting that %s can act on %s...\n", pc.prettyString(), ta);
     assert (pc.canAct(ta)); // (a|'a)\{a} can do Tau(a, 'a)
-    //System.out.printf("Asserting that %s can act on %s...\n", pc.prettyString(), taswitch);
+    System.out.printf("Asserting that %s can act on %s...\n", pc.prettyString(), taswitch);
     assert (pc.canAct(taswitch)); // (a|'a)\{a} can do Tau('a, a)
   }
 

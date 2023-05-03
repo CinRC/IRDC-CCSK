@@ -152,9 +152,9 @@ public class GUIController implements Initializable {
     }
 
     public void enumerate(){
+        String process = inputBox.getText();
         try{
             IRDC.config.add(RCCSFlag.ENUMERATE); // adds enumerate flag to allow enumeration of process
-            String process = inputBox.getText();
             if(process.startsWith("\"")){
                 process = process.substring(1);
             }
@@ -170,7 +170,7 @@ public class GUIController implements Initializable {
         }
         catch(Exception e){
             IRDC.config.remove(RCCSFlag.ENUMERATE);
-            outputField.setText(String.valueOf(e));
+            outputField.setText(process + " is not properly formatted! Please check formatting guidelines.");
         }
     }
     public void walkthroughPage(ActionEvent event) throws IOException{

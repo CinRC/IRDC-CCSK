@@ -61,7 +61,7 @@ public class ProcessTemplate {
           }
           if (p instanceof SummationProcess s){
             if (s.left.hasKey() && s.right.hasKey()){
-              throw new CCSParserException("Unreachable processes detected! Summation processes cannot have execution on both sides");
+              throw new CCSParserException("Unreachable processes detected! Summation processes cannot have execution on both sides. Please ensure you've added parenthesis if your binding order is not accurate.");
             }
             if (s.left.hasKey()){
               s.right.setGhost(true);

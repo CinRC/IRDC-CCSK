@@ -330,7 +330,7 @@ public abstract class Process extends ProgramNode implements IRDCObject {
     if (!prefixes.isEmpty()) {
       l.add(prefixes.getFirst());
     }
-    if (hasKey())//TODO: Fix for concurrent processes whos key points to left or right, duplicating it when added
+    if (hasKey() && !IRDC.config.contains(RCCSFlag.FORWARD_ONLY))//TODO: Fix for concurrent processes whos key points to left or right, duplicating it when added
     {
       l.add(getKey());
     }

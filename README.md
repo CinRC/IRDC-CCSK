@@ -127,6 +127,7 @@ This program can be configured by using command-line arguments, or flags. The fl
 | --iU        	                       | Parser will ignore unrecognized characters in the process formula                                          	                                                                                                                                                                                                                        |
 | --kL        	                       | (Deprecated) Keys will be visibly similar to the label they represent                                                   	                                                                                                                                                                                                           |
 | --gui       	                       | Program will start with a GUI instead of CLI                                                               	                                                                                                                                                                                                                        |
+| --forward-only       	              | Program will run in a non-reversible paradigm                                                               	                                                                                                                                                                                                                       |
 | --interactive  	                    | Run the program in interactive mode. In interactive mode, the given process will be displayed and the user will be prompted to give a label or key to act on.                                                                   	                                                                                                   |
 | --enumerate  	                      | Run the program in enumeration mode (Default). In enumeration mode, the given process will be enumerated to completion, and the transition tree will be printed to stdout                                                                    	                                                                                      |
 | --validate  	                       | Run the program in validation mode. In validation mode, a user inputted file will be scanned for processes to parse. Processes in the file must be separated by newlines, with one process per line. Each process will be validated for syntax and formatting.                                                                    	 |
@@ -150,7 +151,7 @@ Maj.Min.Patch.Rev system, where:
 When making changes, increment the version number according to changes made.
 ## Alternatives
 
-This project, in particular, is a working implementation of the _forward-only_ Calculus of Communicating Systems (CSS).
+This project, in particular, is a working implementation of the Calculus of Communicating Systems with Keys (CCSk).
 Some of the other implementations of [process algebras](https://en.wikipedia.org/wiki/Process_calculus) that are
 publicly available are:
 
@@ -161,6 +162,6 @@ publicly available are:
 - [muccs](https://github.com/andreasimonetto/muccs), an implementation of CCS in Prolog with some nice examples.
 - [CCS_Prolog](https://github.com/CoffeeStraw/CCS_Prolog), an interpreter for CCS language written in SWI-Prolog.
 
-The implementation of CSSk
+The implementation of CCSk
 described [in this master thesis](https://leicester.figshare.com/articles/thesis/SimCCSK_simulation_of_the_reversible_process_calculi_CCSK/10091681)
 is to our knowledge not publicly available.

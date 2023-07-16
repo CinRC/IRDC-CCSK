@@ -37,6 +37,8 @@ public enum RCCSFlag {
       "--dN"),
   IGNORE_UNRECOGNIZED("Unrecognized characters in process are ignored",
       "--iU"),
+  FORWARD_ONLY("IRDC will run in forward-only mode (reversibility disabled)",
+      "--forward-only"),
   KEYS_MATCH_LABELS("Keys will be visibly similar to the label they represent",
       "--kL"),
   REGENERATE("Given process that has already begun execution will be regenerated and enumerated.",

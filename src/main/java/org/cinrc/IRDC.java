@@ -219,6 +219,13 @@ public class IRDC {
     sb.append("\nExamples:\n");
     sb.append("java -jar IRDC.jar --validate processes.txt");
 
+
+    sb.append("Regeneration Mode\n---------------\n");
+    sb.append("In regeneration mode, the given process will be reversed to it's ancestor (unexecuted) process\n");
+    sb.append("\nExamples:\n");
+    sb.append("java -jar IRDC.jar --regenerate \"a[k0]|b[k1]");
+    sb.append("java -jar IRDC.jar --regenerate \"Tau{a}[k0]|Tau{a}[k0]");
+
     return sb.toString();
   }
 

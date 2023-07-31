@@ -91,7 +91,10 @@ public class CCSParser {
 
     LinkedList<Label> parsedPrefixes = CCSParser.parseLabelsFromKeySet(keys);
     parsedPrefixes.addAll(prefixes);
-    p.addPrefixes(parsedPrefixes);
+    if (p.getPrefixes().isEmpty()) //If no prefixes already, add as normal
+      p.addPrefixes(parsedPrefixes);
+    else
+      p = new ProcessImpl(p, parsedPrefixes, Collections.emptySet());
 
     for (LabelKey key : keys){
       /*if (key.from instanceof TauLabelNode t){

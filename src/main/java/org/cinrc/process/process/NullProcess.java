@@ -10,8 +10,21 @@ import org.cinrc.util.RCCSFlag;
 
 public class NullProcess extends Process {
 
+  private String facade;
+
   public NullProcess() {
     super();
+  }
+
+  public NullProcess(String facade){ //TODO: Unify constructors, change all references to give 0 as facade
+    super();
+    this.facade = facade;
+  }
+
+  public NullProcess(String facade, List<Label> prefixes){
+    super();
+    this.facade = facade;
+    this.prefixes.addAll(prefixes);
   }
 
   public NullProcess(List<Label> prefixes) {
@@ -29,6 +42,7 @@ public class NullProcess extends Process {
       p.setKey(getKey());
     }
     p.isGhost = isGhost;
+    p.facade = this.facade;
     p.addRestrictions(getRestriction());
     p.addPrefixes(getPrefixes());
     return p;
@@ -46,7 +60,8 @@ public class NullProcess extends Process {
   @Override
   public String represent() {
     if (IRDC.config.contains(RCCSFlag.DISPLAY_NULL) || prefixes.isEmpty()) {
-      return super.represent("0");
+      String s = facade == null ? "0" : facade;
+      return super.represent(s);
     }
 
     return super.represent("");
@@ -64,6 +79,6 @@ public class NullProcess extends Process {
 
   @Override
   public String origin() {
-    return "0";
+    return facade == null ? "0" : facade;
   }
 }

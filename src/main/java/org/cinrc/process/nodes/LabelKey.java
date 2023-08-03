@@ -68,6 +68,10 @@ public class LabelKey extends Label {
     return toString();
   }
 
+  public String printFullKey(){
+    return String.format("%s%s",getChannel(),represent());
+  }
+
   public LabelKey clone() {
     return new LabelKey(this);
   }

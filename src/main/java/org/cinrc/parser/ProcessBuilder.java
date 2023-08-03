@@ -1,11 +1,14 @@
 package org.cinrc.parser;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import javafx.util.Pair;
 import org.cinrc.IRDC;
 import org.cinrc.process.ProcessTemplate;
 import org.cinrc.process.nodes.IRDCToken;
@@ -31,6 +34,9 @@ public class ProcessBuilder {
 
   private final List<LabelKey> taus;
 
+  // Hashmap<dupe, key>
+  private final HashMap<Integer, LabelKey> keyMap;
+
   private NestedIRDCToken parent;
 
   public ProcessBuilder(String base){
@@ -38,6 +44,7 @@ public class ProcessBuilder {
     insert(new UnknownIRDCToken(base), 0);
     NodeIDGenerator.reset();
     taus = new ArrayList<>();
+    keyMap = new HashMap<>();
   }
 
   public void handleParentheses(){
@@ -94,7 +101,7 @@ public class ProcessBuilder {
   }
   private Process export(NestedIRDCToken nest, LinkedList<LabelKey> key, boolean parent){
     LinkedList<LabelKey> keys = key == null ? new LinkedList<>() : key;
-    LinkedList<Label> prefixes = null == null ? new LinkedList<>() : null;
+    LinkedList<Label> prefixes = new LinkedList<>();
 
     ProcessTemplate template = new ProcessTemplate();
     for (KnownIRDCToken token : nest.getTokens()){
@@ -114,6 +121,8 @@ public class ProcessBuilder {
             throw new CCSParserException("Process is unreachable! Keys cannot be prefixed");
 
           LabelKey k = ((LabelKey) LabelFactory.parseNode(token.represent()));
+
+
           if (k.from instanceof TauLabelNode t) {
             if (taus.isEmpty()) {
               taus.add(k);
@@ -132,6 +141,12 @@ public class ProcessBuilder {
               }
             }
           }else{
+            if (keyMap.containsKey(k.dupe))
+              if (!keyMap.get(k.dupe).getChannel().equals(k.getChannel())) //Two keys with same dupe but different channels
+                throw new CCSParserException(String.format("Unreachable process detected! Key %s and %s have cannot exist simultaneously!"
+                    , keyMap.get(k.dupe).printFullKey()
+                    , k.printFullKey()));
+            keyMap.put(k.dupe, k);
             keys.add(k);
           }
 

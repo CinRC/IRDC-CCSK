@@ -14,6 +14,7 @@ public class CCSInteractionHandler {
   private ProcessContainer container;
 
   public CCSInteractionHandler(Process p) {
+
     this.container = new ProcessContainer(p);
   }
 
